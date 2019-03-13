@@ -167,7 +167,7 @@ open class PutioNextFile {
         self.name = json["name"].stringValue
     }
 
-    func getAudioStreamURL(token: String) -> URL {
+    public func getAudioStreamURL(token: String) -> URL {
         let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
         return URL(string: url)!
     }

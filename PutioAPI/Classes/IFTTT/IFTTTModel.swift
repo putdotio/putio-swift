@@ -9,43 +9,43 @@
 import Foundation
 
 public class PutioIFTTTEvent {
-    public class Ingredients {
-        func toJSON() -> [String: Any] {
-            return [:]
-        }
-    }
-
     open var eventType: String
-    open var ingredients: Ingredients
+    open var ingredients: PutioIFTTTEventIngredients
 
-    init(eventType: String, ingredients: Ingredients) {
+    public init(eventType: String, ingredients: PutioIFTTTEventIngredients) {
         self.eventType = eventType
         self.ingredients = ingredients
     }
 }
 
-public class PutioIFTTTPlaybackEvent: PutioIFTTTEvent {
-    public class PlaybackEventIngredients: PutioIFTTTEvent.Ingredients {
-        open var fileId: Int
-        open var fileName: String
-        open var fileType: String
+public class PutioIFTTTEventIngredients {
+    public func toJSON() -> [String: Any] {
+        return [:]
+    }
+}
 
-        init(fileId: Int, fileName: String, fileType: String) {
-            self.fileId = fileId
-            self.fileName = fileName
-            self.fileType = fileType
-        }
+public class PutioIFTTTPlaybackEventIngredients: PutioIFTTTEventIngredients {
+    public var fileId: Int
+    public var fileName: String
+    public var fileType: String
 
-        override func toJSON() -> [String: Any] {
-            return [
-                "file_id": self.fileId,
-                "file_name": self.fileName,
-                "file_type": self.fileType
-            ]
-        }
+    public init(fileId: Int, fileName: String, fileType: String) {
+        self.fileId = fileId
+        self.fileName = fileName
+        self.fileType = fileType
     }
 
-    init(eventType: String, ingredients: PlaybackEventIngredients) {
+    override public func toJSON() -> [String: Any] {
+        return [
+            "file_id": self.fileId,
+            "file_name": self.fileName,
+            "file_type": self.fileType
+        ]
+    }
+}
+
+public class PutioIFTTTPlaybackEvent: PutioIFTTTEvent {
+    init(eventType: String, ingredients: PutioIFTTTPlaybackEventIngredients) {
         super.init(eventType: eventType, ingredients: ingredients)
     }
 }

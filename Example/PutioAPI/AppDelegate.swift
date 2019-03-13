@@ -11,6 +11,12 @@ import PutioAPI
 
 let api = PutioAPI(clientID: "<#T##String#>", clientSecret: "<#T##String#>")
 
+let a = PutioIFTTTPlaybackEventIngredients(
+        fileId: 0,
+        fileName: "a",
+        fileType: "VIDEO"
+)
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

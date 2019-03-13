@@ -9,7 +9,7 @@
 import Foundation
 
 extension Int64 {
-    func bytesToHumanReadable() -> String {
+    public func bytesToHumanReadable() -> String {
         let formatter = ByteCountFormatter()
         formatter.countStyle = .binary
         return formatter.string(fromByteCount: self)

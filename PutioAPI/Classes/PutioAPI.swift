@@ -19,7 +19,7 @@ public final class PutioAPI {
     weak var delegate: PutioAPIDelegate?
     static let apiURL = "https://api.put.io/v2"
 
-    var config: PutioAPIConfig
+    public var config: PutioAPIConfig
     var headers: HTTPHeaders
     var method: HTTPMethod
     var parameters: Parameters?
