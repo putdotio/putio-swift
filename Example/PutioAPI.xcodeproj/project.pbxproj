@@ -44,7 +44,7 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		D3F0232F530F97D8AA7C288D /* Pods-PutioAPI_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PutioAPI_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PutioAPI_Example/Pods-PutioAPI_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		E3A3E259B911EFC7E9FE370F /* PutioAPI.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = PutioAPI.podspec; path = ../PutioAPI.podspec; sourceTree = "<group>"; };
+		E3A3E259B911EFC7E9FE370F /* PutioAPI.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = PutioAPI.podspec; path = ../PutioAPI.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		EC74F437665BBD68DDF7602B /* Pods-PutioAPI_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PutioAPI_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PutioAPI_Tests/Pods-PutioAPI_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		F6F96589FBAF9511A70C98C4 /* Pods-PutioAPI_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PutioAPI_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-PutioAPI_Example/Pods-PutioAPI_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */

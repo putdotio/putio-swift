@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PutioAPI'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'Swift wrapper for Put.io API v2'
   s.swift_version    = '4.2'
 
@@ -24,12 +24,11 @@ TODO: Add long description of the pod here.
 
   s.homepage         = 'https://github.com/aydieneue/Putio.swift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Altay Aydemir' => 'altay.aydemir@gmail.com' }
   s.source           = { :git => 'https://github.com/aydieneue/Putio.swift.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/aydieneue'
-
   s.ios.deployment_target = '10.0'
-
   s.source_files = 'PutioAPI/Classes/**/*'
   
   # s.resource_bundles = {
