@@ -1,0 +1,27 @@
+PODS:
+  - Alamofire (4.8.1)
+  - PutioAPI (0.1.0):
+    - Alamofire
+    - SwiftyJSON
+  - SwiftyJSON (4.2.0)
+
+DEPENDENCIES:
+  - PutioAPI (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - SwiftyJSON
+
+EXTERNAL SOURCES:
+  PutioAPI:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alamofire: 16ce2c353fb72865124ddae8a57c5942388f4f11
+  PutioAPI: 276778816fad47161427cfa9f7158a0920976e19
+  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
+
+PODFILE CHECKSUM: b3d610bb13e416be7028cf682684f5e71c2356cc
+
+COCOAPODS: 1.5.3

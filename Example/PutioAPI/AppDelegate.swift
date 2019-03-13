@@ -7,6 +7,15 @@
 //
 
 import UIKit
+import PutioAPI
+
+let api = PutioAPI(clientID: "<#T##String#>", clientSecret: "<#T##String#>")
+
+let a = PutioIFTTTPlaybackEventIngredients(
+        fileId: 0,
+        fileName: "a",
+        fileType: "VIDEO"
+)
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true
     }

@@ -1,15 +1,6 @@
 # PutioAPI
 
-[![CI Status](https://img.shields.io/travis/Altay Aydemir/PutioAPI.svg?style=flat)](https://travis-ci.org/Altay Aydemir/PutioAPI)
-[![Version](https://img.shields.io/cocoapods/v/PutioAPI.svg?style=flat)](https://cocoapods.org/pods/PutioAPI)
-[![License](https://img.shields.io/cocoapods/l/PutioAPI.svg?style=flat)](https://cocoapods.org/pods/PutioAPI)
-[![Platform](https://img.shields.io/cocoapods/p/PutioAPI.svg?style=flat)](https://cocoapods.org/pods/PutioAPI)
-
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+Swift wrapper for Put.io API v2. Used in [official Put.io iOS](https://itunes.apple.com/us/app/put-io/id1260479699?mt=8) app.
 
 ## Installation
 
@@ -19,10 +10,6 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod 'PutioAPI'
 ```
-
-## Author
-
-Altay Aydemir, altay.aydemir@lightcurve.io
 
 ## License
 
