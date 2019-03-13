@@ -1,29 +1,16 @@
-# PutioKit
+# Putio.swift
 
-[![CI Status](https://img.shields.io/travis/Altay Aydemir/PutioKit.svg?style=flat)](https://travis-ci.org/Altay Aydemir/PutioKit)
-[![Version](https://img.shields.io/cocoapods/v/PutioKit.svg?style=flat)](https://cocoapods.org/pods/PutioKit)
-[![License](https://img.shields.io/cocoapods/l/PutioKit.svg?style=flat)](https://cocoapods.org/pods/PutioKit)
-[![Platform](https://img.shields.io/cocoapods/p/PutioKit.svg?style=flat)](https://cocoapods.org/pods/PutioKit)
-
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+Swift wrapper for Put.io API v2. Used in [official Put.io iOS](https://itunes.apple.com/us/app/put-io/id1260479699?mt=8) app.
 
 ## Installation
 
-PutioKit is available through [CocoaPods](https://cocoapods.org). To install
+Putio is available through [CocoaPods](https://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod 'PutioKit'
+pod 'Putio'
 ```
-
-## Author
-
-Altay Aydemir, altay.aydemir@lightcurve.io
 
 ## License
 
-PutioKit is available under the MIT license. See the LICENSE file for more info.
+Putio is available under the MIT license. See the LICENSE file for more info.
