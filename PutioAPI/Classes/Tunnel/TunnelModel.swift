@@ -9,10 +9,10 @@
 import Foundation
 import SwiftyJSON
 
-public struct PutioTunnel {
-    let name: String
-    let description: String
-    let hosts: [String]
+open class PutioTunnel {
+    open var name: String
+    open var description: String
+    open var hosts: [String]
 
     init(json: JSON) {
         self.name = json["name"].stringValue

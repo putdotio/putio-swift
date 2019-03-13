@@ -9,13 +9,13 @@
 import Foundation
 import SwiftyJSON
 
-public struct PutioSubtitle {
-    var key: String
-    var language: String
-    var languageCode: String
-    var name: String
-    var source: String
-    var url: String
+open class PutioSubtitle {
+    open var key: String
+    open var language: String
+    open var languageCode: String
+    open var name: String
+    open var source: String
+    open var url: String
 
     init(json: JSON) {
         self.key = json["key"].stringValue

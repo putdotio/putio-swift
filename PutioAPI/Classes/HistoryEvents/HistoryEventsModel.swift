@@ -9,28 +9,28 @@
 import Foundation
 import SwiftyJSON
 
-public struct PutioHistoryEvent {
-    enum EventType {
+open class PutioHistoryEvent {
+    public enum EventType {
         case fileShared, transferCompleted, other
     }
 
-    let id: Int
-    let type: EventType
+    open var id: Int
+    open var type: EventType
 
-    let createdAt: Date
-    let createdAtRelative: String
+    open var createdAt: Date
+    open var createdAtRelative: String
 
-    let fileID: Int
+    open var fileID: Int
 
     // File Shared
-    var sharingUserName: String?
-    var fileName: String?
-    var fileSize: Int64?
+    open var sharingUserName: String?
+    open var fileName: String?
+    open var fileSize: Int64?
 
     // Transfer Completed
-    var source: String?
-    var transferName: String?
-    var transferSize: Int64?
+    open var source: String?
+    open var transferName: String?
+    open var transferSize: Int64?
 
     init(json: JSON) {
         self.id = json["id"].intValue

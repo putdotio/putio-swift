@@ -13,11 +13,11 @@ import SwiftyJSON
 public typealias PutioAPIQuery = Parameters
 public typealias PutioAPIBoolCompletion = ((_ success: Bool, _ error: Error?) -> Void)?
 
-struct PutioAPIConfig {
-    var token: String
-    var clientID: String
-    var clientSecret: String
-    var baseURL: String
+public struct PutioAPIConfig {
+    public var token: String
+    public var clientID: String
+    public var clientSecret: String
+    public var baseURL: String
 
     init(clientID: String, clientSecret: String, token: String = "") {
         self.clientID = clientID
@@ -27,22 +27,22 @@ struct PutioAPIConfig {
     }
 }
 
-struct PutioAPIRequestInfo {
+public struct PutioAPIRequestInfo {
     let url: String
     let method: String
     let headers: Parameters
     let parameters: Parameters?
 }
 
-struct PutioAPIError {
-    let id: String
-    let status: String
-    let type: String
-    let uri: String
-    let statusCode: Int
-    let message: String
+public struct PutioAPIError {
+    public let id: String
+    public let status: String
+    public let type: String
+    public let uri: String
+    public let statusCode: Int
+    public let message: String
 
-    let ns: NSError
+    public let ns: NSError
 
     init(_ requestInfo: PutioAPIRequestInfo, _ json: JSON) {
         self.id = json["error_id"].stringValue

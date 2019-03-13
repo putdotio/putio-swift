@@ -9,17 +9,17 @@
 import Foundation
 import SwiftyJSON
 
-public struct PutioFile {
-    enum FileType {
+open class PutioFile {
+    public enum FileType {
         case folder, video, audio, image, pdf, other
     }
 
-    struct VideoMetadata {
-        var height: Int
-        var width: Int
-        var codec: String
-        var duration: Double
-        var aspectRatio: Double
+    public struct VideoMetadata {
+        public var height: Int
+        public var width: Int
+        public var codec: String
+        public var duration: Double
+        public var aspectRatio: Double
 
         init(json: JSON) {
             self.height = json["height"].intValue
@@ -30,32 +30,32 @@ public struct PutioFile {
         }
     }
 
-    let id: Int
-    var parentID: Int
-    var name: String
-    let type: FileType
-    let typeRaw: String
-    let isShared: Bool
-    let isAccessed: Bool
-    var icon: String
+    open var id: Int
+    open var parentID: Int
+    open var name: String
+    open var type: FileType
+    open var typeRaw: String
+    open var isShared: Bool
+    open var isAccessed: Bool
+    open var icon: String
 
-    var size: Int64
-    var sizeReadable: String
+    open var size: Int64
+    open var sizeReadable: String
 
-    let createdAt: Date
-    let createdAtRelative: String
+    open var createdAt: Date
+    open var createdAtRelative: String
 
     // MARK: Folder Properties
-    var isSharedRoot: Bool = false
+    open var isSharedRoot: Bool = false
 
     // MARK: Video Properties
-    var needConvert: Bool = false
-    var hasMp4: Bool = false
-    var startFrom: Int = 0
-    var streamURL: String = ""
-    var mp4StreamURL: String = ""
-    var metaData: VideoMetadata?
-    var screenshot: String = ""
+    open var needConvert: Bool = false
+    open var hasMp4: Bool = false
+    open var startFrom: Int = 0
+    open var streamURL: String = ""
+    open var mp4StreamURL: String = ""
+    open var metaData: VideoMetadata?
+    open var screenshot: String = ""
 
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -117,37 +117,37 @@ public struct PutioFile {
         }
     }
 
-    func getHlsStreamURL(token: String) -> URL {
+    public func getHlsStreamURL(token: String) -> URL {
         let url = "\(PutioAPI.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
         return URL(string: url)!
     }
 
-    func getAudioStreamURL(token: String) -> URL {
+    public func getAudioStreamURL(token: String) -> URL {
         let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
         return URL(string: url)!
     }
 
-    func getDownloadURL(token: String) -> URL {
+    public func getDownloadURL(token: String) -> URL {
         let url = "\(PutioAPI.apiURL)/files/\(self.id)/download?oauth_token=\(token)"
         return URL(string: url)!
     }
 
-    func getMp4DownloadURL(token: String) -> URL {
+    public func getMp4DownloadURL(token: String) -> URL {
         let url = "\(PutioAPI.apiURL)/files/\(self.id)/mp4/download?oauth_token=\(token)"
         return URL(string: url)!
     }
 }
 
-public struct PutioMp4Conversion {
-    enum Status: String {
+open class PutioMp4Conversion {
+    public enum Status: String {
         case queued = "IN_QUEUE",
             converting = "CONVERTING",
             completed = "COMPLETED",
             error = "ERROR"
     }
 
-    let percentDone: Float
-    var status: Status
+    open var percentDone: Float
+    open var status: Status
 
     init(json: JSON) {
         let mp4 = json["mp4"]
@@ -156,10 +156,10 @@ public struct PutioMp4Conversion {
     }
 }
 
-public struct PutioNextFile {
-    var id: Int
-    var name: String
-    var parentID: Int
+open class PutioNextFile {
+    open var id: Int
+    open var name: String
+    open var parentID: Int
 
     init(json: JSON) {
         self.id = json["id"].intValue

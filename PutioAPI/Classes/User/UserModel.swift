@@ -9,20 +9,19 @@
 import Foundation
 import SwiftyJSON
 
-public struct PutioUser {
-    let id: Int
-    let username: String
-    let mail: String
-    let hash: String
-    let features: [String: Any]
+open class PutioUser {
+    open var id: Int
+    open var username: String
+    open var mail: String
+    open var hash: String
+    open var features: [String: Any]
+    open var downloadToken: String
 
-    var downloadToken: String
-
-    public struct Disk {
-        var available: Int64
-        var availableReable: String
-        var size: Int64
-        var sizeReadable: String
+    public class Disk {
+        open var available: Int64
+        open var availableReable: String
+        open var size: Int64
+        open var sizeReadable: String
 
         init(available: Int64, size: Int64) {
             self.available = available
@@ -32,15 +31,15 @@ public struct PutioUser {
         }
     }
 
-    var disk: Disk
+    open var disk: Disk
 
-    public struct Settings {
-        var routeName: String
-        var suggestNextVideo: Bool
-        var rememberVideoTime: Bool
-        var historyEnabled: Bool
-        var trashEnabled: Bool
-        var sortBy: String
+    public class Settings {
+        open var routeName: String
+        open var suggestNextVideo: Bool
+        open var rememberVideoTime: Bool
+        open var historyEnabled: Bool
+        open var trashEnabled: Bool
+        open var sortBy: String
 
         init(json: JSON) {
             self.routeName = json["tunnel_route_name"].stringValue
@@ -52,7 +51,7 @@ public struct PutioUser {
         }
     }
 
-    var settings: Settings
+    open var settings: Settings
 
     init(json: JSON) {
         let info: JSON = json["info"]

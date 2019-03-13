@@ -9,14 +9,14 @@
 import Foundation
 
 public class PutioIFTTTEvent {
-    class Ingredients {
+    public class Ingredients {
         func toJSON() -> [String: Any] {
             return [:]
         }
     }
 
-    let eventType: String
-    let ingredients: Ingredients
+    open var eventType: String
+    open var ingredients: Ingredients
 
     init(eventType: String, ingredients: Ingredients) {
         self.eventType = eventType
@@ -25,10 +25,10 @@ public class PutioIFTTTEvent {
 }
 
 public class PutioIFTTTPlaybackEvent: PutioIFTTTEvent {
-    class PlaybackEventIngredients: PutioIFTTTEvent.Ingredients {
-        let fileId: Int
-        let fileName: String
-        let fileType: String
+    public class PlaybackEventIngredients: PutioIFTTTEvent.Ingredients {
+        open var fileId: Int
+        open var fileName: String
+        open var fileType: String
 
         init(fileId: Int, fileName: String, fileType: String) {
             self.fileId = fileId
