@@ -1,0 +1,6 @@
+framework module Pods_PutioKit_Example {
+  umbrella header "Pods-PutioKit_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

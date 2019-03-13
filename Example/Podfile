@@ -1,0 +1,11 @@
+platform :ios, '10.0'
+
+use_frameworks!
+
+target 'PutioKit_Example' do
+  pod 'Putio', :path => '../'
+
+  target 'PutioKit_Tests' do
+    inherit! :search_paths
+  end
+end
