@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'PutioAPI_Example' do
+  pod 'PutioAPI', :path => '../'
+
+  target 'PutioAPI_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
