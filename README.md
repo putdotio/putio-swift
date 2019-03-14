@@ -4,7 +4,7 @@ Swift wrapper for Put.io API v2. Used in [official Put.io iOS](https://itunes.ap
 
 ## Installation
 
-PutioAPI is available through [CocoaPods](https://cocoapods.org). To install
+PutioAPI is available through [CocoaPods](https://cocoapods.org/pods/PutioAPI). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
