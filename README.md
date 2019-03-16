@@ -1,4 +1,4 @@
-# PutioAPI
+# Putio.swift
 
 Swift wrapper for Put.io API v2. Used in [official Put.io iOS](https://itunes.apple.com/us/app/put-io/id1260479699?mt=8) app.
 
