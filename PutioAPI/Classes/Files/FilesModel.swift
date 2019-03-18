@@ -75,14 +75,19 @@ open class PutioFile {
         self.sizeReadable = size.bytesToHumanReadable()
 
         // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
-        let formatter = ISO8601DateFormatter()
-        self.createdAt = formatter.date(from: json["created_at"].stringValue) ?? formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
+        let createdAtFormatter = ISO8601DateFormatter()
+        self.createdAt = formatter.date(from: json["created_at"].stringValue) ??
+            formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
 
         // Eg: 5 Days Ago
         self.createdAtRelative = createdAt.timeAgoSinceDate()
 
-        self.updatedAt = formatter.date(from: json["created_at"].stringValue) ?? formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
+        // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
+        let updatedAtFormatter = ISO8601DateFormatter()
+        self.updatedAt = formatter.date(from: json["updated_at"].stringValue) ??
+            formatter.date(from: "\(json["updated_at"].stringValue)+00:00")!
 
+        // Eg: 5 Days Ago
         self.updatedAtRelative = updatedAt.timeAgoSinceDate()
 
         switch json["file_type"].stringValue {
