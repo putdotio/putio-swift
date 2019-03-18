@@ -45,6 +45,9 @@ open class PutioFile {
     open var createdAt: Date
     open var createdAtRelative: String
 
+    open var updatedAt: Date
+    open var updatedAtRelative: String
+
     // MARK: Folder Properties
     open var isSharedRoot: Bool = false
 
@@ -77,6 +80,10 @@ open class PutioFile {
 
         // Eg: 5 Days Ago
         self.createdAtRelative = createdAt.timeAgoSinceDate()
+
+        self.updatedAt = formatter.date(from: json["created_at"].stringValue) ?? formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
+
+        self.updatedAtRelative = updatedAt.timeAgoSinceDate()
 
         switch json["file_type"].stringValue {
         case "FOLDER":
