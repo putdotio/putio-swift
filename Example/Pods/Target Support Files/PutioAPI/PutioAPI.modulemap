@@ -1,6 +1,0 @@
-framework module PutioAPI {
-  umbrella header "PutioAPI-umbrella.h"
-
-  export *
-  module * { export * }
-}
