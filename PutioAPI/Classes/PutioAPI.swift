@@ -103,8 +103,6 @@ public final class PutioAPI {
             headers["Authorization"] = "token \(config.token)"
         }
 
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
-
         Alamofire
             .request(
                 self.requestURL,
@@ -115,8 +113,8 @@ public final class PutioAPI {
             )
             .validate()
             .responseJSON { (response) in
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
-
+                self.reset()
+                
                 switch response.result {
                 case .success:
                     let json = try! JSON(data: response.data!)

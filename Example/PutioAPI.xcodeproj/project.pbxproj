@@ -266,17 +266,13 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PutioAPI_Example/Pods-PutioAPI_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PutioAPI_Example/Pods-PutioAPI_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/PutioAPI/PutioAPI.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PutioAPI.framework",
@@ -284,7 +280,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PutioAPI_Example/Pods-PutioAPI_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PutioAPI_Example/Pods-PutioAPI_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		33E0B92A0DFF049029A0F70F /* [CP] Check Pods Manifest.lock */ = {

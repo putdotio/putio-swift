@@ -8,35 +8,22 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PutioAPI'
-  s.version          = '0.3.3'
-  s.summary          = 'Swift wrapper for Put.io API v2'
+  s.version          = '0.4.0'
   s.swift_version    = '4.2'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
-
-  s.homepage         = 'https://github.com/aydieneue/Putio.swift'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  
+  s.summary          = 'Swift client for Put.io API v2'
+  s.description      = 'Swift client for Put.io API v2 [https://api.put.io]'
+  
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Altay Aydemir' => 'altay.aydemir@gmail.com' }
-  s.source           = { :git => 'https://github.com/aydieneue/Putio.swift.git', :tag => s.version.to_s }
-  s.social_media_url = 'https://twitter.com/aydieneue'
+  s.author           = { 'Putio Devs' => 'devs@put.io' }
+  
+  s.homepage         = 'https://github.com/putdotio/putio.swift'
+  s.source           = { :git => 'https://github.com/putdotio/putio.swift.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/putdotio'
+  
   s.ios.deployment_target = '10.0'
   s.source_files = 'PutioAPI/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'PutioAPI' => ['PutioAPI/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Alamofire'
-  s.dependency 'SwiftyJSON'
+  s.dependency 'Alamofire', '~> 4.9'
+  s.dependency 'SwiftyJSON', '~> 5.0'
 end
