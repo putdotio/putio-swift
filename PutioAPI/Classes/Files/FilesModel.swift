@@ -42,6 +42,9 @@ open class PutioFile {
     open var size: Int64
     open var sizeReadable: String
 
+    open var mp4Size: Int64
+    open var mp4SizeReadable: String
+
     open var createdAt: Date
     open var createdAtRelative: String
 
@@ -70,9 +73,11 @@ open class PutioFile {
 
         // Eg: 1024.0
         self.size = json["size"].int64Value
+        self.mp4Size = json["mp4_size"].int64Value
 
         // Eg: 1 MB
         self.sizeReadable = size.bytesToHumanReadable()
+        self.mp4SizeReadable = mp4Size.bytesToHumanReadable()
 
         // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
         let formatter = ISO8601DateFormatter()
