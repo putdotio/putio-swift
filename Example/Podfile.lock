@@ -1,6 +1,6 @@
 PODS:
   - Alamofire (4.9.0)
-  - PutioAPI (0.4.0):
+  - PutioAPI (0.6.0):
     - Alamofire (~> 4.9)
     - SwiftyJSON (~> 5.0)
   - SwiftyJSON (5.0.0)
@@ -19,7 +19,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
-  PutioAPI: 96ca529607a930a33f3d70f879f2709b1c363e42
+  PutioAPI: e4840e68281a3876f695012a88462e02374cdf97
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
 PODFILE CHECKSUM: b3d610bb13e416be7028cf682684f5e71c2356cc
