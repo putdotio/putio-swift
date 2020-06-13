@@ -170,19 +170,32 @@ open class PutioMp4Conversion {
     }
 }
 
+public enum PutioNextFileType: String {
+    case video = "VIDEO", audio = "AUDIO"
+}
+
 open class PutioNextFile {
     open var id: Int
     open var name: String
     open var parentID: Int
+    open var type: PutioNextFileType
 
-    init(json: JSON) {
+    init(json: JSON, type: PutioNextFileType) {
         self.id = json["id"].intValue
         self.parentID = json["parent_id"].intValue
         self.name = json["name"].stringValue
+        self.type = type
     }
 
-    public func getAudioStreamURL(token: String) -> URL {
-        let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
-        return URL(string: url)!
+    public func getStreamURL(token: String) -> URL {
+        switch (self.type) {
+        case .audio:
+            let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
+            return URL(string: url)!
+        case .video:
+            let url = "\(PutioAPI.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
+            return URL(string: url)!
+        }
+
     }
 }

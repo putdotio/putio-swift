@@ -172,9 +172,9 @@ extension PutioAPI {
         }
     }
 
-    public func findNextFile(fileID: Int, fileType: String, completion: @escaping (_ file: PutioNextFile?, _ error: Error?) -> Void) {
+    public func findNextFile(fileID: Int, fileType: PutioNextFileType, completion: @escaping (_ file: PutioNextFile?, _ error: Error?) -> Void) {
         let URL = "/files/\(fileID)/next-file"
-        let query = ["file_type": fileType]
+        let query = ["file_type": fileType.rawValue]
 
         self.get(URL)
             .query(query)
@@ -183,7 +183,7 @@ extension PutioAPI {
                     return completion(nil, error)
                 }
 
-                return completion(PutioNextFile(json: response!["next_file"]), nil)
+                return completion(PutioNextFile(json: response!["next_file"], type: fileType), nil)
             }
     }
 }
