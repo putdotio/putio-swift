@@ -103,18 +103,23 @@ public final class PutioAPI {
             headers["Authorization"] = "token \(config.token)"
         }
 
+        let requestURL = self.requestURL
+        let method = self.method
+        let parameters = self.parameters
+        let headers = self.headers
+        
+        self.reset()
+
         Alamofire
             .request(
-                self.requestURL,
-                method: self.method,
-                parameters: self.parameters,
+                requestURL,
+                method: method,
+                parameters: parameters,
                 encoding: JSONEncoding.default,
-                headers: self.headers
+                headers: headers
             )
             .validate()
             .responseJSON { (response) in
-                self.reset()
-                
                 switch response.result {
                 case .success:
                     let json = try! JSON(data: response.data!)
@@ -123,10 +128,10 @@ public final class PutioAPI {
                     do {
                         let json = try JSON(data: response.data!)
                         let requestInfo = PutioAPIRequestInfo(
-                            url: self.requestURL,
-                            method: self.method.rawValue,
-                            headers: self.headers,
-                            parameters: self.parameters ?? nil
+                            url: requestURL,
+                            method: method.rawValue,
+                            headers: headers,
+                            parameters: parameters
                         )
                         let error = PutioAPIError(requestInfo, json).ns
                         self.delegate?.onPutioAPIApiError(error: error)
