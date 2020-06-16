@@ -38,6 +38,19 @@ extension PutioAPI {
         }
     }
 
+    public func getStartFrom(fileID: Int, completion: @escaping (_ time: Int?, _ error: Error?) -> Void) {
+        let URL = "/files/\(fileID)/start-from"
+
+        self.get(URL)
+            .end { (response, error) in
+                guard error == nil else {
+                    return completion(nil, error)
+                }
+
+                return completion(response!["start_from"].intValue, nil)
+        }
+    }
+
     public func setStartFrom(fileID: Int, time: Int, completion: PutioAPIBoolCompletion) {
         let URL = "/files/\(fileID)/start-from/set"
 
