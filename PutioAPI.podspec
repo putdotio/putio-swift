@@ -8,14 +8,14 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PutioAPI'
-  s.version          = '0.7.1'
+  s.version          = '0.8.0'
   s.swift_version    = '4.2'
 
   s.summary          = 'Swift client for Put.io API v2'
   s.description      = 'Swift client for Put.io API v2 [https://api.put.io]'
 
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Putio Devs' => 'devs@put.io' }
+  s.author           = { 'Putio' => 'devs@put.io' }
 
   s.homepage         = 'https://github.com/putdotio/putio.swift'
   s.source           = { :git => 'https://github.com/putdotio/putio.swift.git', :tag => s.version.to_s }

@@ -37,7 +37,7 @@ extension PutioAPI {
         }
     }
 
-    public func saveSettings(body: [String: String], completion: PutioAPIBoolCompletion) {
+    public func saveSettings(body: [String: Any], completion: PutioAPIBoolCompletion) {
         let URL = "/account/settings"
 
         self.post(URL)
