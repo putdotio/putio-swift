@@ -1,11 +1,3 @@
-//
-//  FilesModel.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 7.11.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 import SwiftyJSON
 
@@ -191,23 +183,5 @@ open class PutioNextFile {
             let url = "\(PutioAPI.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
             return URL(string: url)!
         }
-    }
-}
-
-open class PutioMp4Conversion {
-    public enum Status: String {
-        case queued = "IN_QUEUE",
-            converting = "CONVERTING",
-            completed = "COMPLETED",
-            error = "ERROR"
-    }
-
-    open var percentDone: Float
-    open var status: Status
-
-    init(json: JSON) {
-        let mp4 = json["mp4"]
-        self.percentDone = mp4["percent_done"].floatValue / 100
-        self.status = Status.init(rawValue: mp4["status"].stringValue)!
     }
 }

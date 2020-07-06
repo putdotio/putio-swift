@@ -1,11 +1,3 @@
-//
-//  FilesApi.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 2.11.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 import SwiftyJSON
 
@@ -51,22 +43,6 @@ extension PutioAPI {
                 }
 
                 return completion(PutioFile(json: response!["file"]), nil)
-        }
-    }
-
-    public func searchFiles(query: String, page: Int = 1, completion: @escaping (_ files: [PutioFile]?, _ error: Error?) -> Void) {
-        let safeQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        let URL = "/files/search/\(safeQuery)/page/\(page)"
-
-        self.get(URL)
-            .end { (response, error) in
-                guard error == nil else {
-                    return completion(nil, error)
-                }
-
-                let files = response!["files"].arrayValue.map {PutioFile(json: $0)}
-
-                return completion(files, nil)
         }
     }
 
