@@ -19,7 +19,7 @@ extension PutioAPI {
                     return completion(nil, error)
                 }
 
-                let events = response!["events"].arrayValue.map {PutioHistoryEvent(json: $0)}
+                let events = response!["events"].arrayValue.map {PutioHistoryEventFactory.get(json: $0)}
 
                 return completion(events, nil)
         }
