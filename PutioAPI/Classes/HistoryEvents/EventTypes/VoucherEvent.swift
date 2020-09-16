@@ -19,6 +19,6 @@ open class PutioVoucherEvent: PutioHistoryEvent {
         
         super.init(json: json)
         
-        self.type = .voucherEvent
+        self.type = .voucher
     }
 }

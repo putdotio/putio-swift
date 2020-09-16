@@ -10,9 +10,13 @@ import Foundation
 import SwiftyJSON
 
 
+public protocol PutioFileHistoryEvent {
+    var fileID: Int { get set }
+}
+
 open class PutioHistoryEvent {
     public enum EventType {
-        case upload, fileShared, transferCompleted, transferError, fileFromRSSDeletedError, rssFilterPaused, transferFromRSSError, transferCallbackError, privateTorrentPin, voucherEvent, other
+        case upload, fileShared, transferCompleted, transferError, fileFromRSSDeletedError, rssFilterPaused, transferFromRSSError, transferCallbackError, privateTorrentPin, voucher, zipCreated, other
     }
     open var id: Int
     open var type: EventType
