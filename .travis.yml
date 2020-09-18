@@ -1,0 +1,12 @@
+language: objective-c
+osx_image: xcode12
+
+xcode_workspace: ./Example/PutioAPI.xcworkspace
+xcode_scheme: PutioAPI-Example
+xcode_destination: platform=iOS Simulator,OS=11.3,name=iPhone X
+
+deploy:
+  provider: script
+  script: ./scripts/push.sh
+  on:
+    tags: true
