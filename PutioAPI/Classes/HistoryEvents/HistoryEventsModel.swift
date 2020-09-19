@@ -9,41 +9,28 @@
 import Foundation
 import SwiftyJSON
 
+
+public protocol PutioFileHistoryEvent {
+    var fileID: Int { get set }
+}
+
 open class PutioHistoryEvent {
     public enum EventType {
-        case fileShared, transferCompleted, other
+        case upload, fileShared, transferCompleted, transferError, fileFromRSSDeletedError, rssFilterPaused, transferFromRSSError, transferCallbackError, privateTorrentPin, voucher, zipCreated, other
     }
-
     open var id: Int
     open var type: EventType
 
     open var createdAt: Date
     open var createdAtRelative: String
 
-    open var fileID: Int
-
-    // File Shared
-    open var sharingUserName: String?
-    open var fileName: String?
-    open var fileSize: Int64?
-
-    // Transfer Completed
-    open var source: String?
-    open var transferName: String?
-    open var transferSize: Int64?
+    open var userID: Int
 
     init(json: JSON) {
         self.id = json["id"].intValue
-        self.fileID = json["file_id"].intValue
+        self.userID = json["user_id"].intValue
 
-        switch json["type"].stringValue {
-        case "file_shared":
-            self.type = .fileShared
-        case "transfer_completed":
-            self.type = .transferCompleted
-        default:
-            self.type = .other
-        }
+        self.type = .other
 
         // Put.io API currently does not provide dates compatible with iso8601, but can do in the future.
         let formatter = ISO8601DateFormatter()
@@ -51,17 +38,5 @@ open class PutioHistoryEvent {
 
         // Ex: 5 Days Ago
         self.createdAtRelative = createdAt.timeAgoSinceDate()
-
-        if type == .fileShared {
-            self.sharingUserName = json["sharing_user_name"].stringValue
-            self.fileName = json["file_name"].stringValue
-            self.fileSize = json["file_size"].int64Value
-        }
-
-        if type == .transferCompleted {
-            self.source = json["source"].stringValue
-            self.transferName = json["transfer_name"].stringValue
-            self.transferSize = json["transfer_size"].int64Value
-        }
     }
 }
