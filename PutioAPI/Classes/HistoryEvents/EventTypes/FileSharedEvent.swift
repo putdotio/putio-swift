@@ -1,6 +1,6 @@
 //
 //  FileSharedEvent.swift
-//  AcknowList
+//  Putio
 //
 //  Created by Batuhan Aksoy on 14.09.2020.
 //
