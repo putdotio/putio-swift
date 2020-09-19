@@ -17,6 +17,8 @@ pod 'PutioAPI'
 
 ## Development
 
+### Environment Setup
+
 ```bash
 git clone git@github.com:putdotio/putio.swift.git
 
@@ -25,4 +27,10 @@ cd ./putio.swift
 ./scripts/setup.sh
 
 open ./Example/Putio.xcworkspace
+```
+
+### Bumping the Version
+
+```bash
+bundle exec pod-bump <patch|minor|major> --no-push
 ```
