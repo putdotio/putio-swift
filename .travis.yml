@@ -5,8 +5,10 @@ xcode_workspace: ./Example/PutioAPI.xcworkspace
 xcode_scheme: PutioAPI-Example
 xcode_destination: platform=iOS Simulator,OS=14.0,name=iPhone 11
 
+install: ./scripts/setup.sh
+
 deploy:
   provider: script
-  script: ./scripts/push.sh
+  script: ./scripts/deploy.sh
   on:
     tags: true

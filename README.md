@@ -1,4 +1,4 @@
-# Putio.swift
+# PutioAPI
 
 Swift wrapper for [Put.io API v2](https://api.put.io). Used in [official Put.io iOS](https://itunes.apple.com/us/app/put-io/id1260479699?mt=8) app.
 
@@ -11,6 +11,14 @@ it, simply add the following line to your Podfile:
 pod 'PutioAPI'
 ```
 
-## License
+## Development
 
-PutioAPI is available under the MIT license. See the LICENSE file for more info.
+```bash
+git clone git@github.com:putdotio/putio.swift.git
+
+cd ./putio.swift
+
+./scripts/setup.sh
+
+open ./Example/Putio.xcworkspace
+```
