@@ -3,7 +3,7 @@ osx_image: xcode12
 
 xcode_workspace: ./Example/PutioAPI.xcworkspace
 xcode_scheme: PutioAPI-Example
-xcode_destination: platform=iOS Simulator,OS=11.3,name=iPhone X
+xcode_destination: platform=iOS Simulator,OS=14.0,name=iPhone 11
 
 deploy:
   provider: script
