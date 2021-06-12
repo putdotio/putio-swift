@@ -26,7 +26,7 @@ cd ./putio.swift
 
 ./scripts/setup.sh
 
-open ./Example/Putio.xcworkspace
+open ./Example/PutioAPI.xcworkspace
 ```
 
 ### Bumping the Version
