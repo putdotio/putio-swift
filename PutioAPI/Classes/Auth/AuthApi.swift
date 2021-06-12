@@ -52,7 +52,7 @@ extension PutioAPI {
     }
 
     public func validateToken(token: String, completion: @escaping (_ result: PutioTokenValidationResult?, _ error: Error?) -> Void) {
-        let URL = "/oaut2/validate"
+        let URL = "/oauth2/validate"
         self.get(URL)
             .end { response, error in
                 guard error == nil else {
