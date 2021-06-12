@@ -66,7 +66,7 @@ extension PutioAPI {
 
     public func verifyTOTP(totp: String, completion: @escaping (_ result: PutioVerifyTOTPResult?, _ error: Error?) -> Void) {
         let URL = "/two_factor/verify/totp"
-        let body = ["totp": totp] as [String: Any]
+        let body = ["totp": totp] as [String: String]
 
         self.post(URL)
             .send(body)
