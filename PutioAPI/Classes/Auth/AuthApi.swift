@@ -51,5 +51,17 @@ extension PutioAPI {
         }
     }
 
+    public func validateToken(token: String, completion: @escaping (_ result: PutioTokenValidationResult?, _ error: Error?) -> Void) {
+        let URL = "/oaut2/validate"
+        self.get(URL)
+            .end { response, error in
+                guard error == nil else {
+                    return completion(nil, error)
+                }
+
+                return completion(PutioTokenValidationResult(json: response!), nil)
+            }
+    }
+
     public func logout() {}
 }
