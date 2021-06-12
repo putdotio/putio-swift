@@ -14,3 +14,13 @@ open class PutioTokenValidationResult {
         self.user_id = json["user_id"].intValue
     }
 }
+
+open class PutioVerifyTOTPResult {
+    open var token: String
+    open var user_id: Int
+
+    init(json: JSON) {
+        self.token = json["token"].stringValue
+        self.user_id = json["user_id"].intValue
+    }
+}

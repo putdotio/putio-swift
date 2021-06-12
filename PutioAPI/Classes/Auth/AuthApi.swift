@@ -53,6 +53,7 @@ extension PutioAPI {
 
     public func validateToken(token: String, completion: @escaping (_ result: PutioTokenValidationResult?, _ error: Error?) -> Void) {
         let URL = "/oauth2/validate"
+
         self.get(URL)
             .end { response, error in
                 guard error == nil else {
@@ -61,6 +62,21 @@ extension PutioAPI {
 
                 return completion(PutioTokenValidationResult(json: response!), nil)
             }
+    }
+
+    public func verifyTOTP(totp: String, completion: @escaping (_ result: PutioVerifyTOTPResult?, _ error: Error?) -> Void) {
+        let URL = "/two_factor/verify/totp"
+        let body = ["totp": totp] as [String: Any]
+
+        self.post(URL)
+            .send(body)
+            .end { (response, error) in
+                guard error == nil else {
+                    return completion(nil, error)
+                }
+
+                return completion(PutioVerifyTOTPResult(json: response!), nil)
+        }
     }
 
     public func logout() {}
