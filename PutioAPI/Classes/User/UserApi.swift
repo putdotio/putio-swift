@@ -52,4 +52,15 @@ extension PutioAPI {
                 return completion(true, nil)
         }
     }
+    
+    public func resetFileSpecificSortSettings(completion: PutioAPIBoolCompletion) {
+        let URL = "/files/remove-sort-by-settings"
+        
+        self.post(URL)
+            .end { (_, error) in
+                guard let completion = completion else { return }
+                guard error == nil else { return completion(false, error) }
+                return completion(true, nil)
+            }
+    }
 }

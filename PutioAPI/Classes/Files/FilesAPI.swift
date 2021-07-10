@@ -162,4 +162,21 @@ extension PutioAPI {
                 return completion(PutioNextFile(json: response!["next_file"], type: fileType), nil)
             }
     }
+    
+    public func setSortBy(fileId: Int, sortBy: String, completion: PutioAPIBoolCompletion) {
+        let URL = "/files/set-sort-by"
+        let body = ["file_id": fileId, "sort_by": sortBy] as [String: Any]
+        
+        self.post(URL)
+            .send(body)
+            .end { (_, error) in
+                guard let completion = completion else { return }
+                
+                guard error == nil else {
+                    return completion(false, error)
+                }
+                
+                return completion(true, nil)
+            }
+    }
 }
