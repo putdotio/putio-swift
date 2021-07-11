@@ -23,13 +23,11 @@ open class PutioFile {
     }
 
     open var id: Int
-    open var parentID: Int
     open var name: String
-    open var type: FileType
-    open var typeRaw: String
-    open var isShared: Bool
-    open var isAccessed: Bool
     open var icon: String
+    open var type: FileType
+    open var parentID: Int
+    open var isShared: Bool
 
     open var size: Int64
     open var sizeReadable: String
@@ -45,6 +43,7 @@ open class PutioFile {
 
     // MARK: Folder Properties
     open var isSharedRoot: Bool = false
+    open var sortBy: String = ""
 
     // MARK: Video Properties
     open var needConvert: Bool = false
@@ -57,11 +56,10 @@ open class PutioFile {
 
     init(json: JSON) {
         self.id = json["id"].intValue
-        self.parentID = json["parent_id"].intValue
         self.name = json["name"].stringValue
-        self.isShared = json["is_shared"].boolValue
-        self.isAccessed = !(json["first_accessed_at"].stringValue.isEmpty)
         self.icon = json["icon"].stringValue
+        self.parentID = json["parent_id"].intValue
+        self.isShared = json["is_shared"].boolValue
 
         // Eg: 1024.0
         self.size = json["size"].int64Value
@@ -99,10 +97,8 @@ open class PutioFile {
             self.type = .other
         }
 
-        // Needed for analytics event (tried_to_open_unsupported_file)
-        self.typeRaw = json["file_type"].stringValue
-
         if type == .folder {
+            self.sortBy = json["sort_by"].stringValue
             self.isSharedRoot = json["folder_type"].stringValue == "SHARED_ROOT"
         }
 
