@@ -1,11 +1,3 @@
-//
-//  UserModel.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 7.11.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 import SwiftyJSON
 
@@ -16,6 +8,7 @@ open class PutioUser {
     open var hash: String
     open var features: [String: Any]
     open var downloadToken: String
+    open var trashSize: Int64
 
     public class Disk {
         open var available: Int64
@@ -68,6 +61,7 @@ open class PutioUser {
         self.features = info["features"].dictionaryObject ?? [:]
         self.downloadToken = info["download_token"].stringValue
         self.disk = Disk(json: info["disk"])
+        self.trashSize = info["trash_size"].int64Value
         self.settings = Settings(json: info["settings"])
     }
 }
