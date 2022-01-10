@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PutioAPI'
-  s.version          = '0.16.2'
+  s.version          = '0.16.3'
   s.swift_version    = '4.2'
 
   s.summary          = 'Swift client for Put.io API v2'
