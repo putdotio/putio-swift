@@ -3,18 +3,12 @@ import SwiftyJSON
 
 open class PutioTrashFile: PutioBaseFile {
     open var deletedAt: Date
-    open var expiresAt: Date
+    open var expiresOn: Date
 
     override init(json: JSON) {
-        // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
         let formatter = ISO8601DateFormatter()
-
-        self.deletedAt = formatter.date(from: json["deleted_at"].stringValue) ??
-            formatter.date(from: "\(json["deleted_at"].stringValue)+00:00")!
-
-        self.expiresAt = formatter.date(from: json["expiration_date"].stringValue) ??
-            formatter.date(from: "\(json["expiration_date"].stringValue)+00:00")!
-
+        self.deletedAt = formatter.date(from: json["deleted_at"].stringValue) ?? formatter.date(from: "\(json["deleted_at"].stringValue)+00:00")!
+        self.expiresOn = formatter.date(from: json["expiration_date"].stringValue) ?? formatter.date(from: "\(json["expiration_date"].stringValue)+00:00")!
         super.init(json: json)
     }
 }

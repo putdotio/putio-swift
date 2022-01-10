@@ -36,7 +36,7 @@ extension PutioAPI {
         let URL = "/trash/restore"
         var body: [String: Any] = [:]
 
-        if let cursor = cursor {
+        if let cursor = cursor, cursor != "" {
             body = ["cursor": cursor]
         } else {
             body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
@@ -60,7 +60,7 @@ extension PutioAPI {
         let URL = "/trash/delete"
         var body: [String: Any] = [:]
 
-        if let cursor = cursor {
+        if let cursor = cursor, cursor != "" {
             body = ["cursor": cursor]
         } else {
             body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]

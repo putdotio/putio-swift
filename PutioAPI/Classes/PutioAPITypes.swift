@@ -1,11 +1,3 @@
-//
-//  PutioAPITypes.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 11.11.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 import Alamofire
 import SwiftyJSON
