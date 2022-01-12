@@ -40,8 +40,9 @@ open class PutioUser {
         open var showOptimisticUsage: Bool
 
         init(json: JSON) {
+            let routeName = json["tunnel_route_name"].stringValue
             self.sortBy = json["sort_by"].stringValue
-            self.routeName = json["tunnel_route_name"].stringValue
+            self.routeName = routeName == "" ? "default" : routeName
             self.suggestNextVideo = json["next_episode"].boolValue
             self.rememberVideoTime = json["start_from"].boolValue
             self.historyEnabled = json["history_enabled"].boolValue
