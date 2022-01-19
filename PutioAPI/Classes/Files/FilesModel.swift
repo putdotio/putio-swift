@@ -11,12 +11,8 @@ open class PutioBaseFile {
     open var icon: String
     open var type: PutioFileType
     open var parentID: Int
-
     open var size: Int64
-    open var sizeReadable: String
-
     open var createdAt: Date
-    open var createdAtRelative: String
 
     init(json: JSON) {
         self.id = json["id"].intValue
@@ -39,18 +35,12 @@ open class PutioBaseFile {
             self.type = .other
         }
 
-        // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
-        let formatter = ISO8601DateFormatter()
-        self.createdAt = formatter.date(from: json["created_at"].stringValue) ?? formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
-
-        // Eg: 5 Days Ago
-        self.createdAtRelative = createdAt.timeAgoSinceDate()
-
         // Eg: 1024.0
         self.size = json["size"].int64Value
 
-        // Eg: 1 MB
-        self.sizeReadable = size.bytesToHumanReadable()
+        // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
+        let formatter = ISO8601DateFormatter()
+        self.createdAt = formatter.date(from: json["created_at"].stringValue) ?? formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
     }
 }
 
@@ -73,7 +63,6 @@ public struct PutioVideoMetadata {
 open class PutioFile: PutioBaseFile {
     open var isShared: Bool
     open var updatedAt: Date
-    open var updatedAtRelative: String
 
     // MARK: Folder Properties
     open var isSharedRoot: Bool = false
@@ -88,7 +77,6 @@ open class PutioFile: PutioBaseFile {
     open var hasMp4: Bool = false
 
     open var mp4Size: Int64 = 0
-    open var mp4SizeReadable: String = ""
     open var mp4StreamURL: String = ""
 
     open var streamURL: String = ""
@@ -104,9 +92,6 @@ open class PutioFile: PutioBaseFile {
             formatter.date(from: json["updated_at"].stringValue) ??
             formatter.date(from: "\(json["updated_at"].stringValue)+00:00")!
 
-        // Eg: 5 Days Ago
-        self.updatedAtRelative = updatedAt.timeAgoSinceDate()
-
         if base.type == .folder {
             self.sortBy = json["sort_by"].stringValue
             self.isSharedRoot = json["folder_type"].stringValue == "SHARED_ROOT"
@@ -121,7 +106,6 @@ open class PutioFile: PutioBaseFile {
 
             if (self.hasMp4) {
                 self.mp4Size = json["mp4_size"].int64Value
-                self.mp4SizeReadable = mp4Size.bytesToHumanReadable()
             }
 
             if json["video_metadata"].dictionary != nil {

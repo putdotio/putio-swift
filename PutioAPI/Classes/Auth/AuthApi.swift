@@ -1,11 +1,3 @@
-//
-//  Auth.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 24.10.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 
 extension PutioAPI {
@@ -22,6 +14,20 @@ extension PutioAPI {
 
                 return completion(response!["access_token"].stringValue, nil)
         }
+    }
+
+    public func getLoginURL(redirectURI: String, responseType: String = "token", state: String = "") -> URL {
+        var url = URLComponents(string: "\(PutioAPI.webAppURL)/authenticate")
+
+        url?.queryItems = [
+            URLQueryItem(name: "client_id", value: self.config.clientID),
+            URLQueryItem(name: "client_name", value: self.config.clientName),
+            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "response_type", value: responseType),
+            URLQueryItem(name: "state", value: state),
+        ]
+
+        return (url?.url!)!
     }
 
     public func getAuthCode(clientName: String, completion: @escaping (_ code: String?, _ error: Error?) -> Void) {

@@ -1,10 +1,3 @@
-//
-//  ZipCreatedEvent.swift
-//  PutioAPI
-//
-//  Created by Batuhan Aksoy on 16.09.2020.
-//
-
 import SwiftyJSON
 
 open class PutioZipCreatedEvent: PutioHistoryEvent {

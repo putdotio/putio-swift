@@ -1,11 +1,3 @@
-//
-//  IFTTTModel.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 6.06.2018.
-//  Copyright © 2018 Put.io. All rights reserved.
-//
-
 import Foundation
 
 public class PutioIFTTTEvent {

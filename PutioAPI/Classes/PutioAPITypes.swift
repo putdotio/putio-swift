@@ -9,11 +9,13 @@ public struct PutioAPIConfig {
     public var token: String
     public var clientID: String
     public var clientSecret: String
+    public var clientName: String
     public var baseURL: String
 
-    init(clientID: String, clientSecret: String, token: String = "") {
+    init(clientID: String, clientSecret: String = "", clientName: String = "", token: String = "") {
         self.clientID = clientID
         self.clientSecret = clientSecret
+        self.clientName = clientName
         self.token = token
         self.baseURL = PutioAPI.apiURL
     }

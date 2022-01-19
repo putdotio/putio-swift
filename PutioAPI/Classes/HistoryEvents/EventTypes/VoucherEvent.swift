@@ -1,10 +1,3 @@
-//
-//  VoucherEvent.swift
-//  PutioAPI
-//
-//  Created by Batuhan Aksoy on 14.09.2020.
-//
-
 import SwiftyJSON
 
 open class PutioVoucherEvent: PutioHistoryEvent {

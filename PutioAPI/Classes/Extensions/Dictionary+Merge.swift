@@ -1,11 +1,3 @@
-//
-//  Dictionary+Merge.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 2.11.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 
 extension Dictionary {

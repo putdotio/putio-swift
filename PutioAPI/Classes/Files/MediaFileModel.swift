@@ -6,7 +6,8 @@ open class PutioMp4Conversion {
         case queued = "IN_QUEUE",
             converting = "CONVERTING",
             completed = "COMPLETED",
-            error = "ERROR"
+            error = "ERROR",
+            notAvailable = "NOT_AVAILABLE"
     }
 
     open var percentDone: Float

@@ -1,11 +1,3 @@
-//
-//  SubtitlesApi.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 22.12.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 
 extension PutioAPI {

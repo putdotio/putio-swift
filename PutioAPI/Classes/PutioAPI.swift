@@ -1,11 +1,3 @@
-//
-//  PutioAPI.swift
-//  Putio
-//
-//  Created by Altay Aydemir on 26.10.2017.
-//  Copyright © 2017 Put.io. All rights reserved.
-//
-
 import Foundation
 import Alamofire
 import SwiftyJSON
@@ -18,6 +10,7 @@ public protocol PutioAPIDelegate: class {
 public final class PutioAPI {
     weak var delegate: PutioAPIDelegate?
     static let apiURL = "https://api.put.io/v2"
+    static let webAppURL = "https://app.put.io"
 
     public var config: PutioAPIConfig
     var headers: HTTPHeaders
@@ -25,7 +18,7 @@ public final class PutioAPI {
     var parameters: Parameters?
     var requestURL: String
 
-    public init(clientID: String, clientSecret: String) {
+    public init(clientID: String, clientSecret: String = "") {
         self.config = PutioAPIConfig(clientID: clientID, clientSecret: clientSecret)
         self.headers = [:]
         self.method = .get
