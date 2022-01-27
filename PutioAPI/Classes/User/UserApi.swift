@@ -55,4 +55,30 @@ extension PutioAPI {
                 return completion(true, nil)
             }
     }
+
+    public func clearData(options: [String:Bool], completion: PutioAPIBoolCompletion) {
+        let URL = "/account/clear"
+        self.post(URL)
+            .send(options)
+            .end { (_, error) in
+                guard let completion = completion else { return }
+                guard error == nil else { return completion(false, error) }
+                return completion(true, nil)
+            }
+    }
+
+    public func destroyAccount(currentPassword: String, completion: PutioAPIBoolCompletion) {
+        let URL = "/account/destroy"
+        let body = ["current_password": currentPassword]
+
+        self.post(URL)
+            .send(body)
+            .end { (_, error) in
+                guard let completion = completion else { return }
+                guard error == nil else { return completion(false, error) }
+                return completion(true, nil)
+            }
+    }
 }
+
+

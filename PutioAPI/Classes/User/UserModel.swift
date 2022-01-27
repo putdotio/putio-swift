@@ -72,3 +72,14 @@ open class PutioUser {
         self.settings = Settings(json: info["settings"])
     }
 }
+
+public var PutioClearDataOptionKeys = [
+    "files",
+    "finished_transfers",
+    "active_transfers",
+    "rss_feeds",
+    "rss_logs",
+    "history",
+    "trash",
+    "friends"
+]
