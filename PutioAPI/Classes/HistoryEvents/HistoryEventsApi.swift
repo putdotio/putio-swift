@@ -2,7 +2,7 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func getHistoryEvents(completion: @escaping (_ events: [PutioHistoryEvent]?, _ error: Error?) -> Void) {
+    public func getHistoryEvents(completion: @escaping (_ events: [PutioHistoryEvent]?, _ error: PutioAPIError?) -> Void) {
         let URL = "/events/list"
 
         self.get(URL)

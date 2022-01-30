@@ -3,7 +3,6 @@ import Alamofire
 import SwiftyJSON
 
 public typealias PutioAPIQuery = Parameters
-public typealias PutioAPIBoolCompletion = ((_ success: Bool, _ error: Error?) -> Void)?
 
 public struct PutioAPIConfig {
     public var token: String
@@ -23,39 +22,49 @@ public struct PutioAPIConfig {
 
 public struct PutioAPIRequestInfo {
     let url: String
-    let method: String
-    let headers: Parameters
+    let method: HTTPMethod
+    let headers: HTTPHeaders
     let parameters: Parameters?
 }
 
-public struct PutioAPIError {
+public struct PutioAPIError: Error {
+    public let request: PutioAPIRequestInfo
     public let id: String
-    public let status: String
     public let type: String
     public let uri: String
-    public let statusCode: Int
     public let message: String
+    public let statusCode: Int
+    public let underlyingError: Error
 
-    public let ns: NSError
+    init(requestInfo: PutioAPIRequestInfo, errorJSON: JSON, error: AFError) {
+        self.request = requestInfo
+        self.id = errorJSON["error_id"].stringValue
+        self.type = errorJSON["error_type"].stringValue
+        self.uri = errorJSON["error_uri"].stringValue
+        self.message = errorJSON["message"].stringValue
+        self.statusCode = errorJSON["status_code"].intValue
+        self.underlyingError = error
+    }
 
-    init(_ requestInfo: PutioAPIRequestInfo, _ json: JSON) {
-        self.id = json["error_id"].stringValue
-        self.status = json["status"].stringValue
-        self.type = json["error_type"].stringValue
-        self.uri = json["error_uri"].stringValue
-        self.statusCode = json["status_code"].intValue
-        self.message = json["error_message"].stringValue
+    init(requestInfo: PutioAPIRequestInfo, error: AFError) {
+        self.request = requestInfo
+        self.id = ""
+        self.type = "NETWORK_ERROR"
+        self.uri = requestInfo.url
+        self.message = error.localizedDescription
+        self.statusCode = 0
+        self.underlyingError = error
+    }
 
-        let domain = "[\(requestInfo.method): \(requestInfo.url)]"
-
-        let userInfo = [
-            NSLocalizedDescriptionKey: NSLocalizedString(message, comment: message),
-            NSLocalizedFailureReasonErrorKey: NSLocalizedString(message, comment: message),
-            "ErrorID": id,
-            "Headers": JSON(requestInfo.headers),
-            "Parameters": JSON(requestInfo.parameters ?? [:])
-        ] as [String: Any]
-
-        self.ns = NSError(domain: domain, code: statusCode, userInfo: userInfo)
+    init(requestInfo: PutioAPIRequestInfo, error: Error) {
+        self.request = requestInfo
+        self.id = ""
+        self.type = "UNKNOWN_ERROR"
+        self.uri = requestInfo.url
+        self.message = error.localizedDescription
+        self.statusCode = -1
+        self.underlyingError = error
     }
 }
+
+public typealias PutioAPIBoolCompletion = ((_ success: Bool, _ error: PutioAPIError?) -> Void)?

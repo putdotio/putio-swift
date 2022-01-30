@@ -2,7 +2,7 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func getGrants(completion: @escaping (_ routes: [PutioOAuthGrant]?, _ error: Error?) -> Void) {
+    public func getGrants(completion: @escaping (_ routes: [PutioOAuthGrant]?, _ error: PutioAPIError?) -> Void) {
         let url = "/oauth/grants"
 
         self.get(url)
@@ -32,7 +32,7 @@ extension PutioAPI {
         }
     }
 
-    public func linkDevice(code: String, completion: @escaping (_ success: PutioOAuthGrant?, _ error: Error?) -> Void) {
+    public func linkDevice(code: String, completion: @escaping (_ success: PutioOAuthGrant?, _ error: PutioAPIError?) -> Void) {
         let URL = "/oauth2/oob/code"
         let body = ["code": code]
 

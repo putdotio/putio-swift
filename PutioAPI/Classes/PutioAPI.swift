@@ -3,20 +3,21 @@ import Alamofire
 import SwiftyJSON
 
 public protocol PutioAPIDelegate: class {
-    func onPutioAPIApiError(error: Error)
-    func onPutioAPIParseError(error: Error)
+    func onPutioAPIApiError(error: PutioAPIError)
 }
 
 public final class PutioAPI {
     weak var delegate: PutioAPIDelegate?
+
     static let apiURL = "https://api.put.io/v2"
     static let webAppURL = "https://app.put.io"
 
     public var config: PutioAPIConfig
-    var headers: HTTPHeaders
-    var method: HTTPMethod
-    var parameters: Parameters?
-    var requestURL: String
+    
+    private var requestURL: String
+    private var method: HTTPMethod
+    private var headers: HTTPHeaders
+    private var parameters: Parameters?
 
     public init(clientID: String, clientSecret: String = "") {
         self.config = PutioAPIConfig(clientID: clientID, clientSecret: clientSecret)
@@ -42,10 +43,7 @@ public final class PutioAPI {
     }
 
     func authenticate(username: String, password: String) -> PutioAPI {
-        if let authorizationHeader = Request.authorizationHeader(user: username, password: password) {
-            headers[authorizationHeader.key] = authorizationHeader.value
-        }
-
+        headers = [.authorization(username: username, password: password)]
         return self
     }
 
@@ -91,50 +89,52 @@ public final class PutioAPI {
         return self
     }
 
-    func end(_ completion: @escaping (JSON?, Error?) -> Void) {
+    func end(_ completion: @escaping (JSON?, PutioAPIError?) -> Void) {
         if config.token != "" {
             headers["Authorization"] = "token \(config.token)"
         }
 
-        let requestURL = self.requestURL
-        let method = self.method
-        let parameters = self.parameters
-        let headers = self.headers
-        
+        let requestInfo = PutioAPIRequestInfo(
+            url: self.requestURL,
+            method: self.method,
+            headers: self.headers,
+            parameters: self.parameters
+        )
+
         self.reset()
 
-        Alamofire
+        AF
             .request(
-                requestURL,
-                method: method,
-                parameters: parameters,
+                requestInfo.url,
+                method: requestInfo.method,
+                parameters: requestInfo.parameters,
                 encoding: JSONEncoding.default,
-                headers: headers
-            )
+                headers: requestInfo.headers
+            ) { $0.timeoutInterval = 10 }
             .validate()
-            .responseJSON { (response) in
-                switch response.result {
-                case .success:
-                    let json = try! JSON(data: response.data!)
-                    return completion(json, nil)
-                case .failure(let responseError):
-                    do {
-                        let json = try JSON(data: response.data!)
-                        let requestInfo = PutioAPIRequestInfo(
-                            url: requestURL,
-                            method: method.rawValue,
-                            headers: headers,
-                            parameters: parameters
-                        )
-                        let error = PutioAPIError(requestInfo, json).ns
-                        self.delegate?.onPutioAPIApiError(error: error)
-                        return completion(nil, error)
-                    } catch {
-                        self.delegate?.onPutioAPIApiError(error: responseError)
-                        self.delegate?.onPutioAPIParseError(error: error)
-                        return completion(nil, responseError)
+            .responseData(completionHandler: { dataResponse in
+                do {
+                    switch dataResponse.result {
+                    case .success(let data):
+                        let json = try JSON(data: data)
+                        return completion(json, nil)
+
+                    case .failure(let error):
+                        if let data = dataResponse.data {
+                            let apiError = PutioAPIError(requestInfo: requestInfo, errorJSON: try JSON(data: data), error: error)
+                            self.delegate?.onPutioAPIApiError(error: apiError)
+                            return completion(nil, apiError)
+                        }
+
+                        let apiError = PutioAPIError(requestInfo: requestInfo, error: error)
+                        self.delegate?.onPutioAPIApiError(error: apiError)
+                        return completion(nil, apiError)
                     }
+                } catch {
+                    let apiError = PutioAPIError(requestInfo: requestInfo, error: error)
+                    self.delegate?.onPutioAPIApiError(error: apiError)
+                    return completion(nil, apiError)
                 }
+            })
         }
-    }
 }

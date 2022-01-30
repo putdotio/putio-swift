@@ -20,17 +20,30 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="fo1-SC-Los">
-                                <rect key="frame" x="40" y="110" width="295" height="85"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="fo1-SC-Los">
+                                <rect key="frame" x="40" y="130" width="295" height="116"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="CLIENT ID" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhF-d2-BQF">
-                                        <rect key="frame" x="0.0" y="0.0" width="295" height="34"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Client ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TEg-bU-onP">
+                                        <rect key="frame" x="0.0" y="0.0" width="295" height="16"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="3920" borderStyle="roundedRect" placeholder="CLIENT ID" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhF-d2-BQF">
+                                        <rect key="frame" x="0.0" y="21" width="295" height="34"/>
                                         <color key="backgroundColor" systemColor="systemGray6Color"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gpS-0M-J90">
+                                        <rect key="frame" x="0.0" y="60" width="295" height="20"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="3RC-na-OVa"/>
+                                        </constraints>
+                                    </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VMn-ZW-nM7">
-                                        <rect key="frame" x="0.0" y="54" width="295" height="31"/>
+                                        <rect key="frame" x="0.0" y="85" width="295" height="31"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="START"/>
                                         <connections>
@@ -50,7 +63,7 @@
                         <constraints>
                             <constraint firstItem="fo1-SC-Los" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="40" id="RVJ-OI-rxq"/>
                             <constraint firstItem="to9-wh-nVQ" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="40" id="l9Z-e1-NXg"/>
-                            <constraint firstItem="fo1-SC-Los" firstAttribute="top" secondItem="to9-wh-nVQ" secondAttribute="bottom" constant="40" id="mJx-g1-wRs"/>
+                            <constraint firstItem="fo1-SC-Los" firstAttribute="top" secondItem="to9-wh-nVQ" secondAttribute="bottom" constant="60" id="mJx-g1-wRs"/>
                             <constraint firstAttribute="trailing" secondItem="fo1-SC-Los" secondAttribute="trailing" constant="40" id="vHN-lR-p2m"/>
                             <constraint firstItem="to9-wh-nVQ" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="y1h-yo-e9M"/>
                         </constraints>
@@ -66,6 +79,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemGray6Color">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

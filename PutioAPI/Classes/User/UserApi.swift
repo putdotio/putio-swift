@@ -2,7 +2,7 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func getUserInfo(query: PutioAPIQuery, completion: @escaping (_ user: PutioUser?, _ error: Error?) -> Void) {
+    public func getUserInfo(query: PutioAPIQuery, completion: @escaping (_ user: PutioUser?, _ error: PutioAPIError?) -> Void) {
         let URL = "/account/info"
 
         self.get(URL)
@@ -16,7 +16,7 @@ extension PutioAPI {
         }
     }
 
-    public func getSettings(completion: @escaping (_ settings: PutioUser.Settings?, _ error: Error?) -> Void) {
+    public func getSettings(completion: @escaping (_ settings: PutioUser.Settings?, _ error: PutioAPIError?) -> Void) {
         let URL = "/account/settings"
 
         self.get(URL)

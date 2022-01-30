@@ -24,6 +24,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
   s.source_files = 'PutioAPI/Classes/**/*'
 
-  s.dependency 'Alamofire', '~> 4.9'
+  s.dependency 'Alamofire', '~> 5.5.0'
   s.dependency 'SwiftyJSON', '~> 5.0'
 end

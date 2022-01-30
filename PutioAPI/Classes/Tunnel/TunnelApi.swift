@@ -2,7 +2,7 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func getTunnelRoutes(completion: @escaping (_ routes: [PutioTunnel]?, _ error: Error?) -> Void) {
+    public func getTunnelRoutes(completion: @escaping (_ routes: [PutioTunnel]?, _ error: PutioAPIError?) -> Void) {
         let URL = "/tunnel/routes"
 
         self.get(URL)

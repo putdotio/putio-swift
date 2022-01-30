@@ -17,7 +17,7 @@ extension PutioAPI {
         }
     }
 
-    public func getMp4ConversionStatus(fileID: Int, completion: @escaping (_ status: PutioMp4Conversion?, _ error: Error?) -> Void) {
+    public func getMp4ConversionStatus(fileID: Int, completion: @escaping (_ status: PutioMp4Conversion?, _ error: PutioAPIError?) -> Void) {
         let URL = "/files/\(fileID)/mp4"
 
         self.get(URL)
@@ -30,7 +30,7 @@ extension PutioAPI {
         }
     }
 
-    public func getStartFrom(fileID: Int, completion: @escaping (_ time: Int?, _ error: Error?) -> Void) {
+    public func getStartFrom(fileID: Int, completion: @escaping (_ time: Int?, _ error: PutioAPIError?) -> Void) {
         let URL = "/files/\(fileID)/start-from"
 
         self.get(URL)

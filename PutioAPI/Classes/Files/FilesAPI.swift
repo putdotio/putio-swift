@@ -2,7 +2,7 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func getFiles(parentID: Int, query: PutioAPIQuery = [:], completion: @escaping (_ parent: PutioFile?, _ children: [PutioFile]?, _ error: Error?) -> Void) {
+    public func getFiles(parentID: Int, query: PutioAPIQuery = [:], completion: @escaping (_ parent: PutioFile?, _ children: [PutioFile]?, _ error: PutioAPIError?) -> Void) {
         let URL = "/files/list"
         let query = query.merge(with: [
             "parent_id": parentID,
@@ -26,7 +26,7 @@ extension PutioAPI {
         }
     }
 
-    public func getFile(fileID: Int, query: PutioAPIQuery = [:], completion: @escaping (_ file: PutioFile?, _ error: Error?) -> Void) {
+    public func getFile(fileID: Int, query: PutioAPIQuery = [:], completion: @escaping (_ file: PutioFile?, _ error: PutioAPIError?) -> Void) {
         let URL = "/files/\(fileID)"
         let query = query.merge(with: [
             "mp4_size": 1,
@@ -148,7 +148,7 @@ extension PutioAPI {
         }
     }
 
-    public func findNextFile(fileID: Int, fileType: PutioNextFileType, completion: @escaping (_ file: PutioNextFile?, _ error: Error?) -> Void) {
+    public func findNextFile(fileID: Int, fileType: PutioNextFileType, completion: @escaping (_ file: PutioNextFile?, _ error: PutioAPIError?) -> Void) {
         let URL = "/files/\(fileID)/next-file"
         let query = ["file_type": fileType.rawValue]
 

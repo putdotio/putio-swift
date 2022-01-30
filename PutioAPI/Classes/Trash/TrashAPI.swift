@@ -2,7 +2,7 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func listTrash(perPage: Int = 50, completion: @escaping (_ result: PutioListTrashResponse?, _ error: Error? ) -> Void) {
+    public func listTrash(perPage: Int = 50, completion: @escaping (_ result: PutioListTrashResponse?, _ error: PutioAPIError? ) -> Void) {
         let URL = "/trash/list"
         let query = ["per_page": perPage] as [String : Any]
 
@@ -17,7 +17,7 @@ extension PutioAPI {
             }
     }
 
-    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (_ result: PutioListTrashResponse?, _ error: Error? ) -> Void) {
+    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (_ result: PutioListTrashResponse?, _ error: PutioAPIError? ) -> Void) {
         let URL = "/trash/list/continue"
         let query = ["cursor": cursor, "per_page": perPage] as [String : Any]
 
