@@ -11,7 +11,7 @@ public struct PutioAPIConfig {
     public var clientName: String
     public var baseURL: String
 
-    init(clientID: String, clientSecret: String = "", clientName: String = "", token: String = "") {
+    public init(clientID: String, clientSecret: String = "", clientName: String = "", token: String = "") {
         self.clientID = clientID
         self.clientSecret = clientSecret
         self.clientName = clientName

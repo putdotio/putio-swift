@@ -24,10 +24,11 @@ class ViewController: UIViewController {
     }
 
     func createAPI(clientID: String) {
-        api = PutioAPI(clientID: clientID)
+        api = PutioAPI(config: PutioAPIConfig(clientID: clientID))
         startAuthFlow()
     }
 
+    // https://developer.apple.com/documentation/authenticationservices/authenticating_a_user_through_a_web_service
     func startAuthFlow() {
         guard let api = api else { return }
 

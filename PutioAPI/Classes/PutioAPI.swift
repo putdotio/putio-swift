@@ -19,8 +19,8 @@ public final class PutioAPI {
     private var headers: HTTPHeaders
     private var parameters: Parameters?
 
-    public init(clientID: String, clientSecret: String = "") {
-        self.config = PutioAPIConfig(clientID: clientID, clientSecret: clientSecret)
+    public init(config: PutioAPIConfig) {
+        self.config = config
         self.headers = [:]
         self.method = .get
         self.requestURL = self.config.baseURL
