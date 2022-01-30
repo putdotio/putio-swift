@@ -70,6 +70,7 @@ class ViewController: UIViewController {
 
     func fetchAccountInfo(token: String) {
         api?.setToken(token: token)
+
         api?.getAccountInfo(completion: { result in
             switch result {
             case .success(let account):
@@ -89,7 +90,17 @@ class ViewController: UIViewController {
 
     func fetchAccountInfoSuccess(account: PutioAccount) {
         let alertController = UIAlertController(title: "API: Fetch Account Info Success", message: account.username, preferredStyle: .alert)
-        let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: { _ in
+            self.api?.getFiles(parentID: 0, completion: { result in
+                switch result {
+                case .success(let data):
+                    return print("Files result: \(data.children.count)")
+
+                case .failure(let error):
+                    return print("Files error: \(error.type)")
+                }
+            })
+        })
         alertController.addAction(closeButton)
         present(alertController, animated: true, completion: nil)
     }

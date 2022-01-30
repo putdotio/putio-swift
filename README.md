@@ -8,12 +8,15 @@ Swift wrapper for [Put.io API v2](https://api.put.io). Used in [official Put.io 
 
 ## Installation
 
-PutioAPI is available through [CocoaPods](https://cocoapods.org/pods/PutioAPI). To install
-it, simply add the following line to your Podfile:
+`PutioAPI` is available through [CocoaPods](https://cocoapods.org/pods/PutioAPI. To install, simply add the following line to your Podfile:
 
 ```ruby
 pod 'PutioAPI'
 ```
+
+## Usage
+
+See the [Example Project](./Example/PutioAPI/ViewController.swift) for a simple auth -> API call flow.
 
 ## Development
 

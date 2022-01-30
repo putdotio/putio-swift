@@ -43,12 +43,8 @@ public final class PutioAPI {
     }
 
     func authenticate(username: String, password: String) -> PutioAPI {
-        headers = [.authorization(username: username, password: password)]
-        return self
-    }
-
-    func set(key: String, value: String) -> PutioAPI {
-        headers[key] = value
+        let authorizationHeader = HTTPHeader.authorization(username: username, password: password)
+        headers.add(authorizationHeader)
         return self
     }
 
@@ -90,8 +86,13 @@ public final class PutioAPI {
     }
 
     func end(_ completion: @escaping (Result<JSON, PutioAPIError>) -> Void) {
+        // Header: Correlation ID
+        headers.add(name: "X-Putio-Correlation-Id", value: UUID().uuidString)
+
+        // Header: Authorization
         if config.token != "" {
-            headers["Authorization"] = "token \(config.token)"
+            let authorizationHeader = HTTPHeader.authorization("token \(config.token)")
+            headers.add(authorizationHeader)
         }
 
         let requestInfo = PutioAPIRequestInfo(
@@ -101,8 +102,10 @@ public final class PutioAPI {
             parameters: self.parameters
         )
 
+        // Reset class properties for the next request -- would be better to get rid of this for immutability
         self.reset()
 
+        //
         AF
             .request(
                 requestInfo.url,
@@ -110,7 +113,7 @@ public final class PutioAPI {
                 parameters: requestInfo.parameters,
                 encoding: JSONEncoding.default,
                 headers: requestInfo.headers
-            ) { $0.timeoutInterval = 10 }
+            ) { $0.timeoutInterval = self.config.timeoutInterval }
             .validate()
             .responseData(completionHandler: { dataResponse in
                 do {
