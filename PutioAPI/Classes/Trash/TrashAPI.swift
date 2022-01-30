@@ -2,37 +2,39 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func listTrash(perPage: Int = 50, completion: @escaping (_ result: PutioListTrashResponse?, _ error: PutioAPIError? ) -> Void) {
+    public func listTrash(perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioAPIError>) -> Void) {
         let URL = "/trash/list"
         let query = ["per_page": perPage] as [String : Any]
 
         self.get(URL)
             .query(query)
-            .end { (json, error) in
-                guard let json = json, error == nil else {
-                    return completion(nil, error)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(PutioListTrashResponse(json: json)))
+                case .failure(let error):
+                    return completion(.failure(error))
                 }
-
-                return completion(PutioListTrashResponse(json: json), nil)
-            }
+            })
     }
 
-    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (_ result: PutioListTrashResponse?, _ error: PutioAPIError? ) -> Void) {
+    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioAPIError>) -> Void) {
         let URL = "/trash/list/continue"
         let query = ["cursor": cursor, "per_page": perPage] as [String : Any]
 
         self.get(URL)
             .query(query)
-            .end { (json, error) in
-                guard let json = json, error == nil else {
-                    return completion(nil, error)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(PutioListTrashResponse(json: json)))
+                case .failure(let error):
+                    return completion(.failure(error))
                 }
-
-                return completion(PutioListTrashResponse(json: json), nil)
-            }
+            })
     }
 
-    public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: PutioAPIBoolCompletion) {
+    public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioAPIBoolCompletion) {
         let URL = "/trash/restore"
         var body: [String: Any] = [:]
 
@@ -44,19 +46,18 @@ extension PutioAPI {
 
         self.post(URL)
             .send(body)
-            .end { (_, error) in
-                guard let completion = completion else { return }
-
-                guard error == nil else {
-                    return completion(false, error)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(json))
+                case .failure(let error):
+                    return completion(.failure(error))
                 }
-
-                return completion(true, nil)
-        }
+            })
 
     }
 
-    public func deleteTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: PutioAPIBoolCompletion) {
+    public func deleteTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioAPIBoolCompletion) {
         let URL = "/trash/delete"
         var body: [String: Any] = [:]
 
@@ -68,29 +69,27 @@ extension PutioAPI {
 
         self.post(URL)
             .send(body)
-            .end { (_, error) in
-                guard let completion = completion else { return }
-
-                guard error == nil else {
-                    return completion(false, error)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(json))
+                case .failure(let error):
+                    return completion(.failure(error))
                 }
-
-                return completion(true, nil)
-        }
+            })
     }
 
-    public func emptyTrash(completion: PutioAPIBoolCompletion) {
+    public func emptyTrash(completion: @escaping PutioAPIBoolCompletion) {
         let URL = "/trash/empty"
 
         self.post(URL)
-            .end { (_, error) in
-                guard let completion = completion else { return }
-
-                guard error == nil else {
-                    return completion(false, error)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(json))
+                case .failure(let error):
+                    return completion(.failure(error))
                 }
-
-                return completion(true, nil)
-        }
+            })
     }
 }

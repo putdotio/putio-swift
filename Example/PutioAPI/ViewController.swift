@@ -69,12 +69,13 @@ class ViewController: UIViewController {
 
     func fetchAccountInfo(token: String) {
         api?.setToken(token: token)
-        api?.getUserInfo(query: [:], completion: { user, error in
-            guard let user = user, error == nil else {
-                return self.fetchAccountInfoFailure(error: error!)
+        api?.getAccountInfo(completion: { result in
+            switch result {
+            case .success(let account):
+                return self.fetchAccountInfoSuccess(account: account)
+            case .failure(let error):
+                return self.fetchAccountInfoFailure(error: error)
             }
-
-            return self.fetchAccountInfoSuccess(user: user)
         })
     }
 
@@ -85,8 +86,8 @@ class ViewController: UIViewController {
         present(alertController, animated: true, completion: nil)
     }
 
-    func fetchAccountInfoSuccess(user: PutioUser) {
-        let alertController = UIAlertController(title: "API: Fetch Account Info Success", message: user.username, preferredStyle: .alert)
+    func fetchAccountInfoSuccess(account: PutioAccount) {
+        let alertController = UIAlertController(title: "API: Fetch Account Info Success", message: account.username, preferredStyle: .alert)
         let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(closeButton)
         present(alertController, animated: true, completion: nil)

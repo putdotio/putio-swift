@@ -2,10 +2,40 @@ import Foundation
 import SwiftyJSON
 
 extension PutioAPI {
-    public func startMp4Conversion(fileID: Int, completion: @escaping PutioAPIBoolCompletion) {
-        let URL = "/files/\(fileID)/mp4"
+    public func getAccountInfo(query: PutioAPIQuery = [:], completion: @escaping (Result<PutioAccount, PutioAPIError>) -> Void) {
+        let URL = "/account/info"
+
+        self.get(URL)
+            .query(query)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(PutioAccount(json: json)))
+                case .failure(let error):
+                    return completion(.failure(error))
+                }
+            })
+    }
+
+    public func getAccountSettings(completion: @escaping (Result<PutioAccount.Settings, PutioAPIError>) -> Void) {
+        let URL = "/account/settings"
+
+        self.get(URL)
+            .end({ result in
+                switch result {
+                case .success(let json):
+                    return completion(.success(PutioAccount.Settings(json: json)))
+                case .failure(let error):
+                    return completion(.failure(error))
+                }
+            })
+    }
+
+    public func saveAccountSettings(body: [String: Any], completion: @escaping PutioAPIBoolCompletion) {
+        let URL = "/account/settings"
 
         self.post(URL)
+            .send(body)
             .end({ result in
                 switch result {
                 case .success(let json):
@@ -16,39 +46,11 @@ extension PutioAPI {
             })
     }
 
-    public func getMp4ConversionStatus(fileID: Int, completion: @escaping (Result<PutioMp4Conversion, PutioAPIError>) -> Void) {
-        let URL = "/files/\(fileID)/mp4"
-
-        self.get(URL)
-            .end({ result in
-                switch result {
-                case .success(let json):
-                    return completion(.success(PutioMp4Conversion(json: json)))
-                case .failure(let error):
-                    return completion(.failure(error))
-                }
-            })
-    }
-
-    public func getStartFrom(fileID: Int, completion: @escaping (Result<Int, PutioAPIError>) -> Void) {
-        let URL = "/files/\(fileID)/start-from"
-
-        self.get(URL)
-            .end({ result in
-                switch result {
-                case .success(let json):
-                    return completion(.success(json["start_from"].intValue))
-                case .failure(let error):
-                    return completion(.failure(error))
-                }
-            })
-    }
-
-    public func setStartFrom(fileID: Int, time: Int, completion: @escaping PutioAPIBoolCompletion) {
-        let URL = "/files/\(fileID)/start-from/set"
+    public func clearAccountData(options: [String: Bool], completion: @escaping PutioAPIBoolCompletion) {
+        let URL = "/account/clear"
 
         self.post(URL)
-            .send(["time": time])
+            .send(options)
             .end({ result in
                 switch result {
                 case .success(let json):
@@ -59,10 +61,12 @@ extension PutioAPI {
             })
     }
 
-    public func resetStartFrom(fileID: Int, completion: @escaping PutioAPIBoolCompletion) {
-        let URL = "/files/\(fileID)/start-from/delete"
+    public func destroyAccount(currentPassword: String, completion: @escaping PutioAPIBoolCompletion) {
+        let URL = "/account/destroy"
+        let body = ["current_password": currentPassword]
 
-        self.get(URL)
+        self.post(URL)
+            .send(body)
             .end({ result in
                 switch result {
                 case .success(let json):
@@ -73,3 +77,5 @@ extension PutioAPI {
             })
     }
 }
+
+

@@ -89,7 +89,7 @@ public final class PutioAPI {
         return self
     }
 
-    func end(_ completion: @escaping (JSON?, PutioAPIError?) -> Void) {
+    func end(_ completion: @escaping (Result<JSON, PutioAPIError>) -> Void) {
         if config.token != "" {
             headers["Authorization"] = "token \(config.token)"
         }
@@ -117,23 +117,23 @@ public final class PutioAPI {
                     switch dataResponse.result {
                     case .success(let data):
                         let json = try JSON(data: data)
-                        return completion(json, nil)
+                        return completion(.success(json))
 
                     case .failure(let error):
                         if let data = dataResponse.data {
                             let apiError = PutioAPIError(requestInfo: requestInfo, errorJSON: try JSON(data: data), error: error)
                             self.delegate?.onPutioAPIApiError(error: apiError)
-                            return completion(nil, apiError)
+                            return completion(.failure(apiError))
                         }
 
                         let apiError = PutioAPIError(requestInfo: requestInfo, error: error)
                         self.delegate?.onPutioAPIApiError(error: apiError)
-                        return completion(nil, apiError)
+                        return completion(.failure(apiError))
                     }
                 } catch {
                     let apiError = PutioAPIError(requestInfo: requestInfo, error: error)
                     self.delegate?.onPutioAPIApiError(error: apiError)
-                    return completion(nil, apiError)
+                    return completion(.failure(apiError))
                 }
             })
         }

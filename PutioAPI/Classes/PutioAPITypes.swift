@@ -67,4 +67,4 @@ public struct PutioAPIError: Error {
     }
 }
 
-public typealias PutioAPIBoolCompletion = ((_ success: Bool, _ error: PutioAPIError?) -> Void)?
+public typealias PutioAPIBoolCompletion = (Result<JSON, PutioAPIError>) -> Void

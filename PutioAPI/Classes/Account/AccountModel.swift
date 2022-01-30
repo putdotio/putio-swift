@@ -1,7 +1,7 @@
 import Foundation
 import SwiftyJSON
 
-open class PutioUser {
+open class PutioAccount {
     open var id: Int
     open var username: String
     open var mail: String
