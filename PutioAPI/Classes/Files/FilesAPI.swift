@@ -38,7 +38,7 @@ extension PutioAPI {
             .end({ result in
                 switch result {
                 case .success(let json):
-                    return completion(.success(PutioFile(json: json)))
+                    return completion(.success(PutioFile(json: json["file"])))
                 case .failure(let error):
                     return completion(.failure(error))
                 }
@@ -151,7 +151,7 @@ extension PutioAPI {
             .end({ result in
                 switch result {
                 case .success(let json):
-                    return completion(.success(PutioNextFile(json: json, type: fileType)))
+                    return completion(.success(PutioNextFile(json: json["next_file"], type: fileType)))
                 case .failure(let error):
                     return completion(.failure(error))
                 }

@@ -56,20 +56,19 @@ open class PutioAccount {
     open var settings: Settings
 
     init(json: JSON) {
-        let info: JSON = json["info"]
-        self.id = info["user_id"].intValue
-        self.username = info["username"].string ?? info["mail"].stringValue
-        self.mail = info["mail"].stringValue
-        self.avatarURL = info["avatar_url"].stringValue
-        self.hash = info["user_hash"].stringValue
-        self.features = info["features"].dictionaryObject ?? [:]
-        self.downloadToken = info["download_token"].stringValue
-        self.trashSize = info["trash_size"].int64Value
-        self.accountActive = info["account_active"].boolValue
-        self.filesWillBeDeletedAt = info["files_will_be_deleted_at"].stringValue
-        self.passwordLastChangedAt = info["password_last_changed_at"].stringValue
-        self.disk = Disk(json: info["disk"])
-        self.settings = Settings(json: info["settings"])
+        self.id = json["user_id"].intValue
+        self.username = json["username"].string ?? json["mail"].stringValue
+        self.mail = json["mail"].stringValue
+        self.avatarURL = json["avatar_url"].stringValue
+        self.hash = json["user_hash"].stringValue
+        self.features = json["features"].dictionaryObject ?? [:]
+        self.downloadToken = json["download_token"].stringValue
+        self.trashSize = json["trash_size"].int64Value
+        self.accountActive = json["account_active"].boolValue
+        self.filesWillBeDeletedAt = json["files_will_be_deleted_at"].stringValue
+        self.passwordLastChangedAt = json["password_last_changed_at"].stringValue
+        self.disk = Disk(json: json["disk"])
+        self.settings = Settings(json: json["settings"])
     }
 }
 

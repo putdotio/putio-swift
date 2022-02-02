@@ -10,7 +10,7 @@ extension PutioAPI {
             .end({ result in
                 switch result {
                 case .success(let json):
-                    return completion(.success(PutioAccount(json: json)))
+                    return completion(.success(PutioAccount(json: json["info"])))
                 case .failure(let error):
                     return completion(.failure(error))
                 }
@@ -24,7 +24,7 @@ extension PutioAPI {
             .end({ result in
                 switch result {
                 case .success(let json):
-                    return completion(.success(PutioAccount.Settings(json: json)))
+                    return completion(.success(PutioAccount.Settings(json: json["settings"])))
                 case .failure(let error):
                     return completion(.failure(error))
                 }
