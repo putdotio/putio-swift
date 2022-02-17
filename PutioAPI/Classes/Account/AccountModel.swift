@@ -7,7 +7,7 @@ open class PutioAccount {
     open var mail: String
     open var avatarURL: String
     open var hash: String
-    open var features: [String: Any]
+    open var features: [String: Bool]
     open var downloadToken: String
     open var trashSize: Int64
     open var accountActive: Bool
@@ -57,11 +57,11 @@ open class PutioAccount {
 
     init(json: JSON) {
         self.id = json["user_id"].intValue
-        self.username = json["username"].string ?? json["mail"].stringValue
+        self.username = json["username"].stringValue
         self.mail = json["mail"].stringValue
         self.avatarURL = json["avatar_url"].stringValue
         self.hash = json["user_hash"].stringValue
-        self.features = json["features"].dictionaryObject ?? [:]
+        self.features = json["features"].dictionaryObject as? [String: Bool] ?? [:]
         self.downloadToken = json["download_token"].stringValue
         self.trashSize = json["trash_size"].int64Value
         self.accountActive = json["account_active"].boolValue

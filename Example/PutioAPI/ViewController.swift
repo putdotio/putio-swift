@@ -33,9 +33,9 @@ class ViewController: UIViewController {
         guard let api = api else { return }
 
         let scheme = "putioswift"
-        let loginURL = api.getLoginURL(redirectURI: "\(scheme)://auth")
+        let url = api.getAuthURL(redirectURI: "\(scheme)://auth")
 
-        session = ASWebAuthenticationSession(url: loginURL, callbackURLScheme: scheme) { callbackURL, error in
+        session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { callbackURL, error in
             guard error == nil, let callbackURL = callbackURL else {
                 return self.handleAuthCallbackFailure(error: error!)
 

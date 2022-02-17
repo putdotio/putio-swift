@@ -1,7 +1,7 @@
 import Foundation
 import SwiftyJSON
 
-open class PutioTunnel {
+open class PutioRoute {
     open var name: String
     open var description: String
     open var hosts: [String]

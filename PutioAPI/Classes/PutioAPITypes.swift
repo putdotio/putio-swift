@@ -2,10 +2,8 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-public typealias PutioAPIQuery = Parameters
-
 public struct PutioAPIConfig {
-    public var baseURL: String
+    public let baseURL: String
     public var token: String
     public var clientID: String
     public var clientSecret: String
@@ -22,11 +20,46 @@ public struct PutioAPIConfig {
     }
 }
 
-public struct PutioAPIRequestInfo {
+public struct PutioAPIRequestConfig {
     let url: String
     let method: HTTPMethod
     let headers: HTTPHeaders
-    let parameters: Parameters?
+    let query: Parameters
+    let body: Parameters?
+
+    init(apiConfig: PutioAPIConfig, url: String, method: HTTPMethod, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:]) {
+        if (query.isEmpty) {
+            self.url = "\(apiConfig.baseURL)\(url)"
+        } else {
+            let encodedURLRequest = try! URLEncoding.queryString.encode(URLRequest(url: URL(string: url)!), with: query)
+            self.url = "\(apiConfig.baseURL)\((encodedURLRequest.url?.absoluteString)!)"
+        }
+
+        self.method = method
+
+        // Header: Correlation ID
+        var enhancedHeaders = headers
+        enhancedHeaders.add(name: "X-Putio-Correlation-Id", value: UUID().uuidString)
+
+        // Header: Authorization
+        if enhancedHeaders.value(for: "authorization") == nil {
+            if apiConfig.token != "" {
+                let authorizationHeader = HTTPHeader.authorization("token \(apiConfig.token)")
+                enhancedHeaders.add(authorizationHeader)
+            }
+        }
+
+        self.headers = enhancedHeaders
+
+        self.query = query
+
+        switch method {
+        case .post, .put, .patch:
+            self.body = body
+        default:
+            self.body = nil
+        }
+    }
 }
 
 public enum PutioAPIErrorType {
@@ -35,28 +68,32 @@ public enum PutioAPIErrorType {
     case unknownError
 }
 
+public struct PutiopAPIErrorRequestInformation {
+    let config: PutioAPIRequestConfig
+}
+
 public struct PutioAPIError: Error {
-    public let requestInfo: PutioAPIRequestInfo
+    public let request: PutiopAPIErrorRequestInformation
     public let type: PutioAPIErrorType
     public let message: String
     public let underlyingError: Error
 
-    init(requestInfo: PutioAPIRequestInfo, errorJSON: JSON, error: AFError) {
-        self.requestInfo = requestInfo
+    init(request: PutiopAPIErrorRequestInformation, errorJSON: JSON, error: AFError) {
+        self.request = request
         self.type = .httpError(statusCode: errorJSON["status_code"].intValue, errorType: errorJSON["error_type"].stringValue)
         self.message = errorJSON["message"].stringValue
         self.underlyingError = error
     }
 
-    init(requestInfo: PutioAPIRequestInfo, error: AFError) {
-        self.requestInfo = requestInfo
+    init(request: PutiopAPIErrorRequestInformation, error: AFError) {
+        self.request = request
         self.type = .networkError
         self.message = error.localizedDescription
         self.underlyingError = error
     }
 
-    init(requestInfo: PutioAPIRequestInfo, error: Error) {
-        self.requestInfo = requestInfo
+    init(request: PutiopAPIErrorRequestInformation, error: Error) {
+        self.request = request
         self.type = .unknownError
         self.message = error.localizedDescription
         self.underlyingError = error
