@@ -75,8 +75,32 @@ extension PutioAPI {
         }
     }
 
-    public func verifyTOTP(totp: String, completion: @escaping (Result<PutioVerifyTOTPResult, PutioAPIError>) -> Void) {
-        self.post("/two_factor/verify/totp", body: ["totp": totp]) { result in
+    public func logout(completion: @escaping PutioAPIBoolCompletion) {
+        self.post("/oauth/grants/logout") { result in
+            switch result {
+            case .success(let json):
+                return completion(.success(json))
+
+            case .failure(let error):
+                return completion(.failure(error))
+            }
+        }
+    }
+
+    // MARK: two-factor
+    public func generateTOTP(completion: @escaping (Result<PutioGenerateTOTPResult, PutioAPIError>) -> Void) {
+        self.post("/two_factor/generate/totp") { result in
+            switch result {
+            case .success(let json):
+                return completion(.success(PutioGenerateTOTPResult(json: json)))
+            case .failure(let error):
+                return completion(.failure(error))
+            }
+        }
+    }
+
+    public func verifyTOTP(code: String, completion: @escaping (Result<PutioVerifyTOTPResult, PutioAPIError>) -> Void) {
+        self.post("/two_factor/verify/totp", body: ["code": code]) { result in
             switch result {
             case .success(let json):
                 return completion(.success(PutioVerifyTOTPResult(json: json)))
@@ -87,12 +111,22 @@ extension PutioAPI {
         }
     }
 
-    public func logout(completion: @escaping PutioAPIBoolCompletion) {
-        self.post("/oauth/grants/logout") { result in
+    public func getRecoveryCodes(completion: @escaping (Result<PutioTwoFactorRecoveryCodes, PutioAPIError>) -> Void) {
+        self.get("/two_factor/recovery_codes") { result in
             switch result {
             case .success(let json):
-                return completion(.success(json))
+                return completion(.success(PutioTwoFactorRecoveryCodes(json: json["recovery_codes"])))
+            case .failure(let error):
+                return completion(.failure(error))
+            }
+        }
+    }
 
+    public func regenerateRecoveryCodes(completion: @escaping (Result<PutioTwoFactorRecoveryCodes, PutioAPIError>) -> Void) {
+        self.post("/two_factor/recovery_codes/refresh") { result in
+            switch result {
+            case .success(let json):
+                return completion(.success(PutioTwoFactorRecoveryCodes(json: json["recovery_codes"])))
             case .failure(let error):
                 return completion(.failure(error))
             }
