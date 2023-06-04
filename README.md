@@ -1,14 +1,23 @@
-# PutioAPI
+<div align="center">
+  <p>
+    <img src="https://static.put.io/avatar/putio-boncuk.png" width="72">
+  </p>
 
-[![Build Status](https://travis-ci.org/putdotio/putio.swift.svg?branch=master)](https://travis-ci.org/putdotio/putio.swift)
-![Cocoapods](https://img.shields.io/cocoapods/v/PutioAPI)
-![GitHub](https://img.shields.io/github/license/putdotio/putio.swift)
+  <h1>putio-swift</h1>
 
-Swift wrapper for [Put.io API v2](https://api.put.io). Used in [official Put.io iOS](https://itunes.apple.com/us/app/put-io/id1260479699?mt=8) app.
+  <p>
+    Swift library for <a href="https://api.put.io/v2/docs">put.io API v2</a>
+  </p>
+
+  <p>
+    <img src="https://img.shields.io/cocoapods/v/PutioAPI" alt="Cocoapods">
+    <img src="https://img.shields.io/github/license/putdotio/putio.swift" alt="GitHub">
+  </p>
+</div>
 
 ## Installation
 
-`PutioAPI` is available through [CocoaPods](https://cocoapods.org/pods/PutioAPI. To install, simply add the following line to your Podfile:
+`PutioAPI` is available through [CocoaPods](https://cocoapods.org/pods/PutioAPI). To install, simply add the following line to your Podfile:
 
 ```ruby
 pod 'PutioAPI'
