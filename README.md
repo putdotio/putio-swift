@@ -11,7 +11,7 @@
 
   <p>
     <img src="https://img.shields.io/cocoapods/v/PutioAPI" alt="Cocoapods">
-    <img src="https://img.shields.io/github/license/putdotio/putio.swift" alt="GitHub">
+    <img src="https://img.shields.io/github/license/putdotio/putio-swift" alt="GitHub">
   </p>
 </div>
 
@@ -32,9 +32,9 @@ See the [Example Project](./Example/PutioAPI/ViewController.swift) for a simple 
 ### Environment Setup
 
 ```bash
-git clone git@github.com:putdotio/putio.swift.git
+git clone git@github.com:putdotio/putio-swift.git
 
-cd ./putio.swift
+cd ./putio-swift
 
 ./scripts/setup.sh
 

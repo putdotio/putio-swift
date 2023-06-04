@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'put.io' => 'devs@put.io' }
 
-  s.homepage         = 'https://github.com/putdotio/putio.swift'
-  s.source           = { :git => 'https://github.com/putdotio/putio.swift.git', :tag => s.version.to_s }
+  s.homepage         = 'https://github.com/putdotio/putio-swift'
+  s.source           = { :git => 'https://github.com/putdotio/putio-swift.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/putdotio'
 
   s.ios.deployment_target = '10.0'

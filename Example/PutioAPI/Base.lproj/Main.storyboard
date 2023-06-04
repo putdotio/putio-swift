@@ -1,89 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
-    <device id="retina4_7" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0"
+    toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none"
+    useAutolayout="YES" useTraitCollections="YES" colorMatched="YES"
+    initialViewController="vXZ-lx-hvc">
+    <device id="retina4_7" orientation="portrait" appearance="light" />
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <deployment identifier="iOS" />
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519" />
+        <capability name="System colors in document resources" minToolsVersion="11.0" />
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0" />
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--View
+        Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="PutioAPI_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController"
+                    customModule="PutioAPI_Example" customModuleProvider="target"
+                    sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
-                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb" />
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV" />
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667" />
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"
+                            flexibleMaxY="YES" />
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="fo1-SC-Los">
-                                <rect key="frame" x="40" y="130" width="295" height="116"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical"
+                                spacing="5" translatesAutoresizingMaskIntoConstraints="NO"
+                                id="fo1-SC-Los">
+                                <rect key="frame" x="40" y="130" width="295" height="116" />
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Client ID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TEg-bU-onP">
-                                        <rect key="frame" x="0.0" y="0.0" width="295" height="16"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
+                                    <label opaque="NO" userInteractionEnabled="NO"
+                                        contentMode="left" horizontalHuggingPriority="251"
+                                        verticalHuggingPriority="251" text="Client ID"
+                                        textAlignment="natural" lineBreakMode="tailTruncation"
+                                        baselineAdjustment="alignBaselines"
+                                        adjustsFontSizeToFit="NO"
+                                        translatesAutoresizingMaskIntoConstraints="NO"
+                                        id="TEg-bU-onP">
+                                        <rect key="frame" x="0.0" y="0.0" width="295" height="16" />
+                                        <fontDescription key="fontDescription"
+                                            style="UICTFontTextStyleCallout" />
+                                        <nil key="textColor" />
+                                        <nil key="highlightedColor" />
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="3920" borderStyle="roundedRect" placeholder="CLIENT ID" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BhF-d2-BQF">
-                                        <rect key="frame" x="0.0" y="21" width="295" height="34"/>
-                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                    <textField opaque="NO" contentMode="scaleToFill"
+                                        contentHorizontalAlignment="left"
+                                        contentVerticalAlignment="center" text="3920"
+                                        borderStyle="roundedRect" placeholder="CLIENT ID"
+                                        adjustsFontForContentSizeCategory="YES" minimumFontSize="17"
+                                        translatesAutoresizingMaskIntoConstraints="NO"
+                                        id="BhF-d2-BQF">
+                                        <rect key="frame" x="0.0" y="21" width="295" height="34" />
+                                        <color key="backgroundColor" systemColor="systemGray6Color" />
+                                        <fontDescription key="fontDescription"
+                                            style="UICTFontTextStyleBody" />
+                                        <textInputTraits key="textInputTraits" />
                                     </textField>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gpS-0M-J90">
-                                        <rect key="frame" x="0.0" y="60" width="295" height="20"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <view contentMode="scaleToFill"
+                                        translatesAutoresizingMaskIntoConstraints="NO"
+                                        id="gpS-0M-J90">
+                                        <rect key="frame" x="0.0" y="60" width="295" height="20" />
+                                        <color key="backgroundColor"
+                                            systemColor="systemBackgroundColor" />
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="3RC-na-OVa"/>
+                                            <constraint firstAttribute="height" constant="20"
+                                                id="3RC-na-OVa" />
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VMn-ZW-nM7">
-                                        <rect key="frame" x="0.0" y="85" width="295" height="31"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="START"/>
+                                    <button opaque="NO" contentMode="scaleToFill"
+                                        contentHorizontalAlignment="center"
+                                        contentVerticalAlignment="center" buttonType="system"
+                                        lineBreakMode="middleTruncation"
+                                        translatesAutoresizingMaskIntoConstraints="NO"
+                                        id="VMn-ZW-nM7">
+                                        <rect key="frame" x="0.0" y="85" width="295" height="31" />
+                                        <state key="normal" title="Button" />
+                                        <buttonConfiguration key="configuration" style="filled"
+                                            title="START" />
                                         <connections>
-                                            <action selector="startButtonTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Umf-ry-TzJ"/>
+                                            <action selector="startButtonTapped:"
+                                                destination="vXZ-lx-hvc" eventType="touchUpInside"
+                                                id="Umf-ry-TzJ" />
                                         </connections>
                                     </button>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="putio.swift example" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="to9-wh-nVQ">
-                                <rect key="frame" x="84" y="40" width="207.5" height="30"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left"
+                                horizontalHuggingPriority="251" verticalHuggingPriority="251"
+                                text="putio-swift example" textAlignment="natural"
+                                lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines"
+                                adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO"
+                                translatesAutoresizingMaskIntoConstraints="NO" id="to9-wh-nVQ">
+                                <rect key="frame" x="84" y="40" width="207.5" height="30" />
+                                <fontDescription key="fontDescription"
+                                    style="UICTFontTextStyleTitle1" />
+                                <nil key="textColor" />
+                                <nil key="highlightedColor" />
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom"
+                            customColorSpace="genericGamma22GrayColorSpace" />
                         <constraints>
-                            <constraint firstItem="fo1-SC-Los" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="40" id="RVJ-OI-rxq"/>
-                            <constraint firstItem="to9-wh-nVQ" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="40" id="l9Z-e1-NXg"/>
-                            <constraint firstItem="fo1-SC-Los" firstAttribute="top" secondItem="to9-wh-nVQ" secondAttribute="bottom" constant="60" id="mJx-g1-wRs"/>
-                            <constraint firstAttribute="trailing" secondItem="fo1-SC-Los" secondAttribute="trailing" constant="40" id="vHN-lR-p2m"/>
-                            <constraint firstItem="to9-wh-nVQ" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="y1h-yo-e9M"/>
+                            <constraint firstItem="fo1-SC-Los" firstAttribute="leading"
+                                secondItem="kh9-bI-dsS" secondAttribute="leading" constant="40"
+                                id="RVJ-OI-rxq" />
+                            <constraint firstItem="to9-wh-nVQ" firstAttribute="top"
+                                secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="40"
+                                id="l9Z-e1-NXg" />
+                            <constraint firstItem="fo1-SC-Los" firstAttribute="top"
+                                secondItem="to9-wh-nVQ" secondAttribute="bottom" constant="60"
+                                id="mJx-g1-wRs" />
+                            <constraint firstAttribute="trailing" secondItem="fo1-SC-Los"
+                                secondAttribute="trailing" constant="40" id="vHN-lR-p2m" />
+                            <constraint firstItem="to9-wh-nVQ" firstAttribute="centerX"
+                                secondItem="kh9-bI-dsS" secondAttribute="centerX" id="y1h-yo-e9M" />
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="startButton" destination="VMn-ZW-nM7" id="cG3-RQ-Yce"/>
-                        <outlet property="textField" destination="BhF-d2-BQF" id="jaz-ja-xTq"/>
+                        <outlet property="startButton" destination="VMn-ZW-nM7" id="cG3-RQ-Yce" />
+                        <outlet property="textField" destination="BhF-d2-BQF" id="jaz-ja-xTq" />
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh"
+                    sceneMemberID="firstResponder" />
             </objects>
-            <point key="canvasLocation" x="138" y="133"/>
+            <point key="canvasLocation" x="138" y="133" />
         </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color white="1" alpha="1" colorSpace="custom"
+                customColorSpace="genericGamma22GrayColorSpace" />
         </systemColor>
         <systemColor name="systemGray6Color">
-            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216"
+                alpha="1" colorSpace="custom" customColorSpace="sRGB" />
         </systemColor>
     </resources>
 </document>
