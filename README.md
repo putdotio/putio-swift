@@ -6,7 +6,7 @@
   <h1>putio-swift</h1>
 
   <p>
-    Swift library for <a href="https://api.put.io/v2/docs">put.io API v2</a>
+    Swift SDK for interacting with the <a href="https://api.put.io/v2/docs">put.io API v2.</a>
   </p>
 
   <p>
