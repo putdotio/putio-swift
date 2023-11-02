@@ -36,8 +36,9 @@ open class PutioAccount {
         open var trashEnabled: Bool
         open var sortBy: String
         open var showOptimisticUsage: Bool
-        open var disableSubtitles: Bool
         open var twoFactorEnabled: Bool
+        open var hideSubtitles: Bool
+        open var dontAutoSelectSubtitles: Bool
 
         init(json: JSON) {
             let routeName = json["tunnel_route_name"].stringValue
@@ -48,8 +49,9 @@ open class PutioAccount {
             self.historyEnabled = json["history_enabled"].boolValue
             self.trashEnabled = json["trash_enabled"].boolValue
             self.showOptimisticUsage = json["show_optimistic_usage"].boolValue
-            self.disableSubtitles = json["disable_subtitles"].boolValue
             self.twoFactorEnabled = json["two_factor_enabled"].boolValue
+            self.hideSubtitles = json["hide_subtitles"].boolValue
+            self.dontAutoSelectSubtitles = json["dont_autoselect_subtitles"].boolValue
         }
     }
 
