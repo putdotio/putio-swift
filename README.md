@@ -43,10 +43,9 @@ gem install bundler # if you don't have bundler
 bundle install
 ```
 
-Install the dependencies, and open the workspace.
+Install the dependencies then open the workspace.
 
 ```bash
 ./scripts/setup.sh
-
 open ./Example/PutioAPI.xcworkspace
 ```
