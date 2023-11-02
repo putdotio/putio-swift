@@ -2,7 +2,6 @@ import UIKit
 import PutioAPI
 import AuthenticationServices
 
-@available(iOS 13.0, *)
 class ViewController: UIViewController {
     var api: PutioAPI?
     var session: ASWebAuthenticationSession?
@@ -106,7 +105,6 @@ class ViewController: UIViewController {
     }
 }
 
-@available(iOS 13.0, *)
 extension ViewController: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return view.window ?? ASPresentationAnchor()

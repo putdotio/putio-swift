@@ -10,7 +10,7 @@ public struct PutioAPIConfig {
     public var clientName: String
     public var timeoutInterval: Double
 
-    public init(clientID: String, clientSecret: String = "", clientName: String = "", token: String = "", timeoutInterval: Double = 10.0) {
+    public init(clientID: String, clientSecret: String = "", clientName: String = "", token: String = "", timeoutInterval: Double = 15.0) {
         self.baseURL = PutioAPI.apiURL
         self.clientID = clientID
         self.clientSecret = clientSecret
@@ -37,11 +37,7 @@ public struct PutioAPIRequestConfig {
 
         self.method = method
 
-        // Header: Correlation ID
         var enhancedHeaders = headers
-        enhancedHeaders.add(name: "X-Putio-Correlation-Id", value: UUID().uuidString)
-
-        // Header: Authorization
         if enhancedHeaders.value(for: "authorization") == nil {
             if apiConfig.token != "" {
                 let authorizationHeader = HTTPHeader.authorization("token \(apiConfig.token)")

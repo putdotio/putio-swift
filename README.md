@@ -25,9 +25,11 @@ pod 'PutioAPI'
 
 ## Usage
 
-See the [Example Project](./Example/PutioAPI/ViewController.swift) for a simple auth -> API call flow.
+- For authentication, check the [Example Project](./Example/PutioAPI/ViewController.swift) for a simple [`ASWebAuthenticationSession`](https://developer.apple.com/documentation/authenticationservices/authenticating_a_user_through_a_web_service) flow.
+- Check [the classes folder](./PutioAPI/Classes/) for available models and respective methods.
+- You can also use `get`, `post`, `put`, and `delete` methods with relative URLs to make requests to the API.
 
-### Development
+## Contribution
 
 Clone the repo.
 
@@ -46,6 +48,7 @@ bundle install
 Install the dependencies then open the workspace.
 
 ```bash
-./scripts/setup.sh
-open ./Example/PutioAPI.xcworkspace
+cd ./Example
+bundle exec pod install
+open ./PutioAPI.xcworkspace
 ```

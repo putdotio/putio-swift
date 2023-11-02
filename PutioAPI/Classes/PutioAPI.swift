@@ -7,7 +7,7 @@ public protocol PutioAPIDelegate: class {
 }
 
 public final class PutioAPI {
-    typealias RequestCompletion = (Result<JSON, PutioAPIError>) -> Void
+    public typealias RequestCompletion = (Result<JSON, PutioAPIError>) -> Void
 
     weak var delegate: PutioAPIDelegate?
 
@@ -27,22 +27,22 @@ public final class PutioAPI {
         self.config.token = ""
     }
 
-    func get(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
+    public func get(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
         let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .get, headers: headers, query: query)
         self.send(requestConfig: requestConfig, completion)
     }
 
-    func post(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
+    public func post(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
         let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .post, headers: headers, query: query, body: body)
         self.send(requestConfig: requestConfig, completion)
     }
 
-    func put(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
+    public func put(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
         let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .put, headers: headers, query: query, body: body)
         self.send(requestConfig: requestConfig, completion)
     }
 
-    func delete(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
+    public func delete(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
         let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .delete, headers: headers, query: query)
         self.send(requestConfig: requestConfig, completion)
     }
