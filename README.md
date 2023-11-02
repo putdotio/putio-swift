@@ -6,7 +6,7 @@
   <h1>putio-swift</h1>
 
   <p>
-    Swift SDK for interacting with the <a href="https://api.put.io/v2/docs">put.io API v2.</a>
+    Swift SDK for interacting with the <a href="https://api.put.io/v2/docs">put.io API.</a>
   </p>
 
   <p>
@@ -27,22 +27,26 @@ pod 'PutioAPI'
 
 See the [Example Project](./Example/PutioAPI/ViewController.swift) for a simple auth -> API call flow.
 
-## Development
+### Development
 
-### Environment Setup
+Clone the repo.
 
 ```bash
 git clone git@github.com:putdotio/putio-swift.git
-
 cd ./putio-swift
+```
 
+Install the package managers, it's suggested to use `rbenv` and `bundler` for convenience.
+
+```bash
+gem install bundler # if you don't have bundler
+bundle install
+```
+
+Install the dependencies, and open the workspace.
+
+```bash
 ./scripts/setup.sh
 
 open ./Example/PutioAPI.xcworkspace
-```
-
-### Bumping the Version
-
-```bash
-bundle exec pod-bump <patch|minor|major> --no-push
 ```

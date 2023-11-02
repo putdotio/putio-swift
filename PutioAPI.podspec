@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'PutioAPI'
-  s.version          = '1.3.0'
+  s.version          = '1.4.0'
   s.swift_version    = '4.2'
 
   s.summary          = 'Swift client for put.io API v2'
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/putdotio/putio-swift.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/putdotio'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '13.0'
   s.source_files = 'PutioAPI/Classes/**/*'
 
   s.dependency 'Alamofire', '~> 5.5.0'
