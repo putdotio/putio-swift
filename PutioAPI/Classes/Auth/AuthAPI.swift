@@ -2,24 +2,6 @@ import Foundation
 import Alamofire
 
 extension PutioAPI {
-    public func login(username: String, password: String, completion: @escaping (Result<String, PutioAPIError>) -> Void) {
-        let headers = HTTPHeaders([HTTPHeader.authorization(username: username, password: password)])
-        let query = [
-            "client_secret": self.config.clientSecret,
-            "client_name": self.config.clientName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
-        ]
-
-        self.put("/oauth2/authorizations/clients/\(self.config.clientID)", headers: headers, query: query) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json["access_token"].stringValue))
-
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
-    }
-
     public func getAuthURL(redirectURI: String, responseType: String = "token", state: String = "") -> URL {
         var url = URLComponents(string: "\(self.config.baseURL)/oauth2/authenticate")
 
