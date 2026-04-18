@@ -14,9 +14,9 @@
   </p>
 
   <p>
-    <a href="https://github.com/putdotio/putio-sdk-swift/actions/workflows/ci.yml?query=branch%3Amaster" style="text-decoration:none;"><img src="https://img.shields.io/github/actions/workflow/status/putdotio/putio-sdk-swift/ci.yml?branch=master&style=flat&label=ci&colorA=000000&colorB=000000" alt="CI"></a>
+    <a href="https://github.com/putdotio/putio-sdk-swift/actions/workflows/ci.yml?query=branch%3Amain" style="text-decoration:none;"><img src="https://img.shields.io/github/actions/workflow/status/putdotio/putio-sdk-swift/ci.yml?branch=main&style=flat&label=ci&colorA=000000&colorB=000000" alt="CI"></a>
     <a href="https://cocoapods.org/pods/PutioAPI" style="text-decoration:none;"><img src="https://img.shields.io/cocoapods/v/PutioAPI?style=flat&colorA=000000&colorB=000000" alt="CocoaPods version"></a>
-    <a href="https://github.com/putdotio/putio-sdk-swift/blob/master/LICENSE" style="text-decoration:none;"><img src="https://img.shields.io/github/license/putdotio/putio-sdk-swift?style=flat&colorA=000000&colorB=000000" alt="license"></a>
+    <a href="https://github.com/putdotio/putio-sdk-swift/blob/main/LICENSE" style="text-decoration:none;"><img src="https://img.shields.io/github/license/putdotio/putio-sdk-swift?style=flat&colorA=000000&colorB=000000" alt="license"></a>
   </p>
 </div>
 
@@ -90,7 +90,7 @@ make verify
 
 Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
-Releases are continuous on `master` and `main`: every merge is treated as releasable. GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
+Releases are continuous on `main`: every merge is treated as releasable. GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
 
 ## Authentication Example
 

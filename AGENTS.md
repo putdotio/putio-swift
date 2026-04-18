@@ -27,8 +27,8 @@
 - The repository includes a `PutioSDK` CocoaPods podspec ready for automated publishing
 - `PutioAPI` remains the currently published CocoaPods package until `PutioSDK` is released from CI
 - The existing public SDK type names remain `PutioAPI`
-- CI currently accepts both `master` and `main` pushes so branch migration can happen without breaking guardrails
-- The release workflow uses semantic-release after `make verify` passes on `master` or `main`
+- CI and release automation run from `main`
+- The release workflow uses semantic-release after `make verify` passes on `main`
 - GitHub releases need only the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
 - Verify example workspace installation when auth-flow or package-install surface changes
 - Repo verification should build the Swift package and the `PutioAPI` framework from the example workspace

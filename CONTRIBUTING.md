@@ -53,7 +53,7 @@ make print-simulator-destination
 - Use `bundle exec pod lib lint PutioSDK.podspec --allow-warnings` and `bundle exec pod lib lint PutioAPI.podspec --allow-warnings` as manual publish-time checks when you need full podspec validation and have a working iOS destination available
 - Use the example app for lightweight runtime sanity checks when changing auth or request flow behavior
 - Do not commit tokens, private API credentials, or release-only secrets
-- The release workflow uses semantic-release on `master` and `main`
+- The release workflow uses semantic-release on `main`
 - GitHub releases only need the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
 
 ## Pull Requests
