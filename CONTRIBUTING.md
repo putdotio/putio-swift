@@ -43,7 +43,7 @@ make print-simulator-destination
 ## Development Notes
 
 - Keep `README.md` consumer-facing and put contributor workflow here
-- Keep the repo shape ready for the future `putio-sdk-swift` rename while preserving the current CocoaPods package name `PutioAPI`
+- The GitHub repository is `putio-sdk-swift` while the CocoaPods package name remains `PutioAPI`
 - Keep podspec metadata, tags, and release docs aligned when publishing a new version
 - Any iPhone simulator on iOS `26.0` or newer is acceptable for interactive example runs; the repo does not require an exact simulator patch version
 - Use `bundle exec pod lib lint PutioAPI.podspec --allow-warnings` as a manual publish-time check when you need full podspec validation and have a working iOS destination available

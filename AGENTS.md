@@ -22,7 +22,7 @@
 
 - Keep the public package surface open-source-safe
 - Prefer the `make verify` entrypoint instead of ad hoc validation commands
-- Keep the repo ready for a future `putio-sdk-swift` rename while preserving the current `PutioAPI` CocoaPods package surface
+- The GitHub repository is `putio-sdk-swift` while the CocoaPods package surface remains `PutioAPI`
 - CI currently accepts both `master` and `main` pushes so branch migration can happen without breaking guardrails
 - Verify example workspace installation when auth-flow or package-install surface changes
 - Repo verification should build the `PutioAPI` framework from the example workspace

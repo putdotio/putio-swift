@@ -14,13 +14,14 @@
   </p>
 
   <p>
-    <a href="https://github.com/putdotio/putio-swift/actions/workflows/ci.yml?query=branch%3Amaster" style="text-decoration:none;"><img src="https://img.shields.io/github/actions/workflow/status/putdotio/putio-swift/ci.yml?branch=master&style=flat&label=ci&colorA=000000&colorB=000000" alt="CI"></a>
+    <a href="https://github.com/putdotio/putio-sdk-swift/actions/workflows/ci.yml?query=branch%3Amaster" style="text-decoration:none;"><img src="https://img.shields.io/github/actions/workflow/status/putdotio/putio-sdk-swift/ci.yml?branch=master&style=flat&label=ci&colorA=000000&colorB=000000" alt="CI"></a>
     <a href="https://cocoapods.org/pods/PutioAPI" style="text-decoration:none;"><img src="https://img.shields.io/cocoapods/v/PutioAPI?style=flat&colorA=000000&colorB=000000" alt="CocoaPods version"></a>
-    <a href="https://github.com/putdotio/putio-swift/blob/master/LICENSE" style="text-decoration:none;"><img src="https://img.shields.io/github/license/putdotio/putio-swift?style=flat&colorA=000000&colorB=000000" alt="license"></a>
+    <a href="https://github.com/putdotio/putio-sdk-swift/blob/master/LICENSE" style="text-decoration:none;"><img src="https://img.shields.io/github/license/putdotio/putio-sdk-swift?style=flat&colorA=000000&colorB=000000" alt="license"></a>
   </p>
 </div>
 
-`putio-sdk-swift` is the public-facing repo shape we want, while the package you install today is still named `PutioAPI`
+GitHub repository: `putio-sdk-swift`
+The CocoaPods package and Swift module remain `PutioAPI`
 
 ## Installation
 
