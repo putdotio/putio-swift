@@ -30,7 +30,7 @@
         "assets": [
           "VERSION"
         ],
-        "message": "chore(sdk): release ${nextRelease.version} [skip ci]\\n\\n${nextRelease.notes}"
+        "message": "chore(sdk): release ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ]
   ]
