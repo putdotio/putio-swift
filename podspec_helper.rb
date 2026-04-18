@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+def putio_sdk_version
+  File.read(File.join(__dir__, 'VERSION')).strip
+end
+
+def configure_putio_sdk_spec(spec, name:, module_name: nil)
+  spec.name             = name
+  spec.module_name      = module_name if module_name
+  spec.version          = putio_sdk_version
+  spec.swift_version    = '4.2'
+
+  spec.summary          = 'Swift SDK for the put.io API.'
+  spec.description      = 'Swift SDK for the [put.io API](https://api.put.io).'
+
+  spec.license          = { :type => 'MIT', :file => 'LICENSE' }
+  spec.author           = { 'put.io' => 'ui@put.io' }
+
+  spec.homepage         = 'https://github.com/putdotio/putio-sdk-swift'
+  spec.source           = { :git => 'https://github.com/putdotio/putio-sdk-swift.git', :tag => spec.version.to_s }
+  spec.social_media_url = 'https://twitter.com/putdotio'
+
+  spec.ios.deployment_target = '13.0'
+  spec.source_files = 'PutioAPI/Classes/**/*'
+
+  spec.dependency 'Alamofire', '~> 5.5.0'
+  spec.dependency 'SwiftyJSON', '~> 5.0'
+end

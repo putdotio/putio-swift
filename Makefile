@@ -1,10 +1,11 @@
-.PHONY: bootstrap verify example-install print-simulator-destination clean
+.PHONY: bootstrap verify verify-spm example-install print-simulator-destination clean
 
 bootstrap:
 	bundle config set --local path vendor/bundle
 	bundle install
 
 verify:
+	swift build
 	bundle exec pod install --project-directory=Example
 	@destination="$$(./scripts/xcode-iphone-simulator-destination.sh --workspace Example/PutioAPI.xcworkspace --scheme PutioAPI 2>/dev/null || true)"; \
 	if [ -n "$$destination" ]; then \
@@ -15,6 +16,9 @@ verify:
 		xcodebuild -workspace Example/PutioAPI.xcworkspace -scheme PutioAPI -sdk iphonesimulator -configuration Debug build CODE_SIGNING_ALLOWED=NO; \
 	fi
 
+verify-spm:
+	swift build
+
 example-install:
 	bundle exec pod install --project-directory=Example
 
@@ -22,4 +26,4 @@ print-simulator-destination:
 	@./scripts/xcode-iphone-simulator-destination.sh --workspace Example/PutioAPI.xcworkspace --scheme PutioAPI
 
 clean:
-	rm -rf .bundle vendor/bundle Example/Pods
+	rm -rf .build .bundle Package.resolved vendor/bundle Example/Pods

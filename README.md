@@ -10,7 +10,7 @@
   </p>
 
   <p>
-    CocoaPods package: <code>PutioAPI</code>
+    Swift Package: <code>PutioSDK</code> · CocoaPods package: <code>PutioAPI</code>
   </p>
 
   <p>
@@ -21,20 +21,47 @@
 </div>
 
 GitHub repository: `putio-sdk-swift`
-The CocoaPods package and Swift module remain `PutioAPI`
+The Swift Package product and module are `PutioSDK`
+The repository now includes a `PutioSDK` CocoaPods podspec ready for release automation
+`PutioAPI` remains the currently published CocoaPods package until `PutioSDK` is published from CI
+The existing public SDK type names remain `PutioAPI`
 
 ## Installation
 
-Install with CocoaPods:
+Install with Swift Package Manager in Xcode using:
+
+```text
+https://github.com/putdotio/putio-sdk-swift.git
+```
+
+Or add it to `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/putdotio/putio-sdk-swift.git", from: "1.0.0")
+]
+```
+
+Then depend on the `PutioSDK` product.
+
+Import it as:
+
+```swift
+import PutioSDK
+```
+
+If you use CocoaPods today, install with:
 
 ```ruby
 pod 'PutioAPI'
 ```
 
+The repo also includes a `PutioSDK` podspec so CI can publish the new package name once `COCOAPODS_TRUNK_TOKEN` is configured
+
 ## Quick Start
 
 ```swift
-import PutioAPI
+import PutioSDK
 
 let api = PutioAPI(
     config: PutioAPIConfig(
@@ -62,6 +89,8 @@ make verify
 ```
 
 Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
+
+Releases are continuous on `master` and `main`: every merge is treated as releasable. GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
 
 ## Authentication Example
 

@@ -3,7 +3,7 @@
 ## Repo
 
 - Swift SDK for the put.io API
-- Current distribution model: CocoaPods podspec plus example app workspace
+- Current distribution model: Swift Package plus CocoaPods podspec, with an example app workspace
 
 ## Start Here
 
@@ -22,10 +22,16 @@
 
 - Keep the public package surface open-source-safe
 - Prefer the `make verify` entrypoint instead of ad hoc validation commands
-- The GitHub repository is `putio-sdk-swift` while the CocoaPods package surface remains `PutioAPI`
+- The GitHub repository is `putio-sdk-swift`
+- The Swift Package surface is `PutioSDK`
+- The repository includes a `PutioSDK` CocoaPods podspec ready for automated publishing
+- `PutioAPI` remains the currently published CocoaPods package until `PutioSDK` is released from CI
+- The existing public SDK type names remain `PutioAPI`
 - CI currently accepts both `master` and `main` pushes so branch migration can happen without breaking guardrails
+- The release workflow uses semantic-release after `make verify` passes on `master` or `main`
+- GitHub releases need only the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
 - Verify example workspace installation when auth-flow or package-install surface changes
-- Repo verification should build the `PutioAPI` framework from the example workspace
+- Repo verification should build the Swift package and the `PutioAPI` framework from the example workspace
 - `make verify` prefers an Xcode-advertised iPhone simulator destination on iOS `26.0+` and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 - `make print-simulator-destination` shows the concrete iPhone simulator destination the repo would use when Xcode can advertise one
 - `pod lib lint` remains a manual publish-time check until destination resolution is consistent across local and CI environments
