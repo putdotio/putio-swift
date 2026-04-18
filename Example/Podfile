@@ -2,10 +2,10 @@ platform :ios, '13.0'
 
 use_frameworks!
 
-target 'PutioAPI_Example' do
+target 'PutioSDK_Example' do
   pod 'PutioSDK', :path => '../'
 
-  target 'PutioAPI_Tests' do
+  target 'PutioSDK_Tests' do
     inherit! :search_paths
   end
 end

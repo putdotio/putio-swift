@@ -24,7 +24,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>org.cocoapods.demo.PutioAPI-Example</string>
+			<string>org.cocoapods.demo.PutioSDK-Example</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>putioswift</string>

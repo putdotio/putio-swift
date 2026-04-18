@@ -1,5 +1,5 @@
 import UIKit
-import PutioAPI
+import PutioSDK
 import AuthenticationServices
 
 class ViewController: UIViewController {

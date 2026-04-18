@@ -11,12 +11,12 @@ From the repository root:
 ```bash
 make bootstrap
 make example-install
-open Example/PutioAPI.xcworkspace
+open Example/PutioSDK.xcworkspace
 ```
 
 ## Usage
 
-- run the `PutioAPI_Example` target
+- run the `PutioSDK_Example` target
 - enter your OAuth client ID
 - complete the `ASWebAuthenticationSession` sign-in flow
 - confirm the app can fetch account info after the callback

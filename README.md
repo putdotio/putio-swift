@@ -90,7 +90,7 @@ Releases are continuous on `main`: every merge is treated as releasable. Convent
 
 The example app shows a minimal `ASWebAuthenticationSession` flow and a follow-up account fetch:
 
-- [Example/PutioAPI/ViewController.swift](./Example/PutioAPI/ViewController.swift)
+- [Example/PutioSDK/ViewController.swift](./Example/PutioSDK/ViewController.swift)
 - [Example/README.md](./Example/README.md)
 
 ## Docs

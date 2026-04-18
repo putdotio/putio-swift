@@ -1,5 +1,5 @@
 import XCTest
-import PutioAPI
+import PutioSDK
 
 class Tests: XCTestCase {
     

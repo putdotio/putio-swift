@@ -21,7 +21,7 @@ def configure_putio_sdk_spec(spec, name:, module_name: nil)
   spec.social_media_url = 'https://twitter.com/putdotio'
 
   spec.ios.deployment_target = '13.0'
-  spec.source_files = 'PutioAPI/Classes/**/*'
+  spec.source_files = 'PutioSDK/Classes/**/*'
 
   spec.dependency 'Alamofire', '~> 5.5.0'
   spec.dependency 'SwiftyJSON', '~> 5.0'

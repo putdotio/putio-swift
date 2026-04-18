@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-               BuildableName = "PutioAPI_Example.app"
-               BlueprintName = "PutioAPI_Example"
-               ReferencedContainer = "container:PutioAPI.xcodeproj">
+               BuildableName = "PutioSDK_Example.app"
+               BlueprintName = "PutioSDK_Example"
+               ReferencedContainer = "container:PutioSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "PutioAPI_Tests.xctest"
-               BlueprintName = "PutioAPI_Tests"
-               ReferencedContainer = "container:PutioAPI.xcodeproj">
+               BuildableName = "PutioSDK_Tests.xctest"
+               BlueprintName = "PutioSDK_Tests"
+               ReferencedContainer = "container:PutioSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "PutioAPI_Example.app"
-            BlueprintName = "PutioAPI_Example"
-            ReferencedContainer = "container:PutioAPI.xcodeproj">
+            BuildableName = "PutioSDK_Example.app"
+            BlueprintName = "PutioSDK_Example"
+            ReferencedContainer = "container:PutioSDK.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -56,9 +56,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "PutioAPI_Tests.xctest"
-               BlueprintName = "PutioAPI_Tests"
-               ReferencedContainer = "container:PutioAPI.xcodeproj">
+               BuildableName = "PutioSDK_Tests.xctest"
+               BlueprintName = "PutioSDK_Tests"
+               ReferencedContainer = "container:PutioSDK.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -78,9 +78,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "PutioAPI_Example.app"
-            BlueprintName = "PutioAPI_Example"
-            ReferencedContainer = "container:PutioAPI.xcodeproj">
+            BuildableName = "PutioSDK_Example.app"
+            BlueprintName = "PutioSDK_Example"
+            ReferencedContainer = "container:PutioSDK.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -95,9 +95,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "PutioAPI_Example.app"
-            BlueprintName = "PutioAPI_Example"
-            ReferencedContainer = "container:PutioAPI.xcodeproj">
+            BuildableName = "PutioSDK_Example.app"
+            BlueprintName = "PutioSDK_Example"
+            ReferencedContainer = "container:PutioSDK.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

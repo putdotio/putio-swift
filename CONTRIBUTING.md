@@ -21,7 +21,7 @@ make example-install
 Open the example workspace:
 
 ```bash
-open Example/PutioAPI.xcworkspace
+open Example/PutioSDK.xcworkspace
 ```
 
 ## Validation
@@ -32,7 +32,7 @@ Run the repo-local verification command before opening or updating a pull reques
 make verify
 ```
 
-This check builds the Swift package, installs the example workspace, and then builds the example-backed `PutioSDK` CocoaPods scheme from `Example/PutioAPI.xcworkspace`. It prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
+This check builds the Swift package, installs the example workspace, and then builds the example-backed `PutioSDK` CocoaPods scheme from `Example/PutioSDK.xcworkspace`. It prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
 To see the concrete iPhone simulator destination Xcode is advertising to the repo on your machine, run:
 
