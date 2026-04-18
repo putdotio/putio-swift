@@ -38,6 +38,25 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Restore SwiftPM build cache
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: ${{ runner.os }}-swiftpm-${{ github.workflow }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftpm-${{ github.workflow }}-
+
+      - name: Restore CocoaPods cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            Example/Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-cocoapods-${{ github.workflow }}-${{ hashFiles('Example/Podfile.lock', 'PutioSDK.podspec', 'podspec_helper.rb') }}
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-${{ github.workflow }}-
 
       - name: Bootstrap repository
         run: make bootstrap
@@ -72,6 +91,25 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Restore SwiftPM build cache
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: ${{ runner.os }}-swiftpm-${{ github.workflow }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-swiftpm-${{ github.workflow }}-
+
+      - name: Restore CocoaPods cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            Example/Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-cocoapods-${{ github.workflow }}-${{ hashFiles('Example/Podfile.lock', 'PutioSDK.podspec', 'podspec_helper.rb') }}
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-${{ github.workflow }}-
 
       - name: Bootstrap repository
         run: make bootstrap
