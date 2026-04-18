@@ -20,8 +20,6 @@
   </p>
 </div>
 
-Install `PutioSDK` with Swift Package Manager or CocoaPods. The SDK's existing public type names still remain `PutioAPI`.
-
 ## Installation
 
 Install with Swift Package Manager in Xcode using:
