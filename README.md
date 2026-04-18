@@ -60,7 +60,7 @@ The repo exposes one local verification command:
 make verify
 ```
 
-Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace and builds the `PutioAPI` framework against `iphonesimulator`
+Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
 ## Authentication Example
 

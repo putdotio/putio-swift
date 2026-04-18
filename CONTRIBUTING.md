@@ -32,13 +32,20 @@ Run the repo-local verification command before opening or updating a pull reques
 make verify
 ```
 
-This check installs the example workspace and builds the `PutioAPI` framework against `iphonesimulator`, which works more reliably on this machine than destination-based CocoaPods lint
+This check installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
+
+To see the concrete iPhone simulator destination Xcode is advertising to the repo on your machine, run:
+
+```bash
+make print-simulator-destination
+```
 
 ## Development Notes
 
 - Keep `README.md` consumer-facing and put contributor workflow here
 - Keep the repo shape ready for the future `putio-sdk-swift` rename while preserving the current CocoaPods package name `PutioAPI`
 - Keep podspec metadata, tags, and release docs aligned when publishing a new version
+- Any iPhone simulator on iOS `26.0` or newer is acceptable for interactive example runs; the repo does not require an exact simulator patch version
 - Use `bundle exec pod lib lint PutioAPI.podspec --allow-warnings` as a manual publish-time check when you need full podspec validation and have a working iOS destination available
 - Use the example app for lightweight runtime sanity checks when changing auth or request flow behavior
 - Do not commit tokens, private API credentials, or release-only secrets
