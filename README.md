@@ -20,10 +20,7 @@
   </p>
 </div>
 
-GitHub repository: `putio-sdk-swift`
-The Swift Package product and module are `PutioSDK`
-The CocoaPods package is `PutioSDK`
-The existing public SDK type names remain `PutioAPI`
+Install `PutioSDK` with Swift Package Manager or CocoaPods. The SDK's existing public type names still remain `PutioAPI`.
 
 ## Installation
 
