@@ -90,7 +90,7 @@ make verify
 
 Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
-Releases are continuous on `main`: every merge is treated as releasable. GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
+Releases are continuous on `main`: every merge is treated as releasable. Conventional commits drive version selection, GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
 
 ## Authentication Example
 

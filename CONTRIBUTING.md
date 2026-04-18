@@ -54,6 +54,7 @@ make print-simulator-destination
 - Use the example app for lightweight runtime sanity checks when changing auth or request flow behavior
 - Do not commit tokens, private API credentials, or release-only secrets
 - The release workflow uses semantic-release on `main`
+- Conventional commits drive automated version selection, matching the TypeScript SDK and CLI repos
 - GitHub releases only need the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
 
 ## Pull Requests
