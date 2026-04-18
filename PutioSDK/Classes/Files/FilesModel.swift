@@ -123,10 +123,10 @@ open class PutioFile: PutioBaseFile {
     public func getStreamURL(token: String) -> URL? {
         switch (self.type) {
         case .audio:
-            let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
+            let url = "\(PutioSDK.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
             return URL(string: url)!
         case .video:
-            let url = "\(PutioAPI.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
+            let url = "\(PutioSDK.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
             return URL(string: url)!
         default:
             return nil
@@ -134,22 +134,22 @@ open class PutioFile: PutioBaseFile {
     }
 
     public func getHlsStreamURL(token: String) -> URL {
-        let url = "\(PutioAPI.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
+        let url = "\(PutioSDK.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
         return URL(string: url)!
     }
 
     public func getAudioStreamURL(token: String) -> URL {
-        let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
+        let url = "\(PutioSDK.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
         return URL(string: url)!
     }
 
     public func getDownloadURL(token: String) -> URL {
-        let url = "\(PutioAPI.apiURL)/files/\(self.id)/download?oauth_token=\(token)"
+        let url = "\(PutioSDK.apiURL)/files/\(self.id)/download?oauth_token=\(token)"
         return URL(string: url)!
     }
 
     public func getMp4DownloadURL(token: String) -> URL {
-        let url = "\(PutioAPI.apiURL)/files/\(self.id)/mp4/download?oauth_token=\(token)"
+        let url = "\(PutioSDK.apiURL)/files/\(self.id)/mp4/download?oauth_token=\(token)"
         return URL(string: url)!
     }
 }
@@ -174,10 +174,10 @@ open class PutioNextFile {
     public func getStreamURL(token: String) -> URL {
         switch (self.type) {
         case .audio:
-            let url = "\(PutioAPI.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
+            let url = "\(PutioSDK.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
             return URL(string: url)!
         case .video:
-            let url = "\(PutioAPI.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
+            let url = "\(PutioSDK.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
             return URL(string: url)!
         }
     }

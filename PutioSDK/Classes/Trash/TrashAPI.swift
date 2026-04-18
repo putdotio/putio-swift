@@ -1,8 +1,8 @@
 import Foundation
 import SwiftyJSON
 
-extension PutioAPI {
-    public func listTrash(perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func listTrash(perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioSDKError>) -> Void) {
         self.get("/trash/list", query: ["per_page": perPage]) { result in
             switch result {
             case .success(let json):
@@ -13,7 +13,7 @@ extension PutioAPI {
         }
     }
 
-    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioAPIError>) -> Void) {
+    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioSDKError>) -> Void) {
         self.get("/trash/list/continue", query: ["cursor": cursor, "per_page": perPage]) { result in
             switch result {
             case .success(let json):
@@ -24,7 +24,7 @@ extension PutioAPI {
         }
     }
 
-    public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioAPIBoolCompletion) {
+    public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioSDKBoolCompletion) {
         var body: [String: Any] = [:]
 
         if let cursor = cursor, cursor != "" {
@@ -43,7 +43,7 @@ extension PutioAPI {
         }
     }
 
-    public func deleteTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioAPIBoolCompletion) {
+    public func deleteTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioSDKBoolCompletion) {
         var body: [String: Any] = [:]
 
         if let cursor = cursor, cursor != "" {
@@ -62,7 +62,7 @@ extension PutioAPI {
         }
     }
 
-    public func emptyTrash(completion: @escaping PutioAPIBoolCompletion) {
+    public func emptyTrash(completion: @escaping PutioSDKBoolCompletion) {
         self.post("/trash/empty") { result in
             switch result {
             case .success(let json):

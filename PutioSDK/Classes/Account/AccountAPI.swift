@@ -2,8 +2,8 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-extension PutioAPI {
-    public func getAccountInfo(query: Parameters = [:], completion: @escaping (Result<PutioAccount, PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func getAccountInfo(query: Parameters = [:], completion: @escaping (Result<PutioAccount, PutioSDKError>) -> Void) {
         self.get("/account/info", query: query) { result in
             switch result {
             case .success(let json):
@@ -14,7 +14,7 @@ extension PutioAPI {
         }
     }
 
-    public func getAccountSettings(completion: @escaping (Result<PutioAccount.Settings, PutioAPIError>) -> Void) {
+    public func getAccountSettings(completion: @escaping (Result<PutioAccount.Settings, PutioSDKError>) -> Void) {
         self.get("/account/settings") { result in
             switch result {
             case .success(let json):
@@ -25,7 +25,7 @@ extension PutioAPI {
         }
     }
 
-    public func saveAccountSettings(body: [String: Any], completion: @escaping PutioAPIBoolCompletion) {
+    public func saveAccountSettings(body: [String: Any], completion: @escaping PutioSDKBoolCompletion) {
         self.post("/account/settings", body: body) { result in
             switch result {
             case .success(let json):
@@ -36,7 +36,7 @@ extension PutioAPI {
         }
     }
 
-    public func clearAccountData(options: [String: Bool], completion: @escaping PutioAPIBoolCompletion) {
+    public func clearAccountData(options: [String: Bool], completion: @escaping PutioSDKBoolCompletion) {
         self.post("/account/clear", body: options) { result in
             switch result {
             case .success(let json):
@@ -47,7 +47,7 @@ extension PutioAPI {
         }
     }
 
-    public func destroyAccount(currentPassword: String, completion: @escaping PutioAPIBoolCompletion) {
+    public func destroyAccount(currentPassword: String, completion: @escaping PutioSDKBoolCompletion) {
         self.post("/account/destroy", body: ["current_password": currentPassword]) { result in
             switch result {
             case .success(let json):

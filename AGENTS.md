@@ -25,7 +25,7 @@
 - The GitHub repository is `putio-sdk-swift`
 - The Swift Package surface is `PutioSDK`
 - The CocoaPods package is `PutioSDK`
-- The existing public SDK type names remain `PutioAPI`
+- The Swift Package module, CocoaPods module, and public SDK types are all `PutioSDK`
 - CI and release automation run from `main`
 - The release workflow uses semantic-release after `make verify` passes on `main`
 - GitHub releases need only the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`

@@ -2,20 +2,20 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-public protocol PutioAPIDelegate: class {
-    func onPutioAPIApiError(error: PutioAPIError)
+public protocol PutioSDKDelegate: AnyObject {
+    func onPutioSDKError(error: PutioSDKError)
 }
 
-public final class PutioAPI {
-    public typealias RequestCompletion = (Result<JSON, PutioAPIError>) -> Void
+public final class PutioSDK {
+    public typealias RequestCompletion = (Result<JSON, PutioSDKError>) -> Void
 
-    weak var delegate: PutioAPIDelegate?
+    weak var delegate: PutioSDKDelegate?
 
     static let apiURL = "https://api.put.io/v2"
 
-    public var config: PutioAPIConfig
+    public var config: PutioSDKConfig
 
-    public init(config: PutioAPIConfig) {
+    public init(config: PutioSDKConfig) {
         self.config = config
     }
 
@@ -28,28 +28,28 @@ public final class PutioAPI {
     }
 
     public func get(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .get, headers: headers, query: query)
+        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .get, headers: headers, query: query)
         self.send(requestConfig: requestConfig, completion)
     }
 
     public func post(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .post, headers: headers, query: query, body: body)
+        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .post, headers: headers, query: query, body: body)
         self.send(requestConfig: requestConfig, completion)
     }
 
     public func put(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .put, headers: headers, query: query, body: body)
+        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .put, headers: headers, query: query, body: body)
         self.send(requestConfig: requestConfig, completion)
     }
 
     public func delete(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioAPIRequestConfig(apiConfig: config, url: url, method: .delete, headers: headers, query: query)
+        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .delete, headers: headers, query: query)
         self.send(requestConfig: requestConfig, completion)
     }
 
 
-    private func send(requestConfig: PutioAPIRequestConfig, _ completion: @escaping (Result<JSON, PutioAPIError>) -> Void) {
-        let requestInformation = PutiopAPIErrorRequestInformation(config: requestConfig)
+    private func send(requestConfig: PutioSDKRequestConfig, _ completion: @escaping (Result<JSON, PutioSDKError>) -> Void) {
+        let requestInformation = PutioSDKErrorRequestInformation(config: requestConfig)
 
         AF.request(
             requestConfig.url,
@@ -68,18 +68,18 @@ public final class PutioAPI {
 
                 case .failure(let error):
                     if let data = dataResponse.data {
-                        let apiError = PutioAPIError(request: requestInformation, errorJSON: try JSON(data: data), error: error)
-                        self.delegate?.onPutioAPIApiError(error: apiError)
+                        let apiError = PutioSDKError(request: requestInformation, errorJSON: try JSON(data: data), error: error)
+                        self.delegate?.onPutioSDKError(error: apiError)
                         return completion(.failure(apiError))
                     }
 
-                    let apiError = PutioAPIError(request: requestInformation, error: error)
-                    self.delegate?.onPutioAPIApiError(error: apiError)
+                    let apiError = PutioSDKError(request: requestInformation, error: error)
+                    self.delegate?.onPutioSDKError(error: apiError)
                     return completion(.failure(apiError))
                 }
             } catch {
-                let apiError = PutioAPIError(request: requestInformation, error: error)
-                self.delegate?.onPutioAPIApiError(error: apiError)
+                let apiError = PutioSDKError(request: requestInformation, error: error)
+                self.delegate?.onPutioSDKError(error: apiError)
                 return completion(.failure(apiError))
             }
         })

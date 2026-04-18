@@ -1,8 +1,8 @@
 import Foundation
 import SwiftyJSON
 
-extension PutioAPI {
-    public func getGrants(completion: @escaping (Result<[PutioOAuthGrant], PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func getGrants(completion: @escaping (Result<[PutioOAuthGrant], PutioSDKError>) -> Void) {
         self.get("/oauth/grants") { result in
             switch result {
             case .success(let json):
@@ -13,7 +13,7 @@ extension PutioAPI {
         }
     }
 
-    public func revokeGrant(id: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func revokeGrant(id: Int, completion: @escaping PutioSDKBoolCompletion) {
         self.post("/oauth/grants/\(id)/delete") { result in
             switch result {
             case .success(let json):
@@ -24,7 +24,7 @@ extension PutioAPI {
         }
     }
 
-    public func linkDevice(code: String, completion: @escaping (Result<PutioOAuthGrant, PutioAPIError>) -> Void) {
+    public func linkDevice(code: String, completion: @escaping (Result<PutioOAuthGrant, PutioSDKError>) -> Void) {
         self.post("/oauth2/oob/code", body: ["code": code]) { result in
             switch result {
             case .success(let json):

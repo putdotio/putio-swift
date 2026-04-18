@@ -8,7 +8,7 @@ def configure_putio_sdk_spec(spec, name:, module_name: nil)
   spec.name             = name
   spec.module_name      = module_name if module_name
   spec.version          = putio_sdk_version
-  spec.swift_version    = '4.2'
+  spec.swift_version    = '5.0'
 
   spec.summary          = 'Swift SDK for the put.io API.'
   spec.description      = 'Swift SDK for the [put.io API](https://api.put.io).'
@@ -20,9 +20,9 @@ def configure_putio_sdk_spec(spec, name:, module_name: nil)
   spec.source           = { :git => 'https://github.com/putdotio/putio-sdk-swift.git', :tag => spec.version.to_s }
   spec.social_media_url = 'https://twitter.com/putdotio'
 
-  spec.ios.deployment_target = '13.0'
+  spec.ios.deployment_target = '26.0'
   spec.source_files = 'PutioSDK/Classes/**/*'
 
-  spec.dependency 'Alamofire', '~> 5.5.0'
+  spec.dependency 'Alamofire', '~> 5.11'
   spec.dependency 'SwiftyJSON', '~> 5.0'
 end

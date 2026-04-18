@@ -2,7 +2,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-public struct PutioAPIConfig {
+public struct PutioSDKConfig {
     public let baseURL: String
     public var token: String
     public var clientID: String
@@ -11,7 +11,7 @@ public struct PutioAPIConfig {
     public var timeoutInterval: Double
 
     public init(clientID: String, clientSecret: String = "", clientName: String = "", token: String = "", timeoutInterval: Double = 15.0) {
-        self.baseURL = PutioAPI.apiURL
+        self.baseURL = PutioSDK.apiURL
         self.clientID = clientID
         self.clientSecret = clientSecret
         self.clientName = clientName
@@ -20,14 +20,14 @@ public struct PutioAPIConfig {
     }
 }
 
-public struct PutioAPIRequestConfig {
+public struct PutioSDKRequestConfig {
     let url: String
     let method: HTTPMethod
     let headers: HTTPHeaders
     let query: Parameters
     let body: Parameters?
 
-    init(apiConfig: PutioAPIConfig, url: String, method: HTTPMethod, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:]) {
+    init(apiConfig: PutioSDKConfig, url: String, method: HTTPMethod, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:]) {
         if (query.isEmpty) {
             self.url = "\(apiConfig.baseURL)\(url)"
         } else {
@@ -58,37 +58,37 @@ public struct PutioAPIRequestConfig {
     }
 }
 
-public enum PutioAPIErrorType {
+public enum PutioSDKErrorType {
     case httpError(statusCode: Int, errorType: String)
     case networkError
     case unknownError
 }
 
-public struct PutiopAPIErrorRequestInformation {
-    let config: PutioAPIRequestConfig
+public struct PutioSDKErrorRequestInformation {
+    let config: PutioSDKRequestConfig
 }
 
-public struct PutioAPIError: Error {
-    public let request: PutiopAPIErrorRequestInformation
-    public let type: PutioAPIErrorType
+public struct PutioSDKError: Error {
+    public let request: PutioSDKErrorRequestInformation
+    public let type: PutioSDKErrorType
     public let message: String
     public let underlyingError: Error
 
-    init(request: PutiopAPIErrorRequestInformation, errorJSON: JSON, error: AFError) {
+    init(request: PutioSDKErrorRequestInformation, errorJSON: JSON, error: AFError) {
         self.request = request
         self.type = .httpError(statusCode: errorJSON["status_code"].intValue, errorType: errorJSON["error_type"].stringValue)
         self.message = errorJSON["message"].stringValue
         self.underlyingError = error
     }
 
-    init(request: PutiopAPIErrorRequestInformation, error: AFError) {
+    init(request: PutioSDKErrorRequestInformation, error: AFError) {
         self.request = request
         self.type = .networkError
         self.message = error.localizedDescription
         self.underlyingError = error
     }
 
-    init(request: PutiopAPIErrorRequestInformation, error: Error) {
+    init(request: PutioSDKErrorRequestInformation, error: Error) {
         self.request = request
         self.type = .unknownError
         self.message = error.localizedDescription
@@ -96,4 +96,4 @@ public struct PutioAPIError: Error {
     }
 }
 
-public typealias PutioAPIBoolCompletion = (Result<JSON, PutioAPIError>) -> Void
+public typealias PutioSDKBoolCompletion = (Result<JSON, PutioSDKError>) -> Void

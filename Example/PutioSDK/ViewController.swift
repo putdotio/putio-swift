@@ -3,7 +3,7 @@ import PutioSDK
 import AuthenticationServices
 
 class ViewController: UIViewController {
-    var api: PutioAPI?
+    var api: PutioSDK?
     var session: ASWebAuthenticationSession?
 
     @IBOutlet weak var textField: UITextField!
@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     }
 
     func createAPI(clientID: String) {
-        api = PutioAPI(config: PutioAPIConfig(clientID: clientID))
+        api = PutioSDK(config: PutioSDKConfig(clientID: clientID))
         startAuthFlow()
     }
 
@@ -80,7 +80,7 @@ class ViewController: UIViewController {
         })
     }
 
-    func fetchAccountInfoFailure(error: PutioAPIError) {
+    func fetchAccountInfoFailure(error: PutioSDKError) {
         let alertController = UIAlertController(title: "API: Fetch Account Info Failure", message: error.message, preferredStyle: .alert)
         let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(closeButton)

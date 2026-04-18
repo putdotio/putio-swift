@@ -1,8 +1,8 @@
 import Foundation
 import SwiftyJSON
 
-extension PutioAPI {
-    public func getRoutes(completion: @escaping (Result<[PutioRoute], PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func getRoutes(completion: @escaping (Result<[PutioRoute], PutioSDKError>) -> Void) {
         self.get("/tunnel/routes") { result in
             switch result {
             case .success(let json):

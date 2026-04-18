@@ -1,7 +1,7 @@
 import Foundation
 
-extension PutioAPI {
-    public func searchFiles(keyword: String, perPage: Int = 50, completion: @escaping (Result<PutioFileSearchResponse, PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func searchFiles(keyword: String, perPage: Int = 50, completion: @escaping (Result<PutioFileSearchResponse, PutioSDKError>) -> Void) {
         let url = "/files/search"
         let query = ["query": keyword, "per_page": perPage] as [String : Any]
 
@@ -15,7 +15,7 @@ extension PutioAPI {
         }
     }
 
-    public func continueFileSearch(cursor: String, completion: @escaping (Result<PutioFileSearchResponse, PutioAPIError>) -> Void) {
+    public func continueFileSearch(cursor: String, completion: @escaping (Result<PutioFileSearchResponse, PutioSDKError>) -> Void) {
         let url = "/files/search/continue"
         let query = ["cursor": cursor]
 

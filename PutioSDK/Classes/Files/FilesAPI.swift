@@ -2,8 +2,8 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-extension PutioAPI {
-    public func getFiles(parentID: Int, query: Parameters = [:], completion: @escaping (Result<(parent: PutioFile, children: [PutioFile]), PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func getFiles(parentID: Int, query: Parameters = [:], completion: @escaping (Result<(parent: PutioFile, children: [PutioFile]), PutioSDKError>) -> Void) {
         let url = "/files/list"
         let query = query.merge(with: [
             "parent_id": parentID,
@@ -23,7 +23,7 @@ extension PutioAPI {
         }
     }
 
-    public func getFile(fileID: Int, query: Parameters = [:], completion: @escaping (Result<PutioFile, PutioAPIError>) -> Void) {
+    public func getFile(fileID: Int, query: Parameters = [:], completion: @escaping (Result<PutioFile, PutioSDKError>) -> Void) {
         let url = "/files/\(fileID)"
         let query = query.merge(with: [
             "mp4_size": 1,
@@ -42,11 +42,11 @@ extension PutioAPI {
         }
     }
 
-    public func deleteFile(fileID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func deleteFile(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
         return self.deleteFiles(fileIDs: [fileID], completion: completion)
     }
 
-    public func deleteFiles(fileIDs: [Int], query: Parameters = [:], completion: @escaping PutioAPIBoolCompletion) {
+    public func deleteFiles(fileIDs: [Int], query: Parameters = [:], completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/delete"
         let query = ["skip_nonexistents": true, "skip_owner_check": false].merge(with: query)
         let body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
@@ -61,11 +61,11 @@ extension PutioAPI {
         }
     }
 
-    public func copyFile(fileID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func copyFile(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
         return self.copyFiles(fileIDs: [fileID], completion: completion)
     }
 
-    public func copyFiles(fileIDs: [Int], completion: @escaping PutioAPIBoolCompletion) {
+    public func copyFiles(fileIDs: [Int], completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/copy-to-disk"
         let body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
 
@@ -79,11 +79,11 @@ extension PutioAPI {
         }
     }
 
-    public func moveFile(fileID: Int, parentID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func moveFile(fileID: Int, parentID: Int, completion: @escaping PutioSDKBoolCompletion) {
         return self.moveFiles(fileIDs: [fileID], parentID: parentID, completion: completion)
     }
 
-    public func moveFiles(fileIDs: [Int], parentID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func moveFiles(fileIDs: [Int], parentID: Int, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/move"
         let body = [
             "file_ids": (fileIDs.map {String($0)}).joined(separator: ","),
@@ -100,7 +100,7 @@ extension PutioAPI {
         }
     }
 
-    public func renameFile(fileID: Int, name: String, completion: @escaping PutioAPIBoolCompletion) {
+    public func renameFile(fileID: Int, name: String, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/rename/"
         let body = ["file_id": fileID, "name": name] as [String: Any]
 
@@ -114,7 +114,7 @@ extension PutioAPI {
         }
     }
 
-    public func createFolder(name: String, parentID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func createFolder(name: String, parentID: Int, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/create-folder"
         let body = ["name": name, "parent_id": parentID] as [String: Any]
 
@@ -128,7 +128,7 @@ extension PutioAPI {
         }
     }
 
-    public func findNextFile(fileID: Int, fileType: PutioNextFileType, completion: @escaping (Result<PutioNextFile, PutioAPIError>) -> Void) {
+    public func findNextFile(fileID: Int, fileType: PutioNextFileType, completion: @escaping (Result<PutioNextFile, PutioSDKError>) -> Void) {
         let url = "/files/\(fileID)/next-file"
         let query = ["file_type": fileType.rawValue]
 
@@ -142,7 +142,7 @@ extension PutioAPI {
         }
     }
     
-    public func setSortBy(fileId: Int, sortBy: String, completion: @escaping PutioAPIBoolCompletion) {
+    public func setSortBy(fileId: Int, sortBy: String, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/set-sort-by"
         let body = ["file_id": fileId, "sort_by": sortBy] as [String: Any]
         
@@ -156,7 +156,7 @@ extension PutioAPI {
         }
     }
 
-    public func resetFileSpecificSortSettings(completion: @escaping PutioAPIBoolCompletion) {
+    public func resetFileSpecificSortSettings(completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/remove-sort-by-settings"
 
         self.post(url) { result in

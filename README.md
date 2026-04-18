@@ -55,8 +55,8 @@ pod 'PutioSDK'
 ```swift
 import PutioSDK
 
-let api = PutioAPI(
-    config: PutioAPIConfig(
+let api = PutioSDK(
+    config: PutioSDKConfig(
         clientID: "<your-client-id>",
         token: "<your-access-token>"
     )

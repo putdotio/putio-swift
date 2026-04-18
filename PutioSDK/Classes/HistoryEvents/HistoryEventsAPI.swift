@@ -1,8 +1,8 @@
 import Foundation
 import SwiftyJSON
 
-extension PutioAPI {
-    public func getHistoryEvents(completion: @escaping (Result<[PutioHistoryEvent], PutioAPIError>) -> Void) {
+extension PutioSDK {
+    public func getHistoryEvents(completion: @escaping (Result<[PutioHistoryEvent], PutioSDKError>) -> Void) {
         self.get("/events/list") { result in
             switch result {
             case .success(let json):
@@ -13,7 +13,7 @@ extension PutioAPI {
         }
     }
 
-    public func clearHistoryEvents(completion: @escaping PutioAPIBoolCompletion) {
+    public func clearHistoryEvents(completion: @escaping PutioSDKBoolCompletion) {
         self.post("/events/delete") { result in
             switch result {
             case .success(let json):
@@ -24,7 +24,7 @@ extension PutioAPI {
         }
     }
 
-    public func deleteHistoryEvent(eventID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func deleteHistoryEvent(eventID: Int, completion: @escaping PutioSDKBoolCompletion) {
         self.post("/events/delete/\(eventID)") { result in
             switch result {
             case .success(let json):

@@ -1,8 +1,8 @@
 import Foundation
 import SwiftyJSON
 
-extension PutioAPI {
-    public func startMp4Conversion(fileID: Int, completion: @escaping PutioAPIBoolCompletion) {
+extension PutioSDK {
+    public func startMp4Conversion(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/\(fileID)/mp4"
 
         self.post(url) { result in
@@ -15,7 +15,7 @@ extension PutioAPI {
         }
     }
 
-    public func getMp4ConversionStatus(fileID: Int, completion: @escaping (Result<PutioMp4Conversion, PutioAPIError>) -> Void) {
+    public func getMp4ConversionStatus(fileID: Int, completion: @escaping (Result<PutioMp4Conversion, PutioSDKError>) -> Void) {
         let url = "/files/\(fileID)/mp4"
 
         self.get(url) { result in
@@ -28,7 +28,7 @@ extension PutioAPI {
         }
     }
 
-    public func getStartFrom(fileID: Int, completion: @escaping (Result<Int, PutioAPIError>) -> Void) {
+    public func getStartFrom(fileID: Int, completion: @escaping (Result<Int, PutioSDKError>) -> Void) {
         let url = "/files/\(fileID)/start-from"
 
         self.get(url) { result in
@@ -41,7 +41,7 @@ extension PutioAPI {
         }
     }
 
-    public func setStartFrom(fileID: Int, time: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func setStartFrom(fileID: Int, time: Int, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/\(fileID)/start-from/set"
 
         self.post(url, body: ["time": time]) { result in
@@ -54,7 +54,7 @@ extension PutioAPI {
         }
     }
 
-    public func resetStartFrom(fileID: Int, completion: @escaping PutioAPIBoolCompletion) {
+    public func resetStartFrom(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
         let url = "/files/\(fileID)/start-from/delete"
 
         self.get(url) { result in

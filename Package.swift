@@ -1,13 +1,13 @@
-// swift-tools-version:5.7
+// swift-tools-version:6.2
 
 import PackageDescription
 
 let package = Package(
     name: "PutioSDK",
     platforms: [
-        .iOS(.v13),
-        .macOS(.v10_15),
-        .macCatalyst(.v14),
+        .iOS(.v26),
+        .macOS(.v26),
+        .macCatalyst(.v26),
     ],
     products: [
         .library(
@@ -16,7 +16,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.5.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.11.0"),
         .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
     ],
     targets: [
@@ -28,5 +28,8 @@ let package = Package(
             ],
             path: "PutioSDK/Classes"
         ),
+    ],
+    swiftLanguageModes: [
+        .v5
     ]
 )

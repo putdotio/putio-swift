@@ -46,7 +46,7 @@ make print-simulator-destination
 - The GitHub repository is `putio-sdk-swift`
 - The Swift Package product and module are `PutioSDK`
 - The CocoaPods package is `PutioSDK`
-- The public SDK type names remain `PutioAPI`
+- The public SDK module and type names are `PutioSDK`
 - Keep `Package.swift`, `PutioSDK.podspec`, and `VERSION` aligned when dependency or platform support changes
 - Any iPhone simulator on iOS `26.0` or newer is acceptable for interactive example runs; the repo does not require an exact simulator patch version
 - Use `bundle exec pod lib lint PutioSDK.podspec --allow-warnings` as a manual publish-time check when you need full podspec validation and have a working iOS destination available

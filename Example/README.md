@@ -2,7 +2,7 @@
 
 The example app is a lightweight smoke-test surface for the SDK's OAuth flow.
 
-It integrates the local CocoaPods package as `PutioSDK`, while the in-code SDK type names remain `PutioAPI`.
+It integrates the local CocoaPods package as `PutioSDK`, and the in-code SDK surface also uses `PutioSDK`.
 
 ## Setup
 

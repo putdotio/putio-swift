@@ -1,6 +1,6 @@
 //
 //  TransferFromRSSErrorEvent.swift
-//  PutioAPI
+//  PutioSDK
 //
 //  Created by Batuhan Aksoy on 14.09.2020.
 //
