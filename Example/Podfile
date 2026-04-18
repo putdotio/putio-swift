@@ -3,7 +3,7 @@ platform :ios, '13.0'
 use_frameworks!
 
 target 'PutioAPI_Example' do
-  pod 'PutioAPI', :path => '../'
+  pod 'PutioSDK', :path => '../'
 
   target 'PutioAPI_Tests' do
     inherit! :search_paths

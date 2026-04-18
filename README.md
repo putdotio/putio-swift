@@ -10,20 +10,19 @@
   </p>
 
   <p>
-    Swift Package: <code>PutioSDK</code> · CocoaPods package: <code>PutioAPI</code>
+    Swift Package: <code>PutioSDK</code> · CocoaPods package: <code>PutioSDK</code>
   </p>
 
   <p>
     <a href="https://github.com/putdotio/putio-sdk-swift/actions/workflows/ci.yml?query=branch%3Amain" style="text-decoration:none;"><img src="https://img.shields.io/github/actions/workflow/status/putdotio/putio-sdk-swift/ci.yml?branch=main&style=flat&label=ci&colorA=000000&colorB=000000" alt="CI"></a>
-    <a href="https://cocoapods.org/pods/PutioAPI" style="text-decoration:none;"><img src="https://img.shields.io/cocoapods/v/PutioAPI?style=flat&colorA=000000&colorB=000000" alt="CocoaPods version"></a>
+    <a href="https://cocoapods.org/pods/PutioSDK" style="text-decoration:none;"><img src="https://img.shields.io/cocoapods/v/PutioSDK?style=flat&colorA=000000&colorB=000000" alt="CocoaPods version"></a>
     <a href="https://github.com/putdotio/putio-sdk-swift/blob/main/LICENSE" style="text-decoration:none;"><img src="https://img.shields.io/github/license/putdotio/putio-sdk-swift?style=flat&colorA=000000&colorB=000000" alt="license"></a>
   </p>
 </div>
 
 GitHub repository: `putio-sdk-swift`
 The Swift Package product and module are `PutioSDK`
-The repository now includes a `PutioSDK` CocoaPods podspec ready for release automation
-`PutioAPI` remains the currently published CocoaPods package until `PutioSDK` is published from CI
+The CocoaPods package is `PutioSDK`
 The existing public SDK type names remain `PutioAPI`
 
 ## Installation
@@ -53,10 +52,8 @@ import PutioSDK
 If you use CocoaPods today, install with:
 
 ```ruby
-pod 'PutioAPI'
+pod 'PutioSDK'
 ```
-
-The repo also includes a `PutioSDK` podspec so CI can publish the new package name once `COCOAPODS_TRUNK_TOKEN` is configured
 
 ## Quick Start
 

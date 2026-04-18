@@ -15,4 +15,3 @@ if [ -z "${COCOAPODS_TRUNK_TOKEN:-}" ]; then
 fi
 
 bundle exec pod trunk push PutioSDK.podspec --allow-warnings
-bundle exec pod trunk push PutioAPI.podspec --allow-warnings
