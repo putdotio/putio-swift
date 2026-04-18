@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
   s.version          = '1.5.0'
   s.swift_version    = '4.2'
 
-  s.summary          = 'Swift client for put.io API.'
-  s.description      = 'Swift client for [put.io API](https://api.put.io).'
+  s.summary          = 'Swift SDK for the put.io API.'
+  s.description      = 'Swift SDK for the [put.io API](https://api.put.io).'
 
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'put.io' => 'ui@put.io' }

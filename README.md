@@ -1,54 +1,85 @@
 <div align="center">
   <p>
-    <img src="https://static.put.io/images/putio-boncuk.png" width="72">
+    <img src="https://static.put.io/images/putio-boncuk.png" width="72" alt="put.io boncuk">
   </p>
 
-  <h1>putio-swift</h1>
+  <h1>putio-sdk-swift</h1>
 
   <p>
-    Swift SDK for interacting with the <a href="https://api.put.io/v2/docs">put.io API.</a>
+    Swift SDK for the <a href="https://api.put.io/v2/docs">put.io API</a>
   </p>
 
   <p>
-    <img src="https://img.shields.io/cocoapods/v/PutioAPI" alt="Cocoapods">
-    <img src="https://img.shields.io/github/license/putdotio/putio-swift" alt="GitHub">
+    CocoaPods package: <code>PutioAPI</code>
+  </p>
+
+  <p>
+    <a href="https://github.com/putdotio/putio-swift/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://img.shields.io/github/actions/workflow/status/putdotio/putio-swift/ci.yml?branch=master&style=flat&label=ci&colorA=000000&colorB=000000" alt="CI"></a>
+    <a href="https://cocoapods.org/pods/PutioAPI"><img src="https://img.shields.io/cocoapods/v/PutioAPI?style=flat&colorA=000000&colorB=000000" alt="CocoaPods version"></a>
+    <a href="https://github.com/putdotio/putio-swift/blob/master/LICENSE"><img src="https://img.shields.io/github/license/putdotio/putio-swift?style=flat&colorA=000000&colorB=000000" alt="license"></a>
   </p>
 </div>
 
+`putio-sdk-swift` is the public-facing repo shape we want, while the package you install today is still named `PutioAPI`
+
 ## Installation
 
-`PutioAPI` is available through [CocoaPods](https://cocoapods.org/pods/PutioAPI). To install, simply add the following line to your Podfile:
+Install with CocoaPods:
 
 ```ruby
 pod 'PutioAPI'
 ```
 
-## Usage
+## Quick Start
 
-- For authentication, check the [Example Project](./Example/PutioAPI/ViewController.swift) for a simple [`ASWebAuthenticationSession`](https://developer.apple.com/documentation/authenticationservices/authenticating_a_user_through_a_web_service) flow.
-- Check [the classes folder](./PutioAPI/Classes/) for available models and respective methods.
-- You can also use `get`, `post`, `put`, and `delete` methods with relative URLs to make requests to the API.
+```swift
+import PutioAPI
 
-## Contribution
+let api = PutioAPI(
+    config: PutioAPIConfig(
+        clientID: "<your-client-id>",
+        token: "<your-access-token>"
+    )
+)
 
-Clone the repo.
-
-```bash
-git clone git@github.com:putdotio/putio-swift.git
-cd ./putio-swift
+api.getAccountInfo { result in
+    switch result {
+    case .success(let account):
+        print(account.username)
+    case .failure(let error):
+        print(error.message)
+    }
+}
 ```
 
-Install the package managers, it's suggested to use `rbenv` and `bundler` for convenience.
+## Verification
+
+The repo exposes one local verification command:
 
 ```bash
-gem install bundler # if you don't have bundler
-bundle install
+make verify
 ```
 
-Install the dependencies then open the workspace.
+Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace and builds the `PutioAPI` framework against `iphonesimulator`
 
-```bash
-cd ./Example
-bundle exec pod install
-open ./PutioAPI.xcworkspace
-```
+## Authentication Example
+
+The example app shows a minimal `ASWebAuthenticationSession` flow and a follow-up account fetch:
+
+- [Example/PutioAPI/ViewController.swift](./Example/PutioAPI/ViewController.swift)
+- [Example/README.md](./Example/README.md)
+
+## Docs
+
+- [CONTRIBUTING.md](./CONTRIBUTING.md) for local setup and verification
+- [SECURITY.md](./SECURITY.md) for private vulnerability reporting
+- [AGENTS.md](./AGENTS.md) for repo-specific agent guidance
+- [Example](./Example) for the example app and smoke-test workspace
+
+## Contributing
+
+Start with [CONTRIBUTING.md](./CONTRIBUTING.md) so local setup, verification, and release expectations stay aligned with CI
+
+## License
+
+This project is available under the [MIT License](./LICENSE)
