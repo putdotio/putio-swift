@@ -14,7 +14,7 @@ def configure_putio_sdk_spec(spec, name:, module_name: nil)
   spec.description      = 'Swift SDK for the [put.io API](https://api.put.io).'
 
   spec.license          = { :type => 'MIT', :file => 'LICENSE' }
-  spec.author           = { 'put.io' => 'ui@put.io' }
+  spec.author           = { 'put.io' => 'devs@put.io' }
 
   spec.homepage         = 'https://github.com/putdotio/putio-sdk-swift'
   spec.source           = { :git => 'https://github.com/putdotio/putio-sdk-swift.git', :tag => spec.version.to_s }
