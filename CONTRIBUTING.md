@@ -55,6 +55,7 @@ make print-simulator-destination
 - The release workflow uses semantic-release on `main`
 - Conventional commits drive automated version selection through semantic-release
 - GitHub releases only need the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
+- Release commits created by the workflow are authored and committed as `devsputio <devs@put.io>`
 
 ## Pull Requests
 
