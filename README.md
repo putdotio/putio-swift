@@ -89,18 +89,20 @@ Releases are continuous on `main`: every merge is treated as releasable. Convent
 The example app shows a minimal `ASWebAuthenticationSession` flow and a follow-up account fetch:
 
 - [Example/PutioSDK/ViewController.swift](./Example/PutioSDK/ViewController.swift)
-- [Example/README.md](./Example/README.md)
+- [Example app guide](./Example/README.md)
 
 ## Docs
 
-- [CONTRIBUTING.md](./CONTRIBUTING.md) for local setup and verification
-- [SECURITY.md](./SECURITY.md) for private vulnerability reporting
-- [AGENTS.md](./AGENTS.md) for repo-specific agent guidance
-- [Example](./Example) for the example app and smoke-test workspace
+- [Example app](./Example) for the example app and smoke-test workspace
+- [Security](./SECURITY.md) for private vulnerability reporting
+
+## Repo Internals
+
+- [Agent guide](./AGENTS.md) for repo-specific agent guidance
 
 ## Contributing
 
-Start with [CONTRIBUTING.md](./CONTRIBUTING.md) so local setup, verification, and release expectations stay aligned with CI
+Start with [Contributing](./CONTRIBUTING.md) so local setup, verification, and release expectations stay aligned with CI
 
 ## License
 
