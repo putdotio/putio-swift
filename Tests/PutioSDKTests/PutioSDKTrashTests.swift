@@ -76,11 +76,11 @@ final class PutioSDKTrashTests: XCTestCase {
         let deleted = try await sdk.deleteTrashFiles(fileIDs: [], cursor: "trash-page-2")
         let emptied = try await sdk.emptyTrash()
 
-        XCTAssertEqual(listed.cursor, "trash-page-2")
+        XCTAssertEqual(listed.cursor, Optional("trash-page-2"))
         XCTAssertEqual(listed.total, 1)
         XCTAssertEqual(listed.trashSize, 99)
         XCTAssertEqual(listed.files.first?.name, "Old episode")
-        XCTAssertEqual(continued.cursor, "done")
+        XCTAssertEqual(continued.cursor, Optional("done"))
         XCTAssertEqual(restored.status, "OK")
         XCTAssertEqual(deleted.cursor, "deleted")
         XCTAssertEqual(emptied.status, "OK")
@@ -90,7 +90,7 @@ final class PutioSDKTrashTests: XCTestCase {
         let decoder = JSONDecoder()
         let response = try decoder.decode(PutioListTrashResponse.self, from: Data(#"{}"#.utf8))
 
-        XCTAssertEqual(response.cursor, "")
+        XCTAssertNil(response.cursor)
         XCTAssertNil(response.total)
         XCTAssertEqual(response.trashSize, 0)
         XCTAssertTrue(response.files.isEmpty)

@@ -18,9 +18,9 @@ open class PutioAuthCode: Decodable {
 
 open class PutioTokenValidationResult: Decodable {
     open var result: Bool
-    open var tokenID: Int
-    open var tokenScope: String
-    open var userID: Int
+    open var tokenID: Int?
+    open var tokenScope: String?
+    open var userID: Int?
 
     enum CodingKeys: String, CodingKey {
         case result
@@ -32,9 +32,9 @@ open class PutioTokenValidationResult: Decodable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.result = try container.decodeIfPresent(Bool.self, forKey: .result) ?? false
-        self.tokenID = try container.decodeIfPresent(Int.self, forKey: .tokenID) ?? 0
-        self.tokenScope = try container.decodeIfPresent(String.self, forKey: .tokenScope) ?? ""
-        self.userID = try container.decodeIfPresent(Int.self, forKey: .userID) ?? 0
+        self.tokenID = try container.decodeIfPresent(Int.self, forKey: .tokenID)
+        self.tokenScope = try container.decodeIfPresent(String.self, forKey: .tokenScope)
+        self.userID = try container.decodeIfPresent(Int.self, forKey: .userID)
     }
 }
 

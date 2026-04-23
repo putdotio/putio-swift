@@ -11,6 +11,16 @@ final class PutioSDKLiveTests: XCTestCase {
         XCTAssertGreaterThan(account.id, 0)
     }
 
+    func testValidateTokenLoadsAgainstRealAPI() async throws {
+        let sdk = try LiveSupport.newAuthedClient()
+        let validation = try await sdk.validateToken(token: sdk.config.token)
+
+        XCTAssertTrue(validation.result)
+        XCTAssertNotNil(validation.tokenID)
+        XCTAssertNotNil(validation.tokenScope)
+        XCTAssertNotNil(validation.userID)
+    }
+
     func testFilesAndTrashDisposableFlow() async throws {
         let sdk = try LiveSupport.newAuthedClient()
         let folderName = LiveSupport.uniqueName(prefix: "putio-swift-live")

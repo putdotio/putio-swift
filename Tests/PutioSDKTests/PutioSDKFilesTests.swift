@@ -228,7 +228,7 @@ final class PutioSDKFilesTests: XCTestCase {
         XCTAssertEqual(nextFile.type, .video)
         XCTAssertEqual(sorted.status, "OK")
         XCTAssertEqual(resetSort.status, "OK")
-        XCTAssertEqual(continuedSearch.cursor, "search-done")
+        XCTAssertEqual(continuedSearch.cursor, Optional("search-done"))
         XCTAssertEqual(continuedSearch.files.first?.name, "Episode 3.mkv")
         XCTAssertEqual(startedConversion.status, "OK")
         XCTAssertEqual(conversion.status, .completed)

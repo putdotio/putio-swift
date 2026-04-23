@@ -144,11 +144,27 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
 
         let response = try await sdk.searchFiles(query: PutioFileSearchQuery(keyword: "matrix", perPage: 25))
 
-        XCTAssertEqual(response.cursor, "page-2")
+        XCTAssertEqual(response.cursor, Optional("page-2"))
         XCTAssertEqual(response.total, 1)
         XCTAssertEqual(response.files.count, 1)
         XCTAssertEqual(response.files.first?.name, "The Matrix.mkv")
         XCTAssertEqual(response.files.first?.type, .video)
+    }
+
+    func testSearchFilesPreservesNullCursor() throws {
+        let payload = """
+        {
+          "cursor": null,
+          "total": 0,
+          "files": []
+        }
+        """
+
+        let response = try JSONDecoder().decode(PutioFileSearchResponse.self, from: Data(payload.utf8))
+
+        XCTAssertNil(response.cursor)
+        XCTAssertEqual(response.total, 0)
+        XCTAssertTrue(response.files.isEmpty)
     }
 
     func testGetMp4ConversionStatusDecodesTypedStatus() async throws {

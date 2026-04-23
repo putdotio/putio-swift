@@ -18,7 +18,7 @@ open class PutioTrashFile: PutioBaseFile {
 }
 
 open class PutioListTrashResponse: Decodable {
-    open var cursor: String
+    open var cursor: String?
     open var total: Int?
     open var trashSize: Int64
     open var files: [PutioTrashFile]
@@ -32,7 +32,7 @@ open class PutioListTrashResponse: Decodable {
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.cursor = try container.decodeIfPresent(String.self, forKey: .cursor) ?? ""
+        self.cursor = try container.decodeIfPresent(String.self, forKey: .cursor)
         self.total = try container.decodeIfPresent(Int.self, forKey: .total)
         self.trashSize = try container.decodeIfPresent(Int64.self, forKey: .trashSize) ?? 0
         self.files = try container.decodeIfPresent([PutioTrashFile].self, forKey: .files) ?? []
