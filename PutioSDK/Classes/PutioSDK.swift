@@ -6,10 +6,9 @@ public protocol PutioSDKDelegate: AnyObject {
 }
 
 public final class PutioSDK {
-    weak var delegate: PutioSDKDelegate?
+    public weak var delegate: PutioSDKDelegate?
     let urlSession: URLSession
     let jsonDecoder: JSONDecoder
-    let jsonEncoder: JSONEncoder
 
     static let apiURL = "https://api.put.io/v2"
 
@@ -23,7 +22,6 @@ public final class PutioSDK {
         self.urlSession = urlSession
         self.config = config
         self.jsonDecoder = JSONDecoder()
-        self.jsonEncoder = JSONEncoder()
     }
 
     public func setToken(token: String) {

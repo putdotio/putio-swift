@@ -304,6 +304,22 @@ final class PutioSDKFilesTests: XCTestCase {
             )
         )
         let metadata = try decoder.decode(PutioVideoMetadata.self, from: Data(#"{}"#.utf8))
+        let rootFile = try decoder.decode(
+            PutioFile.self,
+            from: Data(
+                """
+                {
+                  "id": 0,
+                  "name": "Your Files",
+                  "icon": "folder",
+                  "parent_id": 0,
+                  "size": 0,
+                  "created_at": "2026-04-20T10:00:00Z",
+                  "file_type": "FOLDER"
+                }
+                """.utf8
+            )
+        )
 
         XCTAssertTrue(PutioFileType.fromAPI("FOLDER").isKnown)
         XCTAssertTrue(PutioFileType.fromAPI("VIDEO").isKnown)
@@ -325,6 +341,8 @@ final class PutioSDKFilesTests: XCTestCase {
         XCTAssertEqual(metadata.codec, "")
         XCTAssertEqual(metadata.duration, 0)
         XCTAssertEqual(metadata.aspectRatio, 0)
+        XCTAssertEqual(rootFile.id, 0)
+        XCTAssertEqual(rootFile.updatedAt, rootFile.createdAt)
         XCTAssertNoThrow(try PutioSDKDateParser.parse("2026-04-23T19:08:48.356333"))
         XCTAssertNoThrow(try PutioSDKDateParser.parse("2026-04-23T19:08:48.356333Z"))
         XCTAssertThrowsError(try PutioSDKDateParser.parse(nil))

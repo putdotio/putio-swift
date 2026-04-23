@@ -136,10 +136,13 @@ open class PutioFile: PutioBaseFile {
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        let baseContainer = try decoder.container(keyedBy: PutioBaseFile.CodingKeys.self)
         self.isShared = try container.decodeIfPresent(Bool.self, forKey: .isShared) ?? false
 
+        let id = try baseContainer.decode(Int.self, forKey: .id)
+        let createdAt = try PutioSDKDateParser.decodeDate(forKey: .createdAt, from: baseContainer)
         let updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
-        self.updatedAt = try PutioSDKDateParser.parse(updatedAt)
+        self.updatedAt = try PutioSDKDateParser.parse(updatedAt, fallback: id == 0 ? createdAt : nil)
 
         let folderType = try container.decodeIfPresent(String.self, forKey: .folderType) ?? ""
         self.isSharedRoot = folderType == "SHARED_ROOT"
@@ -312,22 +315,34 @@ open class PutioNextFile: Decodable {
 }
 
 enum PutioSDKDateParser {
+    private static let formatter = ISO8601DateFormatter()
+
+    private static let fractionalFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    private static let formatterQueue = DispatchQueue(label: "io.putdotio.sdk.date-parser")
+
     static func decodeDate<Key: CodingKey>(forKey key: Key, from container: KeyedDecodingContainer<Key>) throws -> Date {
         let value = try container.decode(String.self, forKey: key)
         return try parse(value)
     }
 
-    static func parse(_ value: String?) throws -> Date {
-        let formatter = ISO8601DateFormatter()
-        let fractionalFormatter = ISO8601DateFormatter()
-        fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
+    static func parse(_ value: String?, fallback: Date? = nil) throws -> Date {
         if let value, !value.isEmpty {
             for candidate in [value, "\(value)Z", "\(value)+00:00"] {
-                if let parsed = formatter.date(from: candidate) ?? fractionalFormatter.date(from: candidate) {
+                if let parsed = formatterQueue.sync(execute: {
+                    formatter.date(from: candidate) ?? fractionalFormatter.date(from: candidate)
+                }) {
                     return parsed
                 }
             }
+        }
+
+        if let fallback {
+            return fallback
         }
 
         throw DecodingError.dataCorrupted(
