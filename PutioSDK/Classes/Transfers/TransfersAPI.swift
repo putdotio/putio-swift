@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 extension PutioSDK {
     public func listTransfers(query: PutioTransfersListQuery = PutioTransfersListQuery()) async throws -> PutioTransfersListResponse {
@@ -11,7 +10,7 @@ extension PutioSDK {
             "/transfers/list/continue",
             method: .post,
             query: query.parameters,
-            body: ["cursor": cursor],
+            body: ["cursor": .string(cursor)],
             as: PutioTransfersListResponse.self
         )
     }
@@ -27,7 +26,7 @@ extension PutioSDK {
     }
 
     public func getTransferInfo(urls: [String]) async throws -> PutioTransferInfoResponse {
-        try await request("/transfers/info", method: .post, body: ["urls": urls.joined(separator: "\n")], as: PutioTransferInfoResponse.self)
+        try await request("/transfers/info", method: .post, body: ["urls": .string(urls.joined(separator: "\n"))], as: PutioTransferInfoResponse.self)
     }
 
     public func addTransfer(_ input: PutioTransferAddInput) async throws -> PutioTransfer {
@@ -37,22 +36,24 @@ extension PutioSDK {
 
     public func addTransfers(_ inputs: [PutioTransferAddInput]) async throws -> PutioTransfersAddManyResponse {
         let payload = inputs.map(\.parameters)
-        let data = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        let data = try encoder.encode(payload)
         let urls = String(decoding: data, as: UTF8.self)
-        return try await request("/transfers/add-multi", method: .post, body: ["urls": urls], as: PutioTransfersAddManyResponse.self)
+        return try await request("/transfers/add-multi", method: .post, body: ["urls": .string(urls)], as: PutioTransfersAddManyResponse.self)
     }
 
     public func cancelTransfers(ids: [Int]) async throws -> PutioOKResponse {
-        try await request("/transfers/cancel", method: .post, body: ["transfer_ids": ids.map(String.init).joined(separator: ",")], as: PutioOKResponse.self)
+        try await request("/transfers/cancel", method: .post, body: ["transfer_ids": .string(ids.map(String.init).joined(separator: ","))], as: PutioOKResponse.self)
     }
 
     public func cleanTransfers(ids: [Int] = []) async throws -> PutioTransfersCleanResponse {
-        let body: Parameters = ids.isEmpty ? [:] : ["transfer_ids": ids.map(String.init).joined(separator: ",")]
+        let body: PutioRequestParameters = ids.isEmpty ? [:] : ["transfer_ids": .string(ids.map(String.init).joined(separator: ","))]
         return try await request("/transfers/clean", method: .post, body: body, as: PutioTransfersCleanResponse.self)
     }
 
     public func retryTransfer(id: Int) async throws -> PutioTransfer {
-        let envelope = try await request("/transfers/retry", method: .post, body: ["id": id], as: PutioTransferEnvelope.self)
+        let envelope = try await request("/transfers/retry", method: .post, body: ["id": .integer(id)], as: PutioTransferEnvelope.self)
         return envelope.transfer
     }
 }

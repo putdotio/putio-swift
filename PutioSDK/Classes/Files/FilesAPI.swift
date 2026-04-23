@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 extension PutioSDK {
     public func getFiles(parentID: Int, query: PutioFilesListQuery = PutioFilesListQuery()) async throws -> PutioFilesListResult {
@@ -13,40 +12,40 @@ extension PutioSDK {
     }
 
     public func createFolder(name: String, parentID: Int) async throws -> PutioFile {
-        let body = ["name": name, "parent_id": parentID] as Parameters
+        let body: PutioRequestParameters = ["name": .string(name), "parent_id": .integer(parentID)]
         let envelope = try await request("/files/create-folder", method: .post, body: body, as: PutioFileEnvelope.self)
         return envelope.file
     }
 
     public func deleteFiles(fileIDs: [Int], options: PutioFileDeleteOptions = PutioFileDeleteOptions()) async throws -> PutioOKResponse {
-        let body = ["file_ids": (fileIDs.map { String($0) }).joined(separator: ",")]
+        let body: PutioRequestParameters = ["file_ids": .string((fileIDs.map { String($0) }).joined(separator: ","))]
         return try await request("/files/delete", method: .post, query: options.parameters, body: body, as: PutioOKResponse.self)
     }
 
     public func copyFiles(fileIDs: [Int]) async throws -> PutioOKResponse {
-        let body = ["file_ids": (fileIDs.map { String($0) }).joined(separator: ",")]
+        let body: PutioRequestParameters = ["file_ids": .string((fileIDs.map { String($0) }).joined(separator: ","))]
         return try await request("/files/copy-to-disk", method: .post, body: body, as: PutioOKResponse.self)
     }
 
     public func moveFiles(fileIDs: [Int], parentID: Int) async throws -> PutioFilesMoveResponse {
-        let body = [
-            "file_ids": (fileIDs.map { String($0) }).joined(separator: ","),
-            "parent_id": parentID
-        ] as Parameters
+        let body: PutioRequestParameters = [
+            "file_ids": .string((fileIDs.map { String($0) }).joined(separator: ",")),
+            "parent_id": .integer(parentID),
+        ]
         return try await request("/files/move", method: .post, body: body, as: PutioFilesMoveResponse.self)
     }
 
     public func renameFile(fileID: Int, name: String) async throws -> PutioOKResponse {
-        try await request("/files/rename", method: .post, body: ["file_id": fileID, "name": name], as: PutioOKResponse.self)
+        try await request("/files/rename", method: .post, body: ["file_id": .integer(fileID), "name": .string(name)], as: PutioOKResponse.self)
     }
 
     public func findNextFile(fileID: Int, fileType: PutioNextFileType) async throws -> PutioNextFile {
-        let envelope = try await request("/files/\(fileID)/next-file", query: ["file_type": fileType.rawValue], as: PutioNextFileEnvelope.self)
+        let envelope = try await request("/files/\(fileID)/next-file", query: ["file_type": .string(fileType.rawValue)], as: PutioNextFileEnvelope.self)
         return envelope.nextFile
     }
 
     public func setSortBy(fileId: Int, sortBy: String) async throws -> PutioOKResponse {
-        try await request("/files/set-sort-by", method: .post, body: ["file_id": fileId, "sort_by": sortBy], as: PutioOKResponse.self)
+        try await request("/files/set-sort-by", method: .post, body: ["file_id": .integer(fileId), "sort_by": .string(sortBy)], as: PutioOKResponse.self)
     }
 
     public func resetFileSpecificSortSettings() async throws -> PutioOKResponse {

@@ -149,13 +149,13 @@ public struct PutioAccountInfoQuery {
         self.pushToken = pushToken
     }
 
-    var parameters: [String: Any] {
-        var query: [String: Any] = [:]
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = [:]
         if downloadToken { query["download_token"] = 1 }
         if features { query["features"] = 1 }
         if intercom { query["intercom"] = 1 }
         if pas { query["pas"] = 1 }
-        if let platform { query["platform"] = platform }
+        if let platform { query["platform"] = .string(platform) }
         if profitwell { query["profitwell"] = 1 }
         if pushToken { query["push_token"] = 1 }
         return query
@@ -186,14 +186,14 @@ public struct PutioAccountSettingsPatch {
         self.showOptimisticUsage = showOptimisticUsage
     }
 
-    var parameters: [String: Any] {
-        var body: [String: Any] = [:]
-        if let historyEnabled { body["history_enabled"] = historyEnabled }
-        if let trashEnabled { body["trash_enabled"] = trashEnabled }
-        if let hideSubtitles { body["hide_subtitles"] = hideSubtitles }
-        if let dontAutoSelectSubtitles { body["dont_autoselect_subtitles"] = dontAutoSelectSubtitles }
-        if let tunnelRouteName { body["tunnel_route_name"] = tunnelRouteName }
-        if let showOptimisticUsage { body["show_optimistic_usage"] = showOptimisticUsage }
+    var parameters: PutioRequestParameters {
+        var body: PutioRequestParameters = [:]
+        if let historyEnabled { body["history_enabled"] = .bool(historyEnabled) }
+        if let trashEnabled { body["trash_enabled"] = .bool(trashEnabled) }
+        if let hideSubtitles { body["hide_subtitles"] = .bool(hideSubtitles) }
+        if let dontAutoSelectSubtitles { body["dont_autoselect_subtitles"] = .bool(dontAutoSelectSubtitles) }
+        if let tunnelRouteName { body["tunnel_route_name"] = .string(tunnelRouteName) }
+        if let showOptimisticUsage { body["show_optimistic_usage"] = .bool(showOptimisticUsage) }
         return body
     }
 }
@@ -207,10 +207,10 @@ public struct PutioTwoFactorSettings {
         self.enable = enable
     }
 
-    var parameters: [String: Any] {
+    var parameters: PutioRequestParameters {
         [
-            "code": code,
-            "enable": enable,
+            "code": .string(code),
+            "enable": .bool(enable),
         ]
     }
 }
@@ -222,24 +222,24 @@ public enum PutioAccountSettingsUpdate {
     case password(currentPassword: String, password: String)
     case twoFactor(PutioTwoFactorSettings)
 
-    var parameters: [String: Any] {
+    var parameters: PutioRequestParameters {
         switch self {
         case let .patch(patch):
             return patch.parameters
         case let .username(username):
-            return ["username": username]
+            return ["username": .string(username)]
         case let .mail(currentPassword, mail):
             return [
-                "current_password": currentPassword,
-                "mail": mail,
+                "current_password": .string(currentPassword),
+                "mail": .string(mail),
             ]
         case let .password(currentPassword, password):
             return [
-                "current_password": currentPassword,
-                "password": password,
+                "current_password": .string(currentPassword),
+                "password": .string(password),
             ]
         case let .twoFactor(settings):
-            return ["two_factor_enabled": settings.parameters]
+            return ["two_factor_enabled": .object(settings.parameters)]
         }
     }
 }
@@ -274,16 +274,16 @@ public struct PutioAccountClearOptions {
         self.friends = friends
     }
 
-    var parameters: [String: Any] {
+    var parameters: PutioRequestParameters {
         [
-            "files": files,
-            "finished_transfers": finishedTransfers,
-            "active_transfers": activeTransfers,
-            "rss_feeds": rssFeeds,
-            "rss_logs": rssLogs,
-            "history": history,
-            "trash": trash,
-            "friends": friends,
+            "files": .bool(files),
+            "finished_transfers": .bool(finishedTransfers),
+            "active_transfers": .bool(activeTransfers),
+            "rss_feeds": .bool(rssFeeds),
+            "rss_logs": .bool(rssLogs),
+            "history": .bool(history),
+            "trash": .bool(trash),
+            "friends": .bool(friends),
         ]
     }
 }

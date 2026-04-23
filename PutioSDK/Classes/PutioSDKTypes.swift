@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 public struct PutioSDKConfig {
     public let baseURL: String
@@ -37,41 +36,182 @@ public struct PutioSDKConfig {
     }
 }
 
-public struct PutioSDKRequestConfig {
-    let url: String
-    let method: HTTPMethod
-    let headers: HTTPHeaders
-    let query: Parameters
-    let body: Parameters?
+enum PutioHTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case patch = "PATCH"
+    case delete = "DELETE"
 
-    init(apiConfig: PutioSDKConfig, url: String, method: HTTPMethod, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:]) {
-        if (query.isEmpty) {
-            self.url = "\(apiConfig.baseURL)\(url)"
-        } else {
-            let encodedURLRequest = try! URLEncoding.queryString.encode(URLRequest(url: URL(string: url)!), with: query)
-            self.url = "\(apiConfig.baseURL)\((encodedURLRequest.url?.absoluteString)!)"
+    var acceptsBody: Bool {
+        switch self {
+        case .post, .put, .patch:
+            return true
+        case .get, .delete:
+            return false
         }
+    }
+}
 
+enum PutioRequestValue: Equatable, Encodable, Sendable {
+    case string(String)
+    case integer(Int)
+    case double(Double)
+    case bool(Bool)
+    case array([PutioRequestValue])
+    case object(PutioRequestParameters)
+
+    func encode(to encoder: Encoder) throws {
+        switch self {
+        case let .string(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case let .integer(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case let .double(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case let .bool(value):
+            var container = encoder.singleValueContainer()
+            try container.encode(value)
+        case let .array(values):
+            var container = encoder.unkeyedContainer()
+            for value in values {
+                try container.encode(value)
+            }
+        case let .object(values):
+            try values.encode(to: encoder)
+        }
+    }
+
+    var queryValue: String {
+        switch self {
+        case let .string(value):
+            return value
+        case let .integer(value):
+            return String(value)
+        case let .double(value):
+            return String(value)
+        case let .bool(value):
+            return value ? "1" : "0"
+        case let .array(values):
+            return values.map(\.queryValue).joined(separator: ",")
+        case .object:
+            return ""
+        }
+    }
+}
+
+extension PutioRequestValue: ExpressibleByStringLiteral {
+    init(stringLiteral value: String) {
+        self = .string(value)
+    }
+}
+
+extension PutioRequestValue: ExpressibleByIntegerLiteral {
+    init(integerLiteral value: Int) {
+        self = .integer(value)
+    }
+}
+
+extension PutioRequestValue: ExpressibleByFloatLiteral {
+    init(floatLiteral value: Double) {
+        self = .double(value)
+    }
+}
+
+extension PutioRequestValue: ExpressibleByBooleanLiteral {
+    init(booleanLiteral value: Bool) {
+        self = .bool(value)
+    }
+}
+
+extension PutioRequestValue: ExpressibleByArrayLiteral {
+    init(arrayLiteral elements: PutioRequestValue...) {
+        self = .array(elements)
+    }
+}
+
+extension PutioRequestValue: ExpressibleByDictionaryLiteral {
+    init(dictionaryLiteral elements: (String, PutioRequestValue)...) {
+        self = .object(Dictionary(uniqueKeysWithValues: elements))
+    }
+}
+
+typealias PutioRequestParameters = [String: PutioRequestValue]
+typealias PutioHTTPHeaders = [String: String]
+
+extension Dictionary where Key == String, Value == String {
+    func value(for headerName: String) -> String? {
+        first { key, _ in key.caseInsensitiveCompare(headerName) == .orderedSame }?.value
+    }
+
+    mutating func setValue(_ value: String, forHeader headerName: String) {
+        if let existingKey = keys.first(where: { $0.caseInsensitiveCompare(headerName) == .orderedSame }) {
+            self[existingKey] = value
+        } else {
+            self[headerName] = value
+        }
+    }
+}
+
+public struct PutioSDKRequestConfig {
+    private let baseURL: String
+    private let path: String
+    let method: PutioHTTPMethod
+    let headers: PutioHTTPHeaders
+    let query: PutioRequestParameters
+    let body: PutioRequestParameters?
+
+    var url: String {
+        (try? buildURL().absoluteString) ?? "\(baseURL)\(path)"
+    }
+
+    init(
+        apiConfig: PutioSDKConfig,
+        url: String,
+        method: PutioHTTPMethod,
+        headers: PutioHTTPHeaders = [:],
+        query: PutioRequestParameters = [:],
+        body: PutioRequestParameters = [:]
+    ) {
+        self.baseURL = apiConfig.baseURL
+        self.path = url
         self.method = method
 
         var enhancedHeaders = headers
         if enhancedHeaders.value(for: "authorization") == nil {
             if apiConfig.token != "" {
-                let authorizationHeader = HTTPHeader.authorization("token \(apiConfig.token)")
-                enhancedHeaders.add(authorizationHeader)
+                enhancedHeaders.setValue("token \(apiConfig.token)", forHeader: "Authorization")
             }
         }
 
         self.headers = enhancedHeaders
-
         self.query = query
+        self.body = method.acceptsBody ? body : nil
+    }
 
-        switch method {
-        case .post, .put, .patch:
-            self.body = body
-        default:
-            self.body = nil
+    func buildURL() throws -> URL {
+        let trimmedBaseURL = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        let trimmedPath = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        let rawURL = "\(trimmedBaseURL)/\(trimmedPath)"
+
+        guard var components = URLComponents(string: rawURL) else {
+            throw URLError(.badURL)
         }
+
+        if !query.isEmpty {
+            components.queryItems = query.map { key, value in
+                URLQueryItem(name: key, value: value.queryValue)
+            }
+        }
+
+        guard let url = components.url else {
+            throw URLError(.badURL)
+        }
+
+        return url
     }
 }
 
@@ -95,13 +235,12 @@ extension PutioSDKRequestConfig: CustomStringConvertible, CustomDebugStringConve
         return components.string ?? url
     }
 
-    private var redactedHeaders: HTTPHeaders {
-        HTTPHeaders(headers.map { header in
-            if sensitiveKey(header.name) {
-                return HTTPHeader(name: header.name, value: "<redacted>")
-            }
-            return header
-        })
+    private var redactedHeaders: PutioHTTPHeaders {
+        var redacted: PutioHTTPHeaders = [:]
+        for (key, value) in headers {
+            redacted[key] = sensitiveKey(key) ? "<redacted>" : value
+        }
+        return redacted
     }
 }
 
@@ -115,8 +254,8 @@ extension PutioSDKErrorRequestInformation: CustomStringConvertible, CustomDebugS
     }
 }
 
-private func redact(_ parameters: Parameters) -> Parameters {
-    var redacted = Parameters()
+private func redact(_ parameters: PutioRequestParameters) -> PutioRequestParameters {
+    var redacted = PutioRequestParameters()
     for (key, value) in parameters {
         redacted[key] = sensitiveKey(key) ? "<redacted>" : value
     }

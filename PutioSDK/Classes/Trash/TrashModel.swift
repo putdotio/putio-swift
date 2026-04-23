@@ -46,10 +46,10 @@ public struct PutioTrashListQuery {
         self.perPage = perPage
     }
 
-    var parameters: [String: Any] {
-        var query: [String: Any] = [:]
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = [:]
         if let perPage {
-            query["per_page"] = perPage
+            query["per_page"] = .integer(perPage)
         }
         return query
     }

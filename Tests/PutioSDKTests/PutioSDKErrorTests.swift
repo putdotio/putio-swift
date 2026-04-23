@@ -1,4 +1,3 @@
-import Alamofire
 import XCTest
 
 @testable import PutioSDK
@@ -73,7 +72,7 @@ final class PutioSDKErrorTests: XCTestCase {
             apiConfig: PutioSDKConfig(baseURL: "https://api.put.io/v2", clientID: "ios-app", token: "config-token"),
             url: "/two_factor/verify/totp",
             method: .post,
-            headers: HTTPHeaders(["Authorization": "Bearer header-token"]),
+            headers: ["Authorization": "Bearer header-token"],
             query: ["oauth_token": "query-token"],
             body: ["client_secret": "client-secret", "name": "safe-name"]
         )

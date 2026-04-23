@@ -15,15 +15,11 @@ let package = Package(
             targets: ["PutioSDK"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.11.0"),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "PutioSDK",
-            dependencies: [
-                "Alamofire",
-            ],
+            dependencies: [],
             path: "PutioSDK/Classes"
         ),
         .testTarget(

@@ -11,7 +11,7 @@ extension PutioSDK {
     }
 
     public func linkDevice(code: String) async throws -> PutioOAuthGrant {
-        let envelope = try await request("/oauth2/oob/code", method: .post, body: ["code": code], as: PutioGrantEnvelope.self)
+        let envelope = try await request("/oauth2/oob/code", method: .post, body: ["code": .string(code)], as: PutioGrantEnvelope.self)
         return envelope.app
     }
 }

@@ -16,7 +16,7 @@ extension PutioSDK {
     }
 
     public func setStartFrom(fileID: Int, time: Int) async throws -> PutioOKResponse {
-        try await request("/files/\(fileID)/start-from/set", method: .post, body: ["time": time], as: PutioOKResponse.self)
+        try await request("/files/\(fileID)/start-from/set", method: .post, body: ["time": .integer(time)], as: PutioOKResponse.self)
     }
 
     public func resetStartFrom(fileID: Int) async throws -> PutioOKResponse {

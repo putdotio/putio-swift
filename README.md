@@ -73,7 +73,7 @@ Task {
 }
 ```
 
-The SDK exposes an async-first `async throws` surface and no longer ships completion-handler compatibility wrappers or raw JSON response APIs.
+The SDK exposes an async-first `async throws` surface with native `URLSession` transport and no third-party networking dependency. It no longer ships completion-handler compatibility wrappers or raw JSON response APIs.
 
 ## Verification
 

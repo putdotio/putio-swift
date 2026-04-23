@@ -19,7 +19,7 @@ extension PutioSDK {
     }
 
     public func destroyAccount(currentPassword: String) async throws -> PutioOKResponse {
-        try await request("/account/destroy", method: .post, body: ["current_password": currentPassword], as: PutioOKResponse.self)
+        try await request("/account/destroy", method: .post, body: ["current_password": .string(currentPassword)], as: PutioOKResponse.self)
     }
 }
 

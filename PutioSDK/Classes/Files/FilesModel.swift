@@ -161,30 +161,44 @@ open class PutioFile: PutioBaseFile {
 
     public func getStreamURL(token: String) -> URL? {
         if type == .audio {
-            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/stream?oauth_token=\(token)")
+            return putioFileURL(fileID: id, pathSuffix: "stream", queryItems: [URLQueryItem(name: "oauth_token", value: token)])
         }
 
         if type == .video {
-            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)")
+            return putioFileURL(
+                fileID: id,
+                pathSuffix: "hls/media.m3u8",
+                queryItems: [
+                    URLQueryItem(name: "subtitle_key", value: "all"),
+                    URLQueryItem(name: "oauth_token", value: token),
+                ]
+            )
         }
 
         return nil
     }
 
     public func getHlsStreamURL(token: String) -> URL {
-        URL(string: "\(PutioSDK.apiURL)/files/\(id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)")!
+        putioFileURL(
+            fileID: id,
+            pathSuffix: "hls/media.m3u8",
+            queryItems: [
+                URLQueryItem(name: "subtitle_key", value: "all"),
+                URLQueryItem(name: "oauth_token", value: token),
+            ]
+        )
     }
 
     public func getAudioStreamURL(token: String) -> URL {
-        URL(string: "\(PutioSDK.apiURL)/files/\(id)/stream?oauth_token=\(token)")!
+        putioFileURL(fileID: id, pathSuffix: "stream", queryItems: [URLQueryItem(name: "oauth_token", value: token)])
     }
 
     public func getDownloadURL(token: String) -> URL {
-        URL(string: "\(PutioSDK.apiURL)/files/\(id)/download?oauth_token=\(token)")!
+        putioFileURL(fileID: id, pathSuffix: "download", queryItems: [URLQueryItem(name: "oauth_token", value: token)])
     }
 
     public func getMp4DownloadURL(token: String) -> URL {
-        URL(string: "\(PutioSDK.apiURL)/files/\(id)/mp4/download?oauth_token=\(token)")!
+        putioFileURL(fileID: id, pathSuffix: "mp4/download", queryItems: [URLQueryItem(name: "oauth_token", value: token)])
     }
 }
 
@@ -219,21 +233,21 @@ public struct PutioFilesListQuery {
         self.sortBy = sortBy
     }
 
-    func parameters(parentID: Int) -> [String: Any] {
-        var query: [String: Any] = [
-            "parent_id": parentID,
+    func parameters(parentID: Int) -> PutioRequestParameters {
+        var query: PutioRequestParameters = [
+            "parent_id": .integer(parentID),
             "mp4_status_parent": 1,
             "stream_url_parent": 1,
             "mp4_stream_url_parent": 1,
             "video_metadata_parent": 1,
         ]
-        if let perPage { query["per_page"] = perPage }
+        if let perPage { query["per_page"] = .integer(perPage) }
         if total { query["total"] = 1 }
         if hidden { query["hidden"] = 1 }
         if noCursor { query["no_cursor"] = 1 }
-        if let contentType { query["content_type"] = contentType }
-        if let fileType { query["file_type"] = fileType.rawValue }
-        if let sortBy { query["sort_by"] = sortBy }
+        if let contentType { query["content_type"] = .string(contentType) }
+        if let fileType { query["file_type"] = .string(fileType.rawValue) }
+        if let sortBy { query["sort_by"] = .string(sortBy) }
         return query
     }
 }
@@ -256,8 +270,8 @@ public struct PutioFileDetailsQuery {
         self.mp4StreamURL = mp4StreamURL
     }
 
-    var parameters: [String: Any] {
-        var query: [String: Any] = [:]
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = [:]
         if mp4Size { query["mp4_size"] = 1 }
         if startFrom { query["start_from"] = 1 }
         if streamURL { query["stream_url"] = 1 }
@@ -275,10 +289,10 @@ public struct PutioFileDeleteOptions {
         self.skipOwnerCheck = skipOwnerCheck
     }
 
-    var parameters: [String: Any] {
+    var parameters: PutioRequestParameters {
         [
-            "skip_nonexistents": skipNonexistents,
-            "skip_owner_check": skipOwnerCheck,
+            "skip_nonexistents": .bool(skipNonexistents),
+            "skip_owner_check": .bool(skipOwnerCheck),
         ]
     }
 }
@@ -307,11 +321,32 @@ open class PutioNextFile: Decodable {
     public func getStreamURL(token: String) -> URL {
         switch type {
         case .audio:
-            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/stream?oauth_token=\(token)")!
+            return putioFileURL(fileID: id, pathSuffix: "stream", queryItems: [URLQueryItem(name: "oauth_token", value: token)])
         case .video:
-            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)")!
+            return putioFileURL(
+                fileID: id,
+                pathSuffix: "hls/media.m3u8",
+                queryItems: [
+                    URLQueryItem(name: "subtitle_key", value: "all"),
+                    URLQueryItem(name: "oauth_token", value: token),
+                ]
+            )
         }
     }
+}
+
+private func putioFileURL(fileID: Int, pathSuffix: String, queryItems: [URLQueryItem]) -> URL {
+    var components = URLComponents()
+    components.scheme = "https"
+    components.host = "api.put.io"
+    components.path = "/v2/files/\(fileID)/\(pathSuffix)"
+    components.queryItems = queryItems
+
+    guard let url = components.url else {
+        preconditionFailure("Unable to build a put.io file URL")
+    }
+
+    return url
 }
 
 enum PutioSDKDateParser {

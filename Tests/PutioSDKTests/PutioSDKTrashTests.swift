@@ -97,7 +97,7 @@ final class PutioSDKTrashTests: XCTestCase {
     }
 
     func testTrashListQueryBuildsOptionalPaginationParameters() {
-        XCTAssertEqual(PutioTrashListQuery(perPage: 10).parameters["per_page"] as? Int, 10)
+        XCTAssertEqual(PutioTrashListQuery(perPage: 10).parameters["per_page"], .integer(10))
         XCTAssertTrue(PutioTrashListQuery(perPage: nil).parameters.isEmpty)
     }
 }

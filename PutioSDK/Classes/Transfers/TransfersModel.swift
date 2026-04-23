@@ -217,10 +217,10 @@ public struct PutioTransfersListQuery {
         self.perPage = perPage
     }
 
-    var parameters: [String: Any] {
-        var query: [String: Any] = [:]
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = [:]
         if let perPage {
-            query["per_page"] = perPage
+            query["per_page"] = .integer(perPage)
         }
         return query
     }
@@ -243,13 +243,13 @@ public struct PutioTransferAddInput {
         self.callbackURL = callbackURL
     }
 
-    var parameters: [String: Any] {
-        var body: [String: Any] = ["url": url]
+    var parameters: PutioRequestParameters {
+        var body: PutioRequestParameters = ["url": .string(url)]
         if let saveParentID {
-            body["save_parent_id"] = saveParentID
+            body["save_parent_id"] = .integer(saveParentID)
         }
         if let callbackURL {
-            body["callback_url"] = callbackURL
+            body["callback_url"] = .string(callbackURL)
         }
         return body
     }

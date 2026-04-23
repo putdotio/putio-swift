@@ -11,6 +11,7 @@ graph LR
   Consumer["consumer app"] --> Client["PutioSDK"]
   Client --> Async["async domain methods"]
   Async --> Transport["URLSession transport"]
+  Transport --> Encode["typed request encoding"]
   Transport --> Decode["Decodable boundary parsing"]
   Transport --> Errors["typed localized errors"]
   Transport --> API["put.io API"]
@@ -22,13 +23,14 @@ graph LR
 | --- | --- |
 | `PutioSDK` | shared SDK entrypoint and transport composition |
 | Async methods | preferred modern API surface using `async throws` |
-| Boundary models | `Decodable` request and response types for the modernized domains |
+| Boundary models | typed request inputs plus `Encodable` request values and `Decodable` response types for the modernized domains |
 | Error model | typed transport, API, and decoding failures with `LocalizedError` guidance |
 
 ## Design Rules
 
 - prefer native Swift concurrency over callback-first transport code
 - parse external data at the boundary with `Decodable`
+- encode request query and body values through SDK-owned typed primitives instead of untyped parameter bags
 - keep the CocoaPods and Swift Package surfaces aligned
 - preserve forward compatibility where possible instead of crashing on unknown backend strings
 - keep live-tested domains on the modern async path first, then expand outward
@@ -119,6 +121,6 @@ Typed query inputs exist for account info, account settings updates, file listin
 ## What This Package Is Not
 
 - not a generic JSON bag around the put.io API
-- not an Alamofire-first design anymore
+- not dependent on Alamofire for request construction or transport
 - not full namespace parity with the TypeScript SDK yet
 - not a dual-surface SDK with callback compatibility as a first-class goal

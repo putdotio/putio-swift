@@ -1,22 +1,15 @@
 PODS:
-  - Alamofire (5.11.2)
-  - PutioSDK (2.0.0):
-    - Alamofire (~> 5.11)
+  - PutioSDK (2.0.0)
 
 DEPENDENCIES:
   - PutioSDK (from `../`)
-
-SPEC REPOS:
-  trunk:
-    - Alamofire
 
 EXTERNAL SOURCES:
   PutioSDK:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: 400275dd1c6d87d95a041861d2a59da4b520a203
-  PutioSDK: 0c06549dd3fb300a2924cc1cfd6a5aab9d190912
+  PutioSDK: 9b93d771b1e29b718d5d411254d3206ae7a3faa2
 
 PODFILE CHECKSUM: e929897f16b1021dbb0f00ef39efb79f3674073a
 

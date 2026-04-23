@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 public protocol PutioSDKDelegate: AnyObject {
     func onPutioSDKError(error: PutioSDKError)
@@ -9,6 +8,7 @@ public final class PutioSDK {
     public weak var delegate: PutioSDKDelegate?
     let urlSession: URLSession
     let jsonDecoder: JSONDecoder
+    let jsonEncoder: JSONEncoder
 
     static let apiURL = "https://api.put.io/v2"
 
@@ -22,6 +22,7 @@ public final class PutioSDK {
         self.urlSession = urlSession
         self.config = config
         self.jsonDecoder = JSONDecoder()
+        self.jsonEncoder = JSONEncoder()
     }
 
     public func setToken(token: String) {
@@ -34,10 +35,10 @@ public final class PutioSDK {
 
     func request<T: Decodable>(
         _ url: String,
-        method: HTTPMethod = .get,
-        headers: HTTPHeaders = [:],
-        query: Parameters = [:],
-        body: Parameters = [:],
+        method: PutioHTTPMethod = .get,
+        headers: PutioHTTPHeaders = [:],
+        query: PutioRequestParameters = [:],
+        body: PutioRequestParameters = [:],
         as type: T.Type
     ) async throws -> T {
         let requestConfig = PutioSDKRequestConfig(
@@ -100,7 +101,10 @@ public final class PutioSDK {
     }
 
     private func buildURLRequest(from requestConfig: PutioSDKRequestConfig) throws -> URLRequest {
-        guard let url = URL(string: requestConfig.url) else {
+        let url: URL
+        do {
+            url = try requestConfig.buildURL()
+        } catch {
             throw PutioSDKError(request: PutioSDKErrorRequestInformation(config: requestConfig), unknownError: URLError(.badURL))
         }
 
@@ -108,12 +112,12 @@ public final class PutioSDK {
         request.httpMethod = requestConfig.method.rawValue
         request.timeoutInterval = config.timeoutInterval
 
-        for header in requestConfig.headers where !(header.name.lowercased() == "authorization" && header.value.isEmpty) {
-            request.setValue(header.value, forHTTPHeaderField: header.name)
+        for (name, value) in requestConfig.headers where !(name.lowercased() == "authorization" && value.isEmpty) {
+            request.setValue(value, forHTTPHeaderField: name)
         }
 
         if let body = requestConfig.body, !body.isEmpty {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            request.httpBody = try jsonEncoder.encode(body)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
 

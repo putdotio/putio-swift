@@ -5,7 +5,7 @@ extension PutioSDK {
         try await request(
             "/ifttt-client/event",
             method: .post,
-            body: ["event_type": event.eventType, "ingredients": event.ingredients.toJSON()],
+            body: ["event_type": .string(event.eventType), "ingredients": .object(event.ingredients.parameters())],
             as: PutioOKResponse.self
         )
     }

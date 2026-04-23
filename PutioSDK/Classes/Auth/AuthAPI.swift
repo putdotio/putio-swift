@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 extension PutioSDK {
     public func getAuthURL(redirectURI: String, responseType: String = "token", state: String = "") -> URL {
@@ -13,13 +12,17 @@ extension PutioSDK {
             URLQueryItem(name: "state", value: state),
         ]
 
-        return (url?.url!)!
+        guard let authURL = url?.url else {
+            preconditionFailure("Unable to build put.io auth URL")
+        }
+
+        return authURL
     }
 
     public func getAuthCode() async throws -> PutioAuthCode {
         let query = [
-            "app_id": self.config.clientID,
-            "client_name": self.config.clientName
+            "app_id": PutioRequestValue.string(self.config.clientID),
+            "client_name": PutioRequestValue.string(self.config.clientName),
         ]
 
         return try await request(
@@ -56,8 +59,8 @@ extension PutioSDK {
             "/two_factor/verify/totp",
             method: .post,
             headers: ["Authorization": ""],
-            query: ["oauth_token": twoFactorScopedToken],
-            body: ["code": code],
+            query: ["oauth_token": .string(twoFactorScopedToken)],
+            body: ["code": .string(code)],
             as: PutioVerifyTOTPResult.self
         )
     }

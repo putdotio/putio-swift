@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 extension PutioSDK {
     public func listTrash(query: PutioTrashListQuery = PutioTrashListQuery()) async throws -> PutioListTrashResponse {
@@ -15,7 +14,7 @@ extension PutioSDK {
             "/trash/list/continue",
             method: .post,
             query: query.parameters,
-            body: ["cursor": cursor],
+            body: ["cursor": .string(cursor)],
             as: PutioListTrashResponse.self
         )
     }
@@ -39,10 +38,10 @@ extension PutioSDK {
     }
 }
 
-private func putioTrashMutationBody(fileIDs: [Int], cursor: String?) -> Parameters {
+private func putioTrashMutationBody(fileIDs: [Int], cursor: String?) -> PutioRequestParameters {
     if let cursor, !cursor.isEmpty {
-        return ["cursor": cursor]
+        return ["cursor": .string(cursor)]
     }
 
-    return ["file_ids": (fileIDs.map { String($0) }).joined(separator: ",")]
+    return ["file_ids": .string((fileIDs.map { String($0) }).joined(separator: ","))]
 }

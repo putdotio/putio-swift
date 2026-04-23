@@ -30,13 +30,13 @@ public struct PutioFileSearchQuery {
         self.types = types
     }
 
-    var parameters: [String: Any] {
-        var query: [String: Any] = ["query": keyword]
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = ["query": .string(keyword)]
         if let perPage {
-            query["per_page"] = perPage
+            query["per_page"] = .integer(perPage)
         }
         if !types.isEmpty {
-            query["type"] = types.map(\.rawValue).joined(separator: ",")
+            query["type"] = .string(types.map(\.rawValue).joined(separator: ","))
         }
         return query
     }
@@ -49,10 +49,10 @@ public struct PutioFileSearchContinueQuery {
         self.perPage = perPage
     }
 
-    var parameters: [String: Any] {
-        var query: [String: Any] = [:]
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = [:]
         if let perPage {
-            query["per_page"] = perPage
+            query["per_page"] = .integer(perPage)
         }
         return query
     }

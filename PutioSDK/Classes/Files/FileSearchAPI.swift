@@ -1,5 +1,4 @@
 import Foundation
-import Alamofire
 
 extension PutioSDK {
     public func searchFiles(query: PutioFileSearchQuery) async throws -> PutioFileSearchResponse {
@@ -7,6 +6,6 @@ extension PutioSDK {
     }
 
     public func continueFileSearch(cursor: String, query: PutioFileSearchContinueQuery = PutioFileSearchContinueQuery()) async throws -> PutioFileSearchResponse {
-        try await request("/files/search/continue", method: .post, query: query.parameters, body: ["cursor": cursor], as: PutioFileSearchResponse.self)
+        try await request("/files/search/continue", method: .post, query: query.parameters, body: ["cursor": .string(cursor)], as: PutioFileSearchResponse.self)
     }
 }
