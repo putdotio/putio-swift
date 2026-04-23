@@ -35,9 +35,13 @@ final class PutioSDKTrashTests: XCTestCase {
                 """
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(payload.utf8))
             case "/v2/trash/list/continue":
+                XCTAssertEqual(request.httpMethod, "POST")
                 let components = URLComponents(url: try XCTUnwrap(request.url), resolvingAgainstBaseURL: false)
-                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "cursor" })?.value, "trash-page-2")
+                XCTAssertNil(components?.queryItems?.first(where: { $0.name == "cursor" }))
                 XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "per_page" })?.value, "10")
+                let body = try XCTUnwrap(requestBodyData(for: request))
+                let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: String])
+                XCTAssertEqual(json["cursor"], "trash-page-2")
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"cursor":"done","trash_size":0,"files":[]}"#.utf8))
             case "/v2/trash/restore":
                 XCTAssertEqual(request.httpMethod, "POST")

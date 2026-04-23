@@ -7,7 +7,13 @@ extension PutioSDK {
     }
 
     public func continueListTrash(cursor: String, perPage: Int = 50) async throws -> PutioListTrashResponse {
-        try await request("/trash/list/continue", query: ["cursor": cursor, "per_page": perPage], as: PutioListTrashResponse.self)
+        try await request(
+            "/trash/list/continue",
+            method: .post,
+            query: ["per_page": perPage],
+            body: ["cursor": cursor],
+            as: PutioListTrashResponse.self
+        )
     }
 
     public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?) async throws -> PutioOKResponse {
