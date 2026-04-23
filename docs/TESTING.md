@@ -48,12 +48,16 @@ Current live targets cover:
 
 - account info against the real API
 - disposable folder create, delete, trash restore, and cleanup flows
+- transfer list/count/info decode against the real API
+- playback-adjacent subtitle decode and reversible start-from roundtrips for owned video fixtures
 
 ## Safety Rules
 
 Allowed in `make live-test`:
 
 - read-only account probes
+- read-only transfer probes
+- reversible playback resume mutations with cleanup
 - disposable file and trash flows with cleanup
 
 Excluded from `make live-test`:

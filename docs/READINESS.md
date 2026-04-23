@@ -17,7 +17,7 @@ This document tracks how ready `putio-sdk-swift` is for autonomous agent work an
 | --- | --- | --- |
 | Package boot | `good` | `make bootstrap` and `make verify` are documented and exercised in CI |
 | Unit verification | `good` | request config, async transport, localized errors, and the modernized account/auth/history/files/media/grants/routes/subtitles/transfers/trash domains now have deterministic package coverage with a `90%` source line floor enforced by `make verify` |
-| Live verification | `medium` | account and disposable file/trash flows are live-covered; more namespaces still need safe real-API targets |
+| Live verification | `medium` | account, disposable file/trash, transfer read paths, and playback-adjacent file helpers are live-covered; more namespaces still need safe real-API targets |
 | Release readiness | `good` | `main` stays verify-first, with semantic-release and optional CocoaPods publishing |
 
 ## Highest-Value Next Gaps
