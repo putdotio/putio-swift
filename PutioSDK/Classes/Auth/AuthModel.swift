@@ -1,5 +1,21 @@
 import Foundation
 
+open class PutioAuthCode: Decodable {
+    open var code: String
+    open var qrCodeURL: URL?
+
+    enum CodingKeys: String, CodingKey {
+        case code
+        case qrCodeURL = "qr_code_url"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.code = try container.decodeIfPresent(String.self, forKey: .code) ?? ""
+        self.qrCodeURL = try container.decodeIfPresent(URL.self, forKey: .qrCodeURL)
+    }
+}
+
 open class PutioTokenValidationResult: Decodable {
     open var result: Bool
     open var token_id: Int

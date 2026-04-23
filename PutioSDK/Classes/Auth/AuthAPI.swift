@@ -16,19 +16,18 @@ extension PutioSDK {
         return (url?.url!)!
     }
 
-    public func getAuthCode() async throws -> String {
+    public func getAuthCode() async throws -> PutioAuthCode {
         let query = [
             "app_id": self.config.clientID,
             "client_name": self.config.clientName
         ]
 
-        let envelope = try await request(
+        return try await request(
             "/oauth2/oob/code",
             headers: ["Authorization": ""],
             query: query,
-            as: PutioAuthCodeEnvelope.self
+            as: PutioAuthCode.self
         )
-        return envelope.code
     }
 
     public func checkAuthCodeMatch(code: String) async throws -> String? {
@@ -70,10 +69,6 @@ extension PutioSDK {
         let envelope = try await request("/two_factor/recovery_codes/refresh", method: .post, as: PutioRecoveryCodesEnvelope.self)
         return envelope.recovery_codes
     }
-}
-
-private struct PutioAuthCodeEnvelope: Decodable {
-    let code: String
 }
 
 private struct PutioOAuthTokenEnvelope: Decodable {

@@ -39,7 +39,7 @@ final class PutioSDKAuthTests: XCTestCase {
                 let components = URLComponents(url: try XCTUnwrap(request.url), resolvingAgainstBaseURL: false)
                 XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "app_id" })?.value, "ios-app")
                 XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "client_name" })?.value, "put.io TV + Beta")
-                return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"code":"code-123"}"#.utf8))
+                return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"code":"code-123","qr_code_url":"https://api.put.io/v2/oauth2/oob/qr/code-123"}"#.utf8))
             case "/v2/oauth2/oob/code/code-123":
                 XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"oauth_token":"oauth-token-456"}"#.utf8))
@@ -118,8 +118,8 @@ final class PutioSDKAuthTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let code = try await sdk.getAuthCode()
-        let token = try await sdk.checkAuthCodeMatch(code: code)
+        let authCode = try await sdk.getAuthCode()
+        let token = try await sdk.checkAuthCodeMatch(code: authCode.code)
         let validation = try await sdk.validateToken(token: "external-token")
         let logout = try await sdk.logout()
         let generated = try await sdk.generateTOTP()
@@ -127,7 +127,8 @@ final class PutioSDKAuthTests: XCTestCase {
         let recoveryCodes = try await sdk.getRecoveryCodes()
         let refreshedRecoveryCodes = try await sdk.regenerateRecoveryCodes()
 
-        XCTAssertEqual(code, "code-123")
+        XCTAssertEqual(authCode.code, "code-123")
+        XCTAssertEqual(authCode.qrCodeURL?.absoluteString, "https://api.put.io/v2/oauth2/oob/qr/code-123")
         XCTAssertEqual(token, "oauth-token-456")
         XCTAssertTrue(validation.result)
         XCTAssertEqual(validation.token_id, 44)
@@ -178,10 +179,13 @@ final class PutioSDKAuthTests: XCTestCase {
     func testAuthModelsDecodeGracefulDefaults() throws {
         let decoder = JSONDecoder()
 
+        let authCode = try decoder.decode(PutioAuthCode.self, from: Data(#"{}"#.utf8))
         let validation = try decoder.decode(PutioTokenValidationResult.self, from: Data(#"{}"#.utf8))
         let recoveryCodes = try decoder.decode(PutioTwoFactorRecoveryCodes.self, from: Data(#"{}"#.utf8))
         let verification = try decoder.decode(PutioVerifyTOTPResult.self, from: Data(#"{}"#.utf8))
 
+        XCTAssertEqual(authCode.code, "")
+        XCTAssertNil(authCode.qrCodeURL)
         XCTAssertFalse(validation.result)
         XCTAssertEqual(validation.token_id, 0)
         XCTAssertEqual(validation.token_scope, "")
