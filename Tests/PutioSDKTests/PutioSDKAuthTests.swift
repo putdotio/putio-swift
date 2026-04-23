@@ -10,7 +10,7 @@ final class PutioSDKAuthTests: XCTestCase {
 
     func testGetAuthURLBuildsExpectedQueryItems() throws {
         let sdk = PutioSDK(
-            config: PutioSDKConfig(clientID: "ios-app", clientName: "putio-tv", token: "session-token"),
+            config: PutioSDKConfig(clientID: "ios-app", clientName: "put.io TV + Beta", token: "session-token"),
             urlSession: makeTestSession()
         )
 
@@ -20,7 +20,7 @@ final class PutioSDKAuthTests: XCTestCase {
 
         XCTAssertEqual(components.path, "/v2/oauth2/authenticate")
         XCTAssertEqual(query["client_id"], "ios-app")
-        XCTAssertEqual(query["client_name"], "putio-tv")
+        XCTAssertEqual(query["client_name"], "put.io TV + Beta")
         XCTAssertEqual(query["redirect_uri"], "putio://oauth/callback")
         XCTAssertEqual(query["response_type"], "code")
         XCTAssertEqual(query["state"], "csrf-token")
@@ -37,7 +37,7 @@ final class PutioSDKAuthTests: XCTestCase {
             case "/v2/oauth2/oob/code":
                 let components = URLComponents(url: try XCTUnwrap(request.url), resolvingAgainstBaseURL: false)
                 XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "app_id" })?.value, "ios-app")
-                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "client_name" })?.value, "putio-tv")
+                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "client_name" })?.value, "put.io TV + Beta")
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"code":"code-123"}"#.utf8))
             case "/v2/oauth2/oob/code/code-123":
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"oauth_token":"oauth-token-456"}"#.utf8))
@@ -109,7 +109,7 @@ final class PutioSDKAuthTests: XCTestCase {
         }
 
         let sdk = PutioSDK(
-            config: PutioSDKConfig(clientID: "ios-app", clientName: "putio-tv", token: "session-token"),
+            config: PutioSDKConfig(clientID: "ios-app", clientName: "put.io TV + Beta", token: "session-token"),
             urlSession: makeTestSession()
         )
 

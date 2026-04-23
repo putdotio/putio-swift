@@ -19,7 +19,7 @@ extension PutioSDK {
     public func getAuthCode() async throws -> String {
         let query = [
             "app_id": self.config.clientID,
-            "client_name": self.config.clientName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+            "client_name": self.config.clientName
         ]
 
         let envelope = try await request("/oauth2/oob/code", query: query, as: PutioAuthCodeEnvelope.self)
