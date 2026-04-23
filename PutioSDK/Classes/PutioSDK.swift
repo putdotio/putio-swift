@@ -1,14 +1,11 @@
 import Foundation
 import Alamofire
-import SwiftyJSON
 
 public protocol PutioSDKDelegate: AnyObject {
     func onPutioSDKError(error: PutioSDKError)
 }
 
 public final class PutioSDK {
-    public typealias RequestCompletion = (Result<JSON, PutioSDKError>) -> Void
-
     weak var delegate: PutioSDKDelegate?
     let urlSession: URLSession
     let jsonDecoder: JSONDecoder
@@ -37,26 +34,6 @@ public final class PutioSDK {
         self.config.token = ""
     }
 
-    public func get(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .get, headers: headers, query: query)
-        self.send(requestConfig: requestConfig, completion)
-    }
-
-    public func post(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .post, headers: headers, query: query, body: body)
-        self.send(requestConfig: requestConfig, completion)
-    }
-
-    public func put(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], body: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .put, headers: headers, query: query, body: body)
-        self.send(requestConfig: requestConfig, completion)
-    }
-
-    public func delete(_ url: String, headers: HTTPHeaders = [:], query: Parameters = [:], _ completion: @escaping RequestCompletion) {
-        let requestConfig = PutioSDKRequestConfig(apiConfig: config, url: url, method: .delete, headers: headers, query: query)
-        self.send(requestConfig: requestConfig, completion)
-    }
-
     func request<T: Decodable>(
         _ url: String,
         method: HTTPMethod = .get,
@@ -81,23 +58,6 @@ public final class PutioSDK {
             let apiError = PutioSDKError(request: PutioSDKErrorRequestInformation(config: requestConfig), decodingError: error, responseBody: String(decoding: data, as: UTF8.self))
             delegate?.onPutioSDKError(error: apiError)
             throw apiError
-        }
-    }
-
-
-    private func send(requestConfig: PutioSDKRequestConfig, _ completion: @escaping (Result<JSON, PutioSDKError>) -> Void) {
-        Task {
-            do {
-                let data = try await execute(requestConfig: requestConfig)
-                let json = try JSON(data: data)
-                completion(.success(json))
-            } catch let error as PutioSDKError {
-                completion(.failure(error))
-            } catch {
-                let apiError = PutioSDKError(request: PutioSDKErrorRequestInformation(config: requestConfig), unknownError: error)
-                delegate?.onPutioSDKError(error: apiError)
-                completion(.failure(apiError))
-            }
         }
     }
 

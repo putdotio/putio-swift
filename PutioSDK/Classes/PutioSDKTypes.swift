@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import SwiftyJSON
 
 public struct PutioSDKConfig {
     public let baseURL: String
@@ -155,14 +154,6 @@ public struct PutioSDKError: Error, LocalizedError {
         }
     }
 
-    init(request: PutioSDKErrorRequestInformation, errorJSON: JSON, error: AFError, responseBody: String? = nil) {
-        self.request = request
-        self.type = .httpError(statusCode: errorJSON["status_code"].intValue, errorType: errorJSON["error_type"].string)
-        self.message = errorJSON["message"].stringValue
-        self.underlyingError = error
-        self.responseBody = responseBody
-    }
-
     init(
         request: PutioSDKErrorRequestInformation,
         statusCode: Int,
@@ -208,5 +199,3 @@ public struct PutioOKResponse: Codable {
     public let cursor: String?
     public let skipped: Int?
 }
-
-public typealias PutioSDKBoolCompletion = (Result<JSON, PutioSDKError>) -> Void

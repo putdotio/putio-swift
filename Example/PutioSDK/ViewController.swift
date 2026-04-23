@@ -64,24 +64,27 @@ class ViewController: UIViewController {
             return handleAuthCallbackFailure(error: error)
         }
 
-        fetchAccountInfo(token: token)
+        Task {
+            await fetchAccountInfo(token: token)
+        }
     }
 
-    func fetchAccountInfo(token: String) {
+    @MainActor
+    func fetchAccountInfo(token: String) async {
         api?.setToken(token: token)
 
-        api?.getAccountInfo(completion: { result in
-            switch result {
-            case .success(let account):
-                return self.fetchAccountInfoSuccess(account: account)
-            case .failure(let error):
-                return self.fetchAccountInfoFailure(error: error)
-            }
-        })
+        guard let api else { return }
+
+        do {
+            let account = try await api.getAccountInfo()
+            fetchAccountInfoSuccess(account: account)
+        } catch {
+            fetchAccountInfoFailure(error: error)
+        }
     }
 
-    func fetchAccountInfoFailure(error: PutioSDKError) {
-        let alertController = UIAlertController(title: "API: Fetch Account Info Failure", message: error.message, preferredStyle: .alert)
+    func fetchAccountInfoFailure(error: Error) {
+        let alertController = UIAlertController(title: "API: Fetch Account Info Failure", message: error.localizedDescription, preferredStyle: .alert)
         let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(closeButton)
         present(alertController, animated: true, completion: nil)
@@ -90,15 +93,17 @@ class ViewController: UIViewController {
     func fetchAccountInfoSuccess(account: PutioAccount) {
         let alertController = UIAlertController(title: "API: Fetch Account Info Success", message: account.username, preferredStyle: .alert)
         let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: { _ in
-            self.api?.getFiles(parentID: 0, completion: { result in
-                switch result {
-                case .success(let data):
-                    return print("Files result: \(data.children.count)")
-
-                case .failure(let error):
-                    return print("Files error: \(error.type)")
+            guard let api = self.api else { return }
+            Task {
+                do {
+                    let response = try await api.getFiles(parentID: 0)
+                    print("Files result: \(response.children.count)")
+                } catch let error as PutioSDKError {
+                    print("Files error: \(error.type)")
+                } catch {
+                    print("Files error: \(error.localizedDescription)")
                 }
-            })
+            }
         })
         alertController.addAction(closeButton)
         present(alertController, animated: true, completion: nil)

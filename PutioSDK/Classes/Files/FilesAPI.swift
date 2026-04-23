@@ -1,6 +1,5 @@
 import Foundation
 import Alamofire
-import SwiftyJSON
 
 extension PutioSDK {
     public func getFiles(parentID: Int, query: Parameters = [:]) async throws -> PutioFilesListResult {
@@ -16,19 +15,6 @@ extension PutioSDK {
         return PutioFilesListResult(parent: envelope.parent, children: envelope.files, cursor: envelope.cursor, total: envelope.total)
     }
 
-    public func getFiles(parentID: Int, query: Parameters = [:], completion: @escaping (Result<(parent: PutioFile?, children: [PutioFile]), PutioSDKError>) -> Void) {
-        Task {
-            do {
-                let response = try await getFiles(parentID: parentID, query: query)
-                completion(.success((parent: response.parent, children: response.children)))
-            } catch let error as PutioSDKError {
-                completion(.failure(error))
-            } catch {
-                completion(.failure(PutioSDKError(request: PutioSDKErrorRequestInformation(config: PutioSDKRequestConfig(apiConfig: config, url: "/files/list", method: .get, query: query)), unknownError: error)))
-            }
-        }
-    }
-
     public func getFile(fileID: Int, query: Parameters = [:]) async throws -> PutioFile {
         let query = query.merge(with: [
             "mp4_size": 1,
@@ -39,104 +25,6 @@ extension PutioSDK {
 
         let envelope = try await request("/files/\(fileID)", query: query, as: PutioFileEnvelope.self)
         return envelope.file
-    }
-
-    public func getFile(fileID: Int, query: Parameters = [:], completion: @escaping (Result<PutioFile, PutioSDKError>) -> Void) {
-        Task {
-            do {
-                completion(.success(try await getFile(fileID: fileID, query: query)))
-            } catch let error as PutioSDKError {
-                completion(.failure(error))
-            } catch {
-                completion(.failure(PutioSDKError(request: PutioSDKErrorRequestInformation(config: PutioSDKRequestConfig(apiConfig: config, url: "/files/\(fileID)", method: .get, query: query)), unknownError: error)))
-            }
-        }
-    }
-
-    public func deleteFile(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        return self.deleteFiles(fileIDs: [fileID], completion: completion)
-    }
-
-    public func deleteFiles(fileIDs: [Int], query: Parameters = [:], completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/delete"
-        let query = ["skip_nonexistents": true, "skip_owner_check": false].merge(with: query)
-        let body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
-
-        self.post(url, query: query, body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
-    }
-
-    public func copyFile(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        return self.copyFiles(fileIDs: [fileID], completion: completion)
-    }
-
-    public func copyFiles(fileIDs: [Int], completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/copy-to-disk"
-        let body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
-
-        self.post(url, body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
-    }
-
-    public func moveFile(fileID: Int, parentID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        return self.moveFiles(fileIDs: [fileID], parentID: parentID, completion: completion)
-    }
-
-    public func moveFiles(fileIDs: [Int], parentID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/move"
-        let body = [
-            "file_ids": (fileIDs.map {String($0)}).joined(separator: ","),
-            "parent_id": parentID
-        ] as [String: Any]
-
-        self.post(url, body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
-    }
-
-    public func renameFile(fileID: Int, name: String, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/rename/"
-        let body = ["file_id": fileID, "name": name] as [String: Any]
-
-        self.post(url, body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
-    }
-
-    public func createFolder(name: String, parentID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/create-folder"
-        let body = ["name": name, "parent_id": parentID] as [String: Any]
-
-        self.post(url, body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
     }
 
     public func createFolder(name: String, parentID: Int) async throws -> PutioFile {
@@ -151,52 +39,34 @@ extension PutioSDK {
         return try await request("/files/delete", method: .post, query: query, body: body, as: PutioOKResponse.self)
     }
 
-    public func findNextFile(fileID: Int, fileType: PutioNextFileType, completion: @escaping (Result<PutioNextFile, PutioSDKError>) -> Void) {
-        let url = "/files/\(fileID)/next-file"
-        let query = ["file_type": fileType.rawValue]
-
-        self.get(url, query: query) { result in
-            switch result {
-            case .success(let json):
-                do {
-                    let data = try json["next_file"].rawData()
-                    let nextFile = try JSONDecoder().decode(PutioNextFile.self, from: data)
-                    return completion(.success(nextFile))
-                } catch {
-                    let requestConfig = PutioSDKRequestConfig(apiConfig: self.config, url: url, method: .get, query: query)
-                    return completion(.failure(PutioSDKError(request: PutioSDKErrorRequestInformation(config: requestConfig), decodingError: error, responseBody: json["next_file"].rawString() ?? "")))
-                }
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
-    }
-    
-    public func setSortBy(fileId: Int, sortBy: String, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/set-sort-by"
-        let body = ["file_id": fileId, "sort_by": sortBy] as [String: Any]
-        
-        self.post(url, body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func copyFiles(fileIDs: [Int]) async throws -> PutioOKResponse {
+        let body = ["file_ids": (fileIDs.map { String($0) }).joined(separator: ",")]
+        return try await request("/files/copy-to-disk", method: .post, body: body, as: PutioOKResponse.self)
     }
 
-    public func resetFileSpecificSortSettings(completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/remove-sort-by-settings"
+    public func moveFiles(fileIDs: [Int], parentID: Int) async throws -> PutioFilesMoveResponse {
+        let body = [
+            "file_ids": (fileIDs.map { String($0) }).joined(separator: ","),
+            "parent_id": parentID
+        ] as Parameters
+        return try await request("/files/move", method: .post, body: body, as: PutioFilesMoveResponse.self)
+    }
 
-        self.post(url) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func renameFile(fileID: Int, name: String) async throws -> PutioOKResponse {
+        try await request("/files/rename", method: .post, body: ["file_id": fileID, "name": name], as: PutioOKResponse.self)
+    }
+
+    public func findNextFile(fileID: Int, fileType: PutioNextFileType) async throws -> PutioNextFile {
+        let envelope = try await request("/files/\(fileID)/next-file", query: ["file_type": fileType.rawValue], as: PutioNextFileEnvelope.self)
+        return envelope.nextFile
+    }
+
+    public func setSortBy(fileId: Int, sortBy: String) async throws -> PutioOKResponse {
+        try await request("/files/set-sort-by", method: .post, body: ["file_id": fileId, "sort_by": sortBy], as: PutioOKResponse.self)
+    }
+
+    public func resetFileSpecificSortSettings() async throws -> PutioOKResponse {
+        try await request("/files/remove-sort-by-settings", method: .post, as: PutioOKResponse.self)
     }
 }
 
@@ -216,4 +86,31 @@ private struct PutioFilesListEnvelope: Decodable {
 
 private struct PutioFileEnvelope: Decodable {
     let file: PutioFile
+}
+
+public struct PutioFilesMoveError: Codable {
+    public let errorType: String
+    public let id: Int
+    public let name: String?
+    public let statusCode: Int
+
+    enum CodingKeys: String, CodingKey {
+        case errorType = "error_type"
+        case id
+        case name
+        case statusCode = "status_code"
+    }
+}
+
+public struct PutioFilesMoveResponse: Codable {
+    public let status: String
+    public let errors: [PutioFilesMoveError]
+}
+
+private struct PutioNextFileEnvelope: Decodable {
+    let nextFile: PutioNextFile
+
+    enum CodingKeys: String, CodingKey {
+        case nextFile = "next_file"
+    }
 }

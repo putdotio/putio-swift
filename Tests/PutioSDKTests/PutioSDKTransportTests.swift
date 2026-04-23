@@ -122,4 +122,99 @@ final class PutioSDKTransportTests: XCTestCase {
         XCTAssertEqual(file.type.rawValue, "BOOK")
         XCTAssertFalse(file.type.isKnown)
     }
+
+    func testSaveAccountSettingsPostsJsonAndDecodesOkResponse() async throws {
+        MockURLProtocol.requestHandler = { request in
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.url?.path, "/v2/account/settings")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/json")
+            let body = try XCTUnwrap(requestBodyData(for: request))
+            let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Bool])
+            XCTAssertEqual(json["history_enabled"], false)
+            XCTAssertEqual(json["hide_subtitles"], true)
+
+            return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"status":"OK"}"#.utf8))
+        }
+
+        let sdk = PutioSDK(
+            config: PutioSDKConfig(clientID: "ios-app", token: "token-123"),
+            urlSession: makeTestSession()
+        )
+
+        let response = try await sdk.saveAccountSettings(body: [
+            "history_enabled": false,
+            "hide_subtitles": true
+        ])
+
+        XCTAssertEqual(response.status, "OK")
+    }
+
+    func testMoveFilesDecodesStructuredMoveErrors() async throws {
+        MockURLProtocol.requestHandler = { request in
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.url?.path, "/v2/files/move")
+            let body = try XCTUnwrap(requestBodyData(for: request))
+            let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            XCTAssertEqual(json["file_ids"] as? String, "9,10")
+            XCTAssertEqual(json["parent_id"] as? Int, 7)
+
+            let payload = """
+            {
+              "status": "OK",
+              "errors": [
+                {
+                  "error_type": "OWNER_CHECK_FAILED",
+                  "id": 10,
+                  "name": "Shared file",
+                  "status_code": 403
+                }
+              ]
+            }
+            """
+
+            return (makeHTTPResponse(for: request, statusCode: 200), Data(payload.utf8))
+        }
+
+        let sdk = PutioSDK(
+            config: PutioSDKConfig(clientID: "ios-app", token: "token-123"),
+            urlSession: makeTestSession()
+        )
+
+        let response = try await sdk.moveFiles(fileIDs: [9, 10], parentID: 7)
+
+        XCTAssertEqual(response.status, "OK")
+        XCTAssertEqual(response.errors.count, 1)
+        XCTAssertEqual(response.errors.first?.errorType, "OWNER_CHECK_FAILED")
+        XCTAssertEqual(response.errors.first?.statusCode, 403)
+    }
+
+    func testSendIFTTTEventPostsEventPayload() async throws {
+        MockURLProtocol.requestHandler = { request in
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.url?.path, "/v2/ifttt-client/event")
+            let body = try XCTUnwrap(requestBodyData(for: request))
+            let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: Any])
+            XCTAssertEqual(json["event_type"] as? String, "playback_started")
+            let ingredients = try XCTUnwrap(json["ingredients"] as? [String: Any])
+            XCTAssertEqual(ingredients["file_id"] as? Int, 42)
+            XCTAssertEqual(ingredients["file_name"] as? String, "Movie")
+            XCTAssertEqual(ingredients["file_type"] as? String, "VIDEO")
+
+            return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"status":"OK"}"#.utf8))
+        }
+
+        let sdk = PutioSDK(
+            config: PutioSDKConfig(clientID: "ios-app", token: "token-123"),
+            urlSession: makeTestSession()
+        )
+
+        let response = try await sdk.sendIFTTTEvent(
+            event: PutioIFTTTPlaybackEvent(
+                eventType: "playback_started",
+                ingredients: PutioIFTTTPlaybackEventIngredients(fileId: 42, fileName: "Movie", fileType: "VIDEO")
+            )
+        )
+
+        XCTAssertEqual(response.status, "OK")
+    }
 }

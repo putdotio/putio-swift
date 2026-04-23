@@ -10,9 +10,7 @@ Explain the actual `putio-sdk-swift` package shape for humans and agents.
 graph LR
   Consumer["consumer app"] --> Client["PutioSDK"]
   Client --> Async["async domain methods"]
-  Client --> Legacy["legacy completion wrappers"]
   Async --> Transport["URLSession transport"]
-  Legacy --> Transport
   Transport --> Decode["Decodable boundary parsing"]
   Transport --> Errors["typed localized errors"]
   Transport --> API["put.io API"]
@@ -24,7 +22,6 @@ graph LR
 | --- | --- |
 | `PutioSDK` | shared SDK entrypoint and transport composition |
 | Async methods | preferred modern API surface using `async throws` |
-| Legacy wrappers | compatibility layer for completion-handler call sites |
 | Boundary models | `Decodable` request and response types for the modernized domains |
 | Error model | typed transport, API, and decoding failures with `LocalizedError` guidance |
 
@@ -35,7 +32,7 @@ graph LR
 - keep the CocoaPods and Swift Package surfaces aligned
 - preserve forward compatibility where possible instead of crashing on unknown backend strings
 - keep live-tested domains on the modern async path first, then expand outward
-- treat completion-handler APIs as compatibility wrappers rather than the architectural center
+- keep the public API single-surface and async-first instead of splitting effort across compatibility wrappers
 
 ## Current Modernized Slice
 
@@ -85,4 +82,4 @@ graph LR
 - not a generic JSON bag around the put.io API
 - not an Alamofire-first design anymore
 - not full namespace parity with the TypeScript SDK yet
-- not a promise to keep callback-heavy internals as the long-term architecture
+- not a dual-surface SDK with callback compatibility as a first-class goal

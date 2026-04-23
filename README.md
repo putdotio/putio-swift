@@ -73,7 +73,7 @@ Task {
 }
 ```
 
-The async APIs are the preferred surface. Completion-handler methods remain available as compatibility wrappers while the legacy JSON-heavy areas are migrated.
+The SDK exposes an async-first `async throws` surface and no longer ships completion-handler compatibility wrappers or raw JSON response APIs.
 
 ## Verification
 
