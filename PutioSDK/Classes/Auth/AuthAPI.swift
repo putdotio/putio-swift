@@ -22,12 +22,21 @@ extension PutioSDK {
             "client_name": self.config.clientName
         ]
 
-        let envelope = try await request("/oauth2/oob/code", query: query, as: PutioAuthCodeEnvelope.self)
+        let envelope = try await request(
+            "/oauth2/oob/code",
+            headers: ["Authorization": ""],
+            query: query,
+            as: PutioAuthCodeEnvelope.self
+        )
         return envelope.code
     }
 
     public func checkAuthCodeMatch(code: String) async throws -> String {
-        let envelope = try await request("/oauth2/oob/code/\(code)", as: PutioOAuthTokenEnvelope.self)
+        let envelope = try await request(
+            "/oauth2/oob/code/\(code)",
+            headers: ["Authorization": ""],
+            as: PutioOAuthTokenEnvelope.self
+        )
         return envelope.oauth_token
     }
 

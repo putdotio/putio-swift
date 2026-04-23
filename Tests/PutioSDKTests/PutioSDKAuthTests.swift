@@ -35,11 +35,13 @@ final class PutioSDKAuthTests: XCTestCase {
 
             switch path {
             case "/v2/oauth2/oob/code":
+                XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
                 let components = URLComponents(url: try XCTUnwrap(request.url), resolvingAgainstBaseURL: false)
                 XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "app_id" })?.value, "ios-app")
                 XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "client_name" })?.value, "put.io TV + Beta")
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"code":"code-123"}"#.utf8))
             case "/v2/oauth2/oob/code/code-123":
+                XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"oauth_token":"oauth-token-456"}"#.utf8))
             case "/v2/oauth2/validate":
                 XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Token external-token")
