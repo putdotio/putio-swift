@@ -33,4 +33,15 @@ final class PutioSDKRequestConfigTests: XCTestCase {
 
         XCTAssertEqual(request.headers.value(for: "authorization"), "Bearer custom-token")
     }
+
+    func testRequestConfigCanSuppressConfiguredAuthorizationHeader() {
+        let request = PutioSDKRequestConfig(
+            apiConfig: PutioSDKConfig(clientID: "ios-app", token: "token-123"),
+            url: "/two_factor/verify/totp",
+            method: .post,
+            headers: HTTPHeaders(["Authorization": ""])
+        )
+
+        XCTAssertEqual(request.headers.value(for: "authorization"), "")
+    }
 }

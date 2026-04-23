@@ -43,8 +43,15 @@ extension PutioSDK {
     public func generateTOTP() async throws -> PutioGenerateTOTPResult {
         try await request("/two_factor/generate/totp", method: .post, as: PutioGenerateTOTPResult.self)
     }
-    public func verifyTOTP(code: String) async throws -> PutioVerifyTOTPResult {
-        try await request("/two_factor/verify/totp", method: .post, body: ["code": code], as: PutioVerifyTOTPResult.self)
+    public func verifyTOTP(twoFactorScopedToken: String, code: String) async throws -> PutioVerifyTOTPResult {
+        try await request(
+            "/two_factor/verify/totp",
+            method: .post,
+            headers: ["Authorization": ""],
+            query: ["oauth_token": twoFactorScopedToken],
+            body: ["code": code],
+            as: PutioVerifyTOTPResult.self
+        )
     }
     public func getRecoveryCodes() async throws -> PutioTwoFactorRecoveryCodes {
         let envelope = try await request("/two_factor/recovery_codes", as: PutioRecoveryCodesEnvelope.self)

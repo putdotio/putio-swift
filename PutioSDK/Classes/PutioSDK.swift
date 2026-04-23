@@ -110,7 +110,7 @@ public final class PutioSDK {
         request.httpMethod = requestConfig.method.rawValue
         request.timeoutInterval = config.timeoutInterval
 
-        for header in requestConfig.headers {
+        for header in requestConfig.headers where !(header.name.lowercased() == "authorization" && header.value.isEmpty) {
             request.setValue(header.value, forHTTPHeaderField: header.name)
         }
 

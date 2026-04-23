@@ -72,6 +72,9 @@ final class PutioSDKAuthTests: XCTestCase {
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(payload.utf8))
             case "/v2/two_factor/verify/totp":
                 XCTAssertEqual(request.httpMethod, "POST")
+                XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
+                let components = URLComponents(url: try XCTUnwrap(request.url), resolvingAgainstBaseURL: false)
+                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "oauth_token" })?.value, "two-factor-token")
                 let body = try XCTUnwrap(requestBodyData(for: request))
                 let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: String])
                 XCTAssertEqual(json["code"], "123456")
@@ -118,7 +121,7 @@ final class PutioSDKAuthTests: XCTestCase {
         let validation = try await sdk.validateToken(token: "external-token")
         let logout = try await sdk.logout()
         let generated = try await sdk.generateTOTP()
-        let verified = try await sdk.verifyTOTP(code: "123456")
+        let verified = try await sdk.verifyTOTP(twoFactorScopedToken: "two-factor-token", code: "123456")
         let recoveryCodes = try await sdk.getRecoveryCodes()
         let refreshedRecoveryCodes = try await sdk.regenerateRecoveryCodes()
 
