@@ -50,7 +50,8 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
                   "id": 5,
                   "name": "Calendar Sync",
                   "description": "Calendar integration",
-                  "website": "https://example.com"
+                  "website": "https://example.com",
+                  "has_icon": true
                 }
               ]
             }
@@ -69,6 +70,7 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
         XCTAssertEqual(grants.count, 1)
         XCTAssertEqual(grants.first?.id, 5)
         XCTAssertEqual(grants.first?.website?.absoluteString, "https://example.com")
+        XCTAssertEqual(grants.first?.hasIcon, true)
     }
 
     func testGetSubtitlesPreservesOauthTokenQueryAndDecodesResponse() async throws {
@@ -117,6 +119,7 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
             let payload = """
             {
               "cursor": "page-2",
+              "total": 1,
               "files": [
                 {
                   "id": 7,
@@ -142,6 +145,7 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
         let response = try await sdk.searchFiles(query: PutioFileSearchQuery(keyword: "matrix", perPage: 25))
 
         XCTAssertEqual(response.cursor, "page-2")
+        XCTAssertEqual(response.total, 1)
         XCTAssertEqual(response.files.count, 1)
         XCTAssertEqual(response.files.first?.name, "The Matrix.mkv")
         XCTAssertEqual(response.files.first?.type, .video)

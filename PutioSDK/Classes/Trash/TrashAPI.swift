@@ -2,18 +2,26 @@ import Foundation
 import Alamofire
 
 extension PutioSDK {
-    public func listTrash(perPage: Int = 50) async throws -> PutioListTrashResponse {
-        try await request("/trash/list", query: ["per_page": perPage], as: PutioListTrashResponse.self)
+    public func listTrash(query: PutioTrashListQuery = PutioTrashListQuery()) async throws -> PutioListTrashResponse {
+        try await request("/trash/list", query: query.parameters, as: PutioListTrashResponse.self)
     }
 
-    public func continueListTrash(cursor: String, perPage: Int = 50) async throws -> PutioListTrashResponse {
+    public func listTrash(perPage: Int) async throws -> PutioListTrashResponse {
+        try await listTrash(query: PutioTrashListQuery(perPage: perPage))
+    }
+
+    public func continueListTrash(cursor: String, query: PutioTrashListQuery = PutioTrashListQuery()) async throws -> PutioListTrashResponse {
         try await request(
             "/trash/list/continue",
             method: .post,
-            query: ["per_page": perPage],
+            query: query.parameters,
             body: ["cursor": cursor],
             as: PutioListTrashResponse.self
         )
+    }
+
+    public func continueListTrash(cursor: String, perPage: Int) async throws -> PutioListTrashResponse {
+        try await continueListTrash(cursor: cursor, query: PutioTrashListQuery(perPage: perPage))
     }
 
     public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?) async throws -> PutioOKResponse {

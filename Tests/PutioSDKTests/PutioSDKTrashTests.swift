@@ -17,6 +17,7 @@ final class PutioSDKTrashTests: XCTestCase {
                 let payload = """
                 {
                   "cursor": "trash-page-2",
+                  "total": 1,
                   "trash_size": 99,
                   "files": [
                     {
@@ -69,14 +70,15 @@ final class PutioSDKTrashTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let listed = try await sdk.listTrash(perPage: 25)
-        let continued = try await sdk.continueListTrash(cursor: "trash-page-2", perPage: 10)
+        let listed = try await sdk.listTrash(query: PutioTrashListQuery(perPage: 25))
+        let continued = try await sdk.continueListTrash(cursor: "trash-page-2", query: PutioTrashListQuery(perPage: 10))
         let restored = try await sdk.restoreTrashFiles(fileIDs: [10, 11], cursor: nil)
         let deleted = try await sdk.deleteTrashFiles(fileIDs: [], cursor: "trash-page-2")
         let emptied = try await sdk.emptyTrash()
 
         XCTAssertEqual(listed.cursor, "trash-page-2")
-        XCTAssertEqual(listed.trash_size, 99)
+        XCTAssertEqual(listed.total, 1)
+        XCTAssertEqual(listed.trashSize, 99)
         XCTAssertEqual(listed.files.first?.name, "Old episode")
         XCTAssertEqual(continued.cursor, "done")
         XCTAssertEqual(restored.status, "OK")
@@ -89,7 +91,13 @@ final class PutioSDKTrashTests: XCTestCase {
         let response = try decoder.decode(PutioListTrashResponse.self, from: Data(#"{}"#.utf8))
 
         XCTAssertEqual(response.cursor, "")
-        XCTAssertEqual(response.trash_size, 0)
+        XCTAssertNil(response.total)
+        XCTAssertEqual(response.trashSize, 0)
         XCTAssertTrue(response.files.isEmpty)
+    }
+
+    func testTrashListQueryBuildsOptionalPaginationParameters() {
+        XCTAssertEqual(PutioTrashListQuery(perPage: 10).parameters["per_page"] as? Int, 10)
+        XCTAssertTrue(PutioTrashListQuery(perPage: nil).parameters.isEmpty)
     }
 }

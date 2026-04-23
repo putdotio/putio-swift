@@ -19,19 +19,38 @@ open class PutioTrashFile: PutioBaseFile {
 
 open class PutioListTrashResponse: Decodable {
     open var cursor: String
-    open var trash_size: Int64
+    open var total: Int?
+    open var trashSize: Int64
     open var files: [PutioTrashFile]
 
     enum CodingKeys: String, CodingKey {
         case cursor
-        case trash_size
+        case total
+        case trashSize = "trash_size"
         case files
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.cursor = try container.decodeIfPresent(String.self, forKey: .cursor) ?? ""
-        self.trash_size = try container.decodeIfPresent(Int64.self, forKey: .trash_size) ?? 0
+        self.total = try container.decodeIfPresent(Int.self, forKey: .total)
+        self.trashSize = try container.decodeIfPresent(Int64.self, forKey: .trashSize) ?? 0
         self.files = try container.decodeIfPresent([PutioTrashFile].self, forKey: .files) ?? []
+    }
+}
+
+public struct PutioTrashListQuery {
+    public let perPage: Int?
+
+    public init(perPage: Int? = 50) {
+        self.perPage = perPage
+    }
+
+    var parameters: [String: Any] {
+        var query: [String: Any] = [:]
+        if let perPage {
+            query["per_page"] = perPage
+        }
+        return query
     }
 }

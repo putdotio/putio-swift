@@ -39,9 +39,13 @@ graph LR
 - `account`
   - `getAccountInfo`
   - `getAccountSettings`
+  - `saveAccountSettings`
+  - `clearAccountData`
+  - `destroyAccount`
 - `auth`
   - `getAuthCode`
   - `checkAuthCodeMatch`
+  - `logout`
   - `validateToken`
   - `generateTOTP`
   - `verifyTOTP`
@@ -62,6 +66,12 @@ graph LR
   - `continueFileSearch`
   - `createFolder`
   - `deleteFiles`
+  - `copyFiles`
+  - `moveFiles`
+  - `renameFile`
+  - `findNextFile`
+  - `setFileSort`
+  - `resetFileSort`
   - `getStartFrom`
   - `setStartFrom`
   - `resetStartFrom`
@@ -87,6 +97,24 @@ graph LR
   - `continueListTrash`
   - `restoreTrashFiles`
   - `deleteTrashFiles`
+  - `emptyTrash`
+
+## Native Baseline Coverage
+
+| Baseline family | Swift coverage |
+| --- | --- |
+| Auth and OAuth | `covered` |
+| Account basics and settings | `covered` |
+| Security and 2FA | `covered` |
+| Files browse and detail | `covered` |
+| Search with cursor continuation | `covered` |
+| Transfers | `covered` |
+| History and events | `covered` |
+| Trash with cursor continuation | `covered` |
+| Subtitles | `covered` |
+| Playback-adjacent helpers | `covered` |
+
+Typed query inputs exist for account info, account settings updates, file listing, file detail projections, file search and continuation, transfer listing, and trash listing. Cursor or continuation flows stay explicit where the backend exposes them.
 
 ## What This Package Is Not
 

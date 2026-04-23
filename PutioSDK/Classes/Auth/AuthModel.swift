@@ -18,54 +18,54 @@ open class PutioAuthCode: Decodable {
 
 open class PutioTokenValidationResult: Decodable {
     open var result: Bool
-    open var token_id: Int
-    open var token_scope: String
-    open var user_id: Int
+    open var tokenID: Int
+    open var tokenScope: String
+    open var userID: Int
 
     enum CodingKeys: String, CodingKey {
         case result
-        case token_id
-        case token_scope
-        case user_id
+        case tokenID = "token_id"
+        case tokenScope = "token_scope"
+        case userID = "user_id"
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.result = try container.decodeIfPresent(Bool.self, forKey: .result) ?? false
-        self.token_id = try container.decodeIfPresent(Int.self, forKey: .token_id) ?? 0
-        self.token_scope = try container.decodeIfPresent(String.self, forKey: .token_scope) ?? ""
-        self.user_id = try container.decodeIfPresent(Int.self, forKey: .user_id) ?? 0
+        self.tokenID = try container.decodeIfPresent(Int.self, forKey: .tokenID) ?? 0
+        self.tokenScope = try container.decodeIfPresent(String.self, forKey: .tokenScope) ?? ""
+        self.userID = try container.decodeIfPresent(Int.self, forKey: .userID) ?? 0
     }
 }
 
 open class PutioTwoFactorRecoveryCode: Decodable {
     open var code: String
-    open var used_at: String?
+    open var usedAt: String?
 
     enum CodingKeys: String, CodingKey {
         case code
-        case used_at
+        case usedAt = "used_at"
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.code = try container.decode(String.self, forKey: .code)
-        self.used_at = try container.decodeIfPresent(String.self, forKey: .used_at)
+        self.usedAt = try container.decodeIfPresent(String.self, forKey: .usedAt)
     }
 }
 
 open class PutioTwoFactorRecoveryCodes: Decodable {
-    open var created_at: String
+    open var createdAt: String
     open var codes: [PutioTwoFactorRecoveryCode]
 
     enum CodingKeys: String, CodingKey {
-        case created_at
+        case createdAt = "created_at"
         case codes
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.created_at = try container.decodeIfPresent(String.self, forKey: .created_at) ?? ""
+        self.createdAt = try container.decodeIfPresent(String.self, forKey: .createdAt) ?? ""
         self.codes = try container.decodeIfPresent([PutioTwoFactorRecoveryCode].self, forKey: .codes) ?? []
     }
 }
@@ -73,34 +73,34 @@ open class PutioTwoFactorRecoveryCodes: Decodable {
 open class PutioGenerateTOTPResult: Decodable {
     open var secret: String
     open var uri: String
-    open var recovery_codes: PutioTwoFactorRecoveryCodes
+    open var recoveryCodes: PutioTwoFactorRecoveryCodes
 
     enum CodingKeys: String, CodingKey {
         case secret
         case uri
-        case recovery_codes
+        case recoveryCodes = "recovery_codes"
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.secret = try container.decodeIfPresent(String.self, forKey: .secret) ?? ""
         self.uri = try container.decodeIfPresent(String.self, forKey: .uri) ?? ""
-        self.recovery_codes = try container.decode(PutioTwoFactorRecoveryCodes.self, forKey: .recovery_codes)
+        self.recoveryCodes = try container.decode(PutioTwoFactorRecoveryCodes.self, forKey: .recoveryCodes)
     }
 }
 
 open class PutioVerifyTOTPResult: Decodable {
     open var token: String
-    open var user_id: Int
+    open var userID: Int
 
     enum CodingKeys: String, CodingKey {
         case token
-        case user_id
+        case userID = "user_id"
     }
 
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.token = try container.decodeIfPresent(String.self, forKey: .token) ?? ""
-        self.user_id = try container.decodeIfPresent(Int.self, forKey: .user_id) ?? 0
+        self.userID = try container.decodeIfPresent(Int.self, forKey: .userID) ?? 0
     }
 }

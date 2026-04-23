@@ -63,11 +63,11 @@ extension PutioSDK {
     }
     public func getRecoveryCodes() async throws -> PutioTwoFactorRecoveryCodes {
         let envelope = try await request("/two_factor/recovery_codes", as: PutioRecoveryCodesEnvelope.self)
-        return envelope.recovery_codes
+        return envelope.recoveryCodes
     }
     public func regenerateRecoveryCodes() async throws -> PutioTwoFactorRecoveryCodes {
         let envelope = try await request("/two_factor/recovery_codes/refresh", method: .post, as: PutioRecoveryCodesEnvelope.self)
-        return envelope.recovery_codes
+        return envelope.recoveryCodes
     }
 }
 
@@ -76,5 +76,9 @@ private struct PutioOAuthTokenEnvelope: Decodable {
 }
 
 private struct PutioRecoveryCodesEnvelope: Decodable {
-    let recovery_codes: PutioTwoFactorRecoveryCodes
+    let recoveryCodes: PutioTwoFactorRecoveryCodes
+
+    enum CodingKeys: String, CodingKey {
+        case recoveryCodes = "recovery_codes"
+    }
 }
