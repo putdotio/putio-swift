@@ -325,6 +325,8 @@ final class PutioSDKFilesTests: XCTestCase {
         XCTAssertEqual(metadata.codec, "")
         XCTAssertEqual(metadata.duration, 0)
         XCTAssertEqual(metadata.aspectRatio, 0)
+        XCTAssertNoThrow(try PutioSDKDateParser.parse("2026-04-23T19:08:48.356333"))
+        XCTAssertNoThrow(try PutioSDKDateParser.parse("2026-04-23T19:08:48.356333Z"))
         XCTAssertThrowsError(try PutioSDKDateParser.parse(nil))
         XCTAssertThrowsError(try PutioSDKDateParser.parse("not-a-date"))
     }

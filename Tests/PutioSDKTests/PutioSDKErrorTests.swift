@@ -68,6 +68,35 @@ final class PutioSDKErrorTests: XCTestCase {
         XCTAssertTrue(unknownError.recoverySuggestion?.contains("underlying error") == true)
     }
 
+    func testErrorDescriptionsRedactSensitiveRequestData() {
+        let requestConfig = PutioSDKRequestConfig(
+            apiConfig: PutioSDKConfig(baseURL: "https://api.put.io/v2", clientID: "ios-app", token: "config-token"),
+            url: "/two_factor/verify/totp",
+            method: .post,
+            headers: HTTPHeaders(["Authorization": "Bearer header-token"]),
+            query: ["oauth_token": "query-token"],
+            body: ["client_secret": "client-secret", "name": "safe-name"]
+        )
+        let requestInfo = PutioSDKErrorRequestInformation(config: requestConfig)
+        let error = PutioSDKError(
+            request: requestInfo,
+            statusCode: 401,
+            errorType: "invalid_scope",
+            message: "invalid scope",
+            underlyingError: URLError(.userAuthenticationRequired)
+        )
+
+        let description = String(describing: error)
+
+        XCTAssertFalse(description.contains("config-token"))
+        XCTAssertFalse(description.contains("header-token"))
+        XCTAssertFalse(description.contains("query-token"))
+        XCTAssertFalse(description.contains("client-secret"))
+        XCTAssertTrue(description.contains("safe-name"))
+        XCTAssertTrue(description.contains("<redacted>"))
+        XCTAssertFalse(error.failureReason?.contains("query-token") == true)
+    }
+
     func testTransportNotifiesDelegateForNetworkAndDecodingFailures() async throws {
         let delegate = DelegateProbe()
 

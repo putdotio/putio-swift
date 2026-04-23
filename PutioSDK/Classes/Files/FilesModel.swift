@@ -319,14 +319,14 @@ enum PutioSDKDateParser {
 
     static func parse(_ value: String?) throws -> Date {
         let formatter = ISO8601DateFormatter()
+        let fractionalFormatter = ISO8601DateFormatter()
+        fractionalFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 
         if let value, !value.isEmpty {
-            if let parsed = formatter.date(from: value) {
-                return parsed
-            }
-
-            if let parsed = formatter.date(from: "\(value)+00:00") {
-                return parsed
+            for candidate in [value, "\(value)Z", "\(value)+00:00"] {
+                if let parsed = formatter.date(from: candidate) ?? fractionalFormatter.date(from: candidate) {
+                    return parsed
+                }
             }
         }
 

@@ -75,6 +75,64 @@ public struct PutioSDKRequestConfig {
     }
 }
 
+extension PutioSDKRequestConfig: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String {
+        "PutioSDKRequestConfig(url: \"\(redactedURL)\", method: \(method.rawValue), headers: \(redactedHeaders), query: \(redact(query)), body: \(redact(body ?? [:])))"
+    }
+
+    public var debugDescription: String {
+        description
+    }
+
+    var redactedURL: String {
+        guard var components = URLComponents(string: url), let queryItems = components.queryItems else {
+            return url
+        }
+
+        components.queryItems = queryItems.map { item in
+            sensitiveKey(item.name) ? URLQueryItem(name: item.name, value: "<redacted>") : item
+        }
+        return components.string ?? url
+    }
+
+    private var redactedHeaders: HTTPHeaders {
+        HTTPHeaders(headers.map { header in
+            if sensitiveKey(header.name) {
+                return HTTPHeader(name: header.name, value: "<redacted>")
+            }
+            return header
+        })
+    }
+}
+
+extension PutioSDKErrorRequestInformation: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String {
+        "PutioSDKErrorRequestInformation(config: \(config))"
+    }
+
+    public var debugDescription: String {
+        description
+    }
+}
+
+private func redact(_ parameters: Parameters) -> Parameters {
+    var redacted = Parameters()
+    for (key, value) in parameters {
+        redacted[key] = sensitiveKey(key) ? "<redacted>" : value
+    }
+    return redacted
+}
+
+private func sensitiveKey(_ key: String) -> Bool {
+    let normalized = key.lowercased()
+    return normalized == "authorization" ||
+        normalized == "token" ||
+        normalized == "oauth_token" ||
+        normalized == "access_token" ||
+        normalized == "client_secret" ||
+        normalized.hasSuffix("_token")
+}
+
 public enum PutioSDKErrorType {
     case httpError(statusCode: Int, errorType: String?)
     case networkError
@@ -104,7 +162,7 @@ internal struct PutioAPIErrorEnvelope: Decodable {
     }
 }
 
-public struct PutioSDKError: Error, LocalizedError {
+public struct PutioSDKError: Error, LocalizedError, CustomStringConvertible, CustomDebugStringConvertible {
     public let request: PutioSDKErrorRequestInformation
     public let type: PutioSDKErrorType
     public let message: String
@@ -119,10 +177,10 @@ public struct PutioSDKError: Error, LocalizedError {
         switch type {
         case let .httpError(statusCode, errorType):
             if let errorType, !errorType.isEmpty {
-                return "put.io rejected \(request.config.method.rawValue) \(request.config.url) with HTTP \(statusCode) and error type \(errorType)."
+                return "put.io rejected \(request.config.method.rawValue) \(request.config.redactedURL) with HTTP \(statusCode) and error type \(errorType)."
             }
 
-            return "put.io rejected \(request.config.method.rawValue) \(request.config.url) with HTTP \(statusCode)."
+            return "put.io rejected \(request.config.method.rawValue) \(request.config.redactedURL) with HTTP \(statusCode)."
         case .networkError:
             return "The SDK could not reach put.io."
         case .decodingError:
@@ -130,6 +188,14 @@ public struct PutioSDKError: Error, LocalizedError {
         case .unknownError:
             return "The SDK failed before it could classify the error."
         }
+    }
+
+    public var description: String {
+        "PutioSDKError(request: \(request), type: \(type), message: \"\(message)\", underlyingError: \(underlyingError), responseBody: \(responseBody ?? "nil"))"
+    }
+
+    public var debugDescription: String {
+        description
     }
 
     public var recoverySuggestion: String? {
