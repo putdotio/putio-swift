@@ -1,17 +1,19 @@
-import SwiftyJSON
-
 open class PutioPrivateTorrentPinEvent: PutioHistoryEvent {
     open var userDownloadName: String
     open var pinnedHostIP: String
     open var newHostIP: String
-    
-    override init(json: JSON) {
-        self.userDownloadName = json["user_download_name"].stringValue
-        self.pinnedHostIP = json["pinned_host_ip"].stringValue
-        self.newHostIP = json["new_host_ip"].stringValue
-        
-        super.init(json: json)
-        
-        self.type = .privateTorrentPin
+
+    enum PrivateTorrentPinCodingKeys: String, CodingKey {
+        case userDownloadName = "user_download_name"
+        case pinnedHostIP = "pinned_host_ip"
+        case newHostIP = "new_host_ip"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: PrivateTorrentPinCodingKeys.self)
+        self.userDownloadName = try container.decodeIfPresent(String.self, forKey: .userDownloadName) ?? ""
+        self.pinnedHostIP = try container.decodeIfPresent(String.self, forKey: .pinnedHostIP) ?? ""
+        self.newHostIP = try container.decodeIfPresent(String.self, forKey: .newHostIP) ?? ""
+        try super.init(from: decoder)
     }
 }

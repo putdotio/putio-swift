@@ -55,22 +55,25 @@ pod 'PutioSDK'
 ```swift
 import PutioSDK
 
-let api = PutioSDK(
+let sdk = PutioSDK(
     config: PutioSDKConfig(
         clientID: "<your-client-id>",
         token: "<your-access-token>"
     )
 )
 
-api.getAccountInfo { result in
-    switch result {
-    case .success(let account):
+Task {
+    do {
+        let account = try await sdk.getAccountInfo()
         print(account.username)
-    case .failure(let error):
+    } catch let error as PutioSDKError {
         print(error.message)
+        print(error.recoverySuggestion ?? "")
     }
 }
 ```
+
+The async APIs are the preferred surface. Completion-handler methods remain available as compatibility wrappers while the legacy JSON-heavy areas are migrated.
 
 ## Verification
 
@@ -81,6 +84,12 @@ make verify
 ```
 
 Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
+
+An opt-in live verification lane is also available:
+
+```bash
+make live-test
+```
 
 Releases are continuous on `main`: every merge is treated as releasable. Conventional commits drive version selection through semantic-release, GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
 
@@ -94,6 +103,9 @@ The example app shows a minimal `ASWebAuthenticationSession` flow and a follow-u
 ## Docs
 
 - [Example app](./Example) for the example app and smoke-test workspace
+- [Architecture](./docs/ARCHITECTURE.md) for the current async transport and decoding direction
+- [Testing](./docs/TESTING.md) for deterministic and live verification
+- [Readiness](./docs/READINESS.md) for the current verification confidence
 - [Security](./SECURITY.md) for private vulnerability reporting
 
 ## Repo Internals

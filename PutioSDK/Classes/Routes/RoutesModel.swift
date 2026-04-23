@@ -1,14 +1,20 @@
 import Foundation
-import SwiftyJSON
 
-open class PutioRoute {
+open class PutioRoute: Decodable {
     open var name: String
     open var description: String
     open var hosts: [String]
 
-    init(json: JSON) {
-        self.name = json["name"].stringValue
-        self.description = json["description"].stringValue
-        self.hosts = json["hosts"].arrayValue.map {$0.stringValue}
+    enum CodingKeys: String, CodingKey {
+        case name
+        case description
+        case hosts
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        self.description = try container.decodeIfPresent(String.self, forKey: .description) ?? ""
+        self.hosts = try container.decodeIfPresent([String].self, forKey: .hosts) ?? []
     }
 }

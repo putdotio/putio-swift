@@ -34,6 +34,14 @@ make verify
 
 This check builds the Swift package, installs the example workspace, and then builds the example-backed `PutioSDK` CocoaPods scheme from `Example/PutioSDK.xcworkspace`. It prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
+For real API verification, use the separate live lane:
+
+```bash
+make live-test
+```
+
+The live suite prefers direct runtime env vars first and can optionally hydrate them from a configured 1Password runtime item. See [Testing](./docs/TESTING.md) for the supported variables and safety rules.
+
 To see the concrete iPhone simulator destination Xcode is advertising to the repo on your machine, run:
 
 ```bash
@@ -43,10 +51,12 @@ make print-simulator-destination
 ## Development Notes
 
 - Keep `README.md` consumer-facing and put contributor workflow here
+- Keep deeper verification details in `docs/ARCHITECTURE.md`, `docs/TESTING.md`, and `docs/READINESS.md`
 - The GitHub repository is `putio-sdk-swift`
 - The Swift Package product and module are `PutioSDK`
 - The CocoaPods package is `PutioSDK`
 - The public SDK module and type names are `PutioSDK`
+- Prefer the native async APIs and treat completion-handler entrypoints as compatibility wrappers when extending existing domains
 - Keep `Package.swift`, `PutioSDK.podspec`, and `VERSION` aligned when dependency or platform support changes
 - Any iPhone simulator on iOS `26.0` or newer is acceptable for interactive example runs; the repo does not require an exact simulator patch version
 - Use `bundle exec pod lib lint PutioSDK.podspec --allow-warnings` as a manual publish-time check when you need full podspec validation and have a working iOS destination available

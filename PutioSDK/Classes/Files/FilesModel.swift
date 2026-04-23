@@ -1,11 +1,50 @@
 import Foundation
-import SwiftyJSON
 
-public enum PutioFileType {
-    case folder, video, audio, image, pdf, other
+public struct PutioFileType: RawRepresentable, Equatable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let folder = PutioFileType(rawValue: "FOLDER")
+    public static let video = PutioFileType(rawValue: "VIDEO")
+    public static let audio = PutioFileType(rawValue: "AUDIO")
+    public static let image = PutioFileType(rawValue: "IMAGE")
+    public static let pdf = PutioFileType(rawValue: "PDF")
+    public static let other = PutioFileType(rawValue: "OTHER")
+
+    public var isKnown: Bool {
+        Self.knownValues.contains(rawValue)
+    }
+
+    static func fromAPI(_ rawValue: String) -> PutioFileType {
+        switch rawValue {
+        case Self.folder.rawValue:
+            return .folder
+        case Self.video.rawValue:
+            return .video
+        case Self.audio.rawValue:
+            return .audio
+        case Self.image.rawValue:
+            return .image
+        case Self.pdf.rawValue:
+            return .pdf
+        default:
+            return PutioFileType(rawValue: rawValue)
+        }
+    }
+
+    private static let knownValues: Set<String> = [
+        folder.rawValue,
+        video.rawValue,
+        audio.rawValue,
+        image.rawValue,
+        pdf.rawValue,
+    ]
 }
 
-open class PutioBaseFile {
+open class PutioBaseFile: Decodable {
     open var id: Int
     open var name: String
     open var icon: String
@@ -14,49 +53,50 @@ open class PutioBaseFile {
     open var size: Int64
     open var createdAt: Date
 
-    init(json: JSON) {
-        self.id = json["id"].intValue
-        self.name = json["name"].stringValue
-        self.icon = json["icon"].stringValue
-        self.parentID = json["parent_id"].intValue
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case icon
+        case parentID = "parent_id"
+        case size
+        case createdAt = "created_at"
+        case fileType = "file_type"
+    }
 
-        switch json["file_type"].stringValue {
-        case "FOLDER":
-            self.type = .folder
-        case "VIDEO":
-            self.type = .video
-        case "AUDIO":
-            self.type = .audio
-        case "IMAGE":
-            self.type = .image
-        case "PDF":
-            self.type = .pdf
-        default:
-            self.type = .other
-        }
-
-        // Eg: 1024.0
-        self.size = json["size"].int64Value
-
-        // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
-        let formatter = ISO8601DateFormatter()
-        self.createdAt = formatter.date(from: json["created_at"].stringValue) ?? formatter.date(from: "\(json["created_at"].stringValue)+00:00")!
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.icon = try container.decodeIfPresent(String.self, forKey: .icon) ?? ""
+        self.parentID = try container.decodeIfPresent(Int.self, forKey: .parentID) ?? 0
+        self.size = try container.decodeIfPresent(Int64.self, forKey: .size) ?? 0
+        self.createdAt = try PutioSDKDateParser.decodeDate(forKey: .createdAt, from: container)
+        self.type = PutioFileType.fromAPI(try container.decode(String.self, forKey: .fileType))
     }
 }
 
-public struct PutioVideoMetadata {
+public struct PutioVideoMetadata: Decodable {
     public var height: Int
     public var width: Int
     public var codec: String
     public var duration: Double
     public var aspectRatio: Double
 
-    init(json: JSON) {
-        self.height = json["height"].intValue
-        self.width = json["width"].intValue
-        self.codec = json["codec"].stringValue
-        self.duration = json["duration"].doubleValue
-        self.aspectRatio = json["aspect_ratio"].doubleValue
+    enum CodingKeys: String, CodingKey {
+        case height
+        case width
+        case codec
+        case duration
+        case aspectRatio = "aspect_ratio"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.height = try container.decodeIfPresent(Int.self, forKey: .height) ?? 0
+        self.width = try container.decodeIfPresent(Int.self, forKey: .width) ?? 0
+        self.codec = try container.decodeIfPresent(String.self, forKey: .codec) ?? ""
+        self.duration = try container.decodeIfPresent(Double.self, forKey: .duration) ?? 0
+        self.aspectRatio = try container.decodeIfPresent(Double.self, forKey: .aspectRatio) ?? 0
     }
 }
 
@@ -64,11 +104,9 @@ open class PutioFile: PutioBaseFile {
     open var isShared: Bool
     open var updatedAt: Date
 
-    // MARK: Folder Properties
     open var isSharedRoot: Bool = false
     open var sortBy: String = ""
 
-    // MARK: Video Properties
     open var metaData: PutioVideoMetadata?
     open var screenshot: String = ""
     open var startFrom: Int = 0
@@ -81,104 +119,131 @@ open class PutioFile: PutioBaseFile {
 
     open var streamURL: String = ""
 
-    override init(json: JSON) {
-        let base = PutioBaseFile(json: json)
+    enum CodingKeys: String, CodingKey {
+        case isShared = "is_shared"
+        case updatedAt = "updated_at"
+        case folderType = "folder_type"
+        case sortBy = "sort_by"
+        case metaData = "video_metadata"
+        case screenshot
+        case startFrom = "start_from"
+        case needConvert = "need_convert"
+        case hasMp4 = "is_mp4_available"
+        case mp4Size = "mp4_size"
+        case mp4StreamURL = "mp4_stream_url"
+        case streamURL = "stream_url"
+    }
 
-        self.isShared = json["is_shared"].boolValue
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.isShared = try container.decodeIfPresent(Bool.self, forKey: .isShared) ?? false
 
-        // Put.io API currently does not provide dates compatible with iso8601 but may support in the future
-        let formatter = ISO8601DateFormatter()
-        self.updatedAt = base.id == 0 ? base.createdAt :
-            formatter.date(from: json["updated_at"].stringValue) ??
-            formatter.date(from: "\(json["updated_at"].stringValue)+00:00")!
+        let updatedAt = try container.decodeIfPresent(String.self, forKey: .updatedAt)
+        self.updatedAt = try PutioSDKDateParser.parse(updatedAt)
 
-        if base.type == .folder {
-            self.sortBy = json["sort_by"].stringValue
-            self.isSharedRoot = json["folder_type"].stringValue == "SHARED_ROOT"
-        }
+        let folderType = try container.decodeIfPresent(String.self, forKey: .folderType) ?? ""
+        self.isSharedRoot = folderType == "SHARED_ROOT"
+        self.sortBy = try container.decodeIfPresent(String.self, forKey: .sortBy) ?? ""
+        self.metaData = try container.decodeIfPresent(PutioVideoMetadata.self, forKey: .metaData)
+        self.screenshot = try container.decodeIfPresent(String.self, forKey: .screenshot) ?? ""
+        self.startFrom = Int(try container.decodeIfPresent(Double.self, forKey: .startFrom) ?? 0)
+        self.needConvert = try container.decodeIfPresent(Bool.self, forKey: .needConvert) ?? false
+        self.hasMp4 = try container.decodeIfPresent(Bool.self, forKey: .hasMp4) ?? false
+        self.mp4Size = try container.decodeIfPresent(Int64.self, forKey: .mp4Size) ?? 0
+        self.mp4StreamURL = try container.decodeIfPresent(String.self, forKey: .mp4StreamURL) ?? ""
+        self.streamURL = try container.decodeIfPresent(String.self, forKey: .streamURL) ?? ""
 
-        if base.type == .video {
-            self.hasMp4 = json["is_mp4_available"].boolValue
-            self.needConvert = json["need_convert"].boolValue
-            self.streamURL = json["stream_url"].stringValue
-            self.mp4StreamURL = json["mp4_stream_url"].stringValue
-            self.screenshot = json["screenshot"].stringValue
-
-            if (self.hasMp4) {
-                self.mp4Size = json["mp4_size"].int64Value
-            }
-
-            if json["video_metadata"].dictionary != nil {
-                self.metaData = PutioVideoMetadata(json: json["video_metadata"])
-            }
-        }
-
-        if base.type == .audio || base.type == .video {
-            self.startFrom = json["start_from"].intValue
-        }
-
-        super.init(json: json)
+        try super.init(from: decoder)
     }
 
     public func getStreamURL(token: String) -> URL? {
-        switch (self.type) {
-        case .audio:
-            let url = "\(PutioSDK.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
-            return URL(string: url)!
-        case .video:
-            let url = "\(PutioSDK.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
-            return URL(string: url)!
-        default:
-            return nil
+        if type == .audio {
+            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/stream?oauth_token=\(token)")
         }
+
+        if type == .video {
+            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)")
+        }
+
+        return nil
     }
 
     public func getHlsStreamURL(token: String) -> URL {
-        let url = "\(PutioSDK.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
-        return URL(string: url)!
+        URL(string: "\(PutioSDK.apiURL)/files/\(id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)")!
     }
 
     public func getAudioStreamURL(token: String) -> URL {
-        let url = "\(PutioSDK.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
-        return URL(string: url)!
+        URL(string: "\(PutioSDK.apiURL)/files/\(id)/stream?oauth_token=\(token)")!
     }
 
     public func getDownloadURL(token: String) -> URL {
-        let url = "\(PutioSDK.apiURL)/files/\(self.id)/download?oauth_token=\(token)"
-        return URL(string: url)!
+        URL(string: "\(PutioSDK.apiURL)/files/\(id)/download?oauth_token=\(token)")!
     }
 
     public func getMp4DownloadURL(token: String) -> URL {
-        let url = "\(PutioSDK.apiURL)/files/\(self.id)/mp4/download?oauth_token=\(token)"
-        return URL(string: url)!
+        URL(string: "\(PutioSDK.apiURL)/files/\(id)/mp4/download?oauth_token=\(token)")!
     }
 }
 
-public enum PutioNextFileType: String {
+public enum PutioNextFileType: String, Decodable {
     case video = "VIDEO", audio = "AUDIO"
 }
 
-open class PutioNextFile {
+open class PutioNextFile: Decodable {
     open var id: Int
     open var name: String
     open var parentID: Int
     open var type: PutioNextFileType
 
-    init(json: JSON, type: PutioNextFileType) {
-        self.id = json["id"].intValue
-        self.parentID = json["parent_id"].intValue
-        self.name = json["name"].stringValue
-        self.type = type
+    enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case parentID = "parent_id"
+        case type = "file_type"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.parentID = try container.decodeIfPresent(Int.self, forKey: .parentID) ?? 0
+        self.name = try container.decode(String.self, forKey: .name)
+        self.type = try container.decode(PutioNextFileType.self, forKey: .type)
     }
 
     public func getStreamURL(token: String) -> URL {
-        switch (self.type) {
+        switch type {
         case .audio:
-            let url = "\(PutioSDK.apiURL)/files/\(self.id)/stream?oauth_token=\(token)"
-            return URL(string: url)!
+            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/stream?oauth_token=\(token)")!
         case .video:
-            let url = "\(PutioSDK.apiURL)/files/\(self.id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)"
-            return URL(string: url)!
+            return URL(string: "\(PutioSDK.apiURL)/files/\(id)/hls/media.m3u8?subtitle_key=all&oauth_token=\(token)")!
         }
+    }
+}
+
+enum PutioSDKDateParser {
+    static func decodeDate<Key: CodingKey>(forKey key: Key, from container: KeyedDecodingContainer<Key>) throws -> Date {
+        let value = try container.decode(String.self, forKey: key)
+        return try parse(value)
+    }
+
+    static func parse(_ value: String?) throws -> Date {
+        let formatter = ISO8601DateFormatter()
+
+        if let value, !value.isEmpty {
+            if let parsed = formatter.date(from: value) {
+                return parsed
+            }
+
+            if let parsed = formatter.date(from: "\(value)+00:00") {
+                return parsed
+            }
+        }
+
+        throw DecodingError.dataCorrupted(
+            DecodingError.Context(
+                codingPath: [],
+                debugDescription: "Expected an ISO8601-ish put.io date string",
+            )
+        )
     }
 }

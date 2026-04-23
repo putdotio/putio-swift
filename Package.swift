@@ -28,6 +28,16 @@ let package = Package(
             ],
             path: "PutioSDK/Classes"
         ),
+        .testTarget(
+            name: "PutioSDKTests",
+            dependencies: ["PutioSDK"],
+            path: "Tests/PutioSDKTests"
+        ),
+        .testTarget(
+            name: "PutioSDKLiveTests",
+            dependencies: ["PutioSDK"],
+            path: "Tests/PutioSDKLiveTests"
+        ),
     ],
     swiftLanguageModes: [
         .v5

@@ -1,58 +1,90 @@
 import Foundation
-import SwiftyJSON
 
-open class PutioTokenValidationResult {
+open class PutioTokenValidationResult: Decodable {
     open var result: Bool
     open var token_id: Int
     open var token_scope: String
     open var user_id: Int
 
-    init(json: JSON) {
-        self.result = json["result"].boolValue
-        self.token_id = json["token_id"].intValue
-        self.token_scope = json["token_scope"].stringValue
-        self.user_id = json["user_id"].intValue
+    enum CodingKeys: String, CodingKey {
+        case result
+        case token_id
+        case token_scope
+        case user_id
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.result = try container.decodeIfPresent(Bool.self, forKey: .result) ?? false
+        self.token_id = try container.decodeIfPresent(Int.self, forKey: .token_id) ?? 0
+        self.token_scope = try container.decodeIfPresent(String.self, forKey: .token_scope) ?? ""
+        self.user_id = try container.decodeIfPresent(Int.self, forKey: .user_id) ?? 0
     }
 }
 
-open class PutioTwoFactorRecoveryCode {
+open class PutioTwoFactorRecoveryCode: Decodable {
     open var code: String
     open var used_at: String?
 
-    init(json: JSON) {
-        self.code = json["code"].stringValue
-        self.used_at = json["used_at"].stringValue
+    enum CodingKeys: String, CodingKey {
+        case code
+        case used_at
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.code = try container.decode(String.self, forKey: .code)
+        self.used_at = try container.decodeIfPresent(String.self, forKey: .used_at)
     }
 }
 
-open class PutioTwoFactorRecoveryCodes {
+open class PutioTwoFactorRecoveryCodes: Decodable {
     open var created_at: String
     open var codes: [PutioTwoFactorRecoveryCode]
 
-    init(json: JSON) {
-        self.created_at = json["created_at"].stringValue
-        self.codes = json["codes"].arrayValue.map { PutioTwoFactorRecoveryCode(json: $0) }
+    enum CodingKeys: String, CodingKey {
+        case created_at
+        case codes
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.created_at = try container.decodeIfPresent(String.self, forKey: .created_at) ?? ""
+        self.codes = try container.decodeIfPresent([PutioTwoFactorRecoveryCode].self, forKey: .codes) ?? []
     }
 }
 
-open class PutioGenerateTOTPResult {
+open class PutioGenerateTOTPResult: Decodable {
     open var secret: String
     open var uri: String
     open var recovery_codes: PutioTwoFactorRecoveryCodes
 
-    init(json: JSON) {
-        self.secret = json["secret"].stringValue
-        self.uri = json["uri"].stringValue
-        self.recovery_codes = PutioTwoFactorRecoveryCodes(json: json["recovery_codes"])
+    enum CodingKeys: String, CodingKey {
+        case secret
+        case uri
+        case recovery_codes
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.secret = try container.decodeIfPresent(String.self, forKey: .secret) ?? ""
+        self.uri = try container.decodeIfPresent(String.self, forKey: .uri) ?? ""
+        self.recovery_codes = try container.decode(PutioTwoFactorRecoveryCodes.self, forKey: .recovery_codes)
     }
 }
 
-open class PutioVerifyTOTPResult {
+open class PutioVerifyTOTPResult: Decodable {
     open var token: String
     open var user_id: Int
 
-    init(json: JSON) {
-        self.token = json["token"].stringValue
-        self.user_id = json["user_id"].intValue
+    enum CodingKeys: String, CodingKey {
+        case token
+        case user_id
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.token = try container.decodeIfPresent(String.self, forKey: .token) ?? ""
+        self.user_id = try container.decodeIfPresent(Int.self, forKey: .user_id) ?? 0
     }
 }

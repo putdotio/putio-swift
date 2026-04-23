@@ -1,27 +1,37 @@
 import Foundation
-import SwiftyJSON
 
 open class PutioTrashFile: PutioBaseFile {
     open var deletedAt: Date
     open var expiresOn: Date
 
-    override init(json: JSON) {
-        let formatter = ISO8601DateFormatter()
-        self.deletedAt = formatter.date(from: json["deleted_at"].stringValue) ?? formatter.date(from: "\(json["deleted_at"].stringValue)+00:00")!
-        self.expiresOn = formatter.date(from: json["expiration_date"].stringValue) ?? formatter.date(from: "\(json["expiration_date"].stringValue)+00:00")!
-        super.init(json: json)
+    enum CodingKeys: String, CodingKey {
+        case deletedAt = "deleted_at"
+        case expiresOn = "expiration_date"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.deletedAt = try PutioSDKDateParser.decodeDate(forKey: .deletedAt, from: container)
+        self.expiresOn = try PutioSDKDateParser.decodeDate(forKey: .expiresOn, from: container)
+        try super.init(from: decoder)
     }
 }
 
-
-open class PutioListTrashResponse {
+open class PutioListTrashResponse: Decodable {
     open var cursor: String
     open var trash_size: Int64
     open var files: [PutioTrashFile]
 
-    init(json: JSON) {
-        self.cursor = json["cursor"].stringValue
-        self.trash_size = json["trash_size"].int64Value
-        self.files = json["files"].arrayValue.map { PutioTrashFile(json: $0) }
+    enum CodingKeys: String, CodingKey {
+        case cursor
+        case trash_size
+        case files
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.cursor = try container.decodeIfPresent(String.self, forKey: .cursor) ?? ""
+        self.trash_size = try container.decodeIfPresent(Int64.self, forKey: .trash_size) ?? 0
+        self.files = try container.decodeIfPresent([PutioTrashFile].self, forKey: .files) ?? []
     }
 }

@@ -1,15 +1,16 @@
-import SwiftyJSON
-
 open class PutioZipCreatedEvent: PutioHistoryEvent {
     open var zipID: Int
     open var zipSize: Int64
-    
-    override init(json: JSON) {
-        self.zipID = json["zip_id"].intValue
-        self.zipSize = json["zip_size"].int64Value
-        
-        super.init(json: json)
-        
-        self.type = .zipCreated
+
+    enum ZipCreatedCodingKeys: String, CodingKey {
+        case zipID = "zip_id"
+        case zipSize = "zip_size"
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: ZipCreatedCodingKeys.self)
+        self.zipID = try container.decodeIfPresent(Int.self, forKey: .zipID) ?? 0
+        self.zipSize = try container.decodeIfPresent(Int64.self, forKey: .zipSize) ?? 0
+        try super.init(from: decoder)
     }
 }
