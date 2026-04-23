@@ -71,6 +71,17 @@ graph LR
   - `getRoutes`
 - `subtitles`
   - `getSubtitles`
+- `transfers`
+  - `listTransfers`
+  - `continueTransfers`
+  - `getTransfer`
+  - `countTransfers`
+  - `getTransferInfo`
+  - `addTransfer`
+  - `addTransfers`
+  - `cancelTransfers`
+  - `cleanTransfers`
+  - `retryTransfer`
 - `trash`
   - `listTrash`
   - `continueListTrash`
