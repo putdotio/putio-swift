@@ -59,7 +59,7 @@ final class PutioSDKAccountTests: XCTestCase {
         )
 
         let settings = try await sdk.getAccountSettings()
-        let cleared = try await sdk.clearAccountData(options: ["files": true, "history": false])
+        let cleared = try await sdk.clearAccountData(options: PutioAccountClearOptions(files: true, history: false))
         let destroyed = try await sdk.destroyAccount(currentPassword: "secret-123")
 
         XCTAssertEqual(settings.routeName, "eu-west")
@@ -117,5 +117,65 @@ final class PutioSDKAccountTests: XCTestCase {
         XCTAssertEqual(account.passwordLastChangedAt, "")
         XCTAssertTrue(PutioClearDataOptionKeys.contains("history"))
         XCTAssertTrue(PutioClearDataOptionKeys.contains("trash"))
+    }
+
+    func testTypedAccountInputsBuildExpectedParameters() {
+        let infoQuery = PutioAccountInfoQuery(
+            downloadToken: true,
+            features: true,
+            intercom: true,
+            pas: true,
+            platform: "ios",
+            profitwell: true,
+            pushToken: true
+        )
+        let settingsPatch = PutioAccountSettingsPatch(
+            historyEnabled: false,
+            trashEnabled: true,
+            hideSubtitles: true,
+            dontAutoSelectSubtitles: false,
+            tunnelRouteName: "eu-west",
+            showOptimisticUsage: true
+        )
+        let twoFactor = PutioTwoFactorSettings(code: "123456", enable: true)
+        let clearOptions = PutioAccountClearOptions(
+            files: true,
+            finishedTransfers: true,
+            activeTransfers: true,
+            rssFeeds: true,
+            rssLogs: true,
+            history: true,
+            trash: true,
+            friends: true
+        )
+
+        XCTAssertEqual(infoQuery.parameters["download_token"] as? Int, 1)
+        XCTAssertEqual(infoQuery.parameters["features"] as? Int, 1)
+        XCTAssertEqual(infoQuery.parameters["intercom"] as? Int, 1)
+        XCTAssertEqual(infoQuery.parameters["pas"] as? Int, 1)
+        XCTAssertEqual(infoQuery.parameters["platform"] as? String, "ios")
+        XCTAssertEqual(infoQuery.parameters["profitwell"] as? Int, 1)
+        XCTAssertEqual(infoQuery.parameters["push_token"] as? Int, 1)
+        XCTAssertEqual(settingsPatch.parameters["history_enabled"] as? Bool, false)
+        XCTAssertEqual(settingsPatch.parameters["trash_enabled"] as? Bool, true)
+        XCTAssertEqual(settingsPatch.parameters["hide_subtitles"] as? Bool, true)
+        XCTAssertEqual(settingsPatch.parameters["dont_autoselect_subtitles"] as? Bool, false)
+        XCTAssertEqual(settingsPatch.parameters["tunnel_route_name"] as? String, "eu-west")
+        XCTAssertEqual(settingsPatch.parameters["show_optimistic_usage"] as? Bool, true)
+        XCTAssertEqual(twoFactor.parameters["code"] as? String, "123456")
+        XCTAssertEqual(twoFactor.parameters["enable"] as? Bool, true)
+        XCTAssertEqual(PutioAccountSettingsUpdate.patch(settingsPatch).parameters["history_enabled"] as? Bool, false)
+        XCTAssertEqual(PutioAccountSettingsUpdate.username("alice").parameters["username"] as? String, "alice")
+        XCTAssertEqual(PutioAccountSettingsUpdate.mail(currentPassword: "old", mail: "a@example.com").parameters["mail"] as? String, "a@example.com")
+        XCTAssertEqual(PutioAccountSettingsUpdate.password(currentPassword: "old", password: "new").parameters["password"] as? String, "new")
+        XCTAssertNotNil(PutioAccountSettingsUpdate.twoFactor(twoFactor).parameters["two_factor_enabled"])
+        XCTAssertEqual(clearOptions.parameters["files"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["finished_transfers"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["active_transfers"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["rss_feeds"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["rss_logs"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["history"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["trash"] as? Bool, true)
+        XCTAssertEqual(clearOptions.parameters["friends"] as? Bool, true)
     }
 }

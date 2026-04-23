@@ -142,8 +142,12 @@ final class PutioSDKFilesTests: XCTestCase {
                 XCTAssertEqual(request.httpMethod, "POST")
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"status":"OK"}"#.utf8))
             case "/v2/files/search/continue":
+                XCTAssertEqual(request.httpMethod, "POST")
                 let components = URLComponents(url: try XCTUnwrap(request.url), resolvingAgainstBaseURL: false)
-                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "cursor" })?.value, "search-page-2")
+                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "per_page" })?.value, "10")
+                let body = try XCTUnwrap(requestBodyData(for: request))
+                let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: String])
+                XCTAssertEqual(json["cursor"], "search-page-2")
                 let payload = """
                 {
                   "cursor": "search-done",
@@ -193,7 +197,7 @@ final class PutioSDKFilesTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let listed = try await sdk.getFiles(parentID: 7, query: ["sort_by": "NAME_ASC"])
+        let listed = try await sdk.getFiles(parentID: 7, query: PutioFilesListQuery(sortBy: "NAME_ASC"))
         let file = try await sdk.getFile(fileID: 42)
         let folder = try await sdk.createFolder(name: "Season 2", parentID: 7)
         let deleted = try await sdk.deleteFiles(fileIDs: [42, 43])
@@ -202,7 +206,7 @@ final class PutioSDKFilesTests: XCTestCase {
         let nextFile = try await sdk.findNextFile(fileID: 42, fileType: .video)
         let sorted = try await sdk.setSortBy(fileId: 42, sortBy: "NAME_ASC")
         let resetSort = try await sdk.resetFileSpecificSortSettings()
-        let continuedSearch = try await sdk.continueFileSearch(cursor: "search-page-2")
+        let continuedSearch = try await sdk.continueFileSearch(cursor: "search-page-2", query: PutioFileSearchContinueQuery(perPage: 10))
         let startedConversion = try await sdk.startMp4Conversion(fileID: 42)
         let conversion = try await sdk.getMp4ConversionStatus(fileID: 42)
         let setStartFrom = try await sdk.setStartFrom(fileID: 42, time: 91)
@@ -323,5 +327,49 @@ final class PutioSDKFilesTests: XCTestCase {
         XCTAssertEqual(metadata.aspectRatio, 0)
         XCTAssertThrowsError(try PutioSDKDateParser.parse(nil))
         XCTAssertThrowsError(try PutioSDKDateParser.parse("not-a-date"))
+    }
+
+    func testTypedFileInputsBuildExpectedParameters() {
+        let listQuery = PutioFilesListQuery(
+            perPage: 25,
+            total: true,
+            hidden: true,
+            noCursor: true,
+            contentType: "video/mp4",
+            fileType: .video,
+            sortBy: "NAME_ASC"
+        )
+        let detailsQuery = PutioFileDetailsQuery(
+            mp4Size: true,
+            startFrom: true,
+            streamURL: true,
+            mp4StreamURL: true
+        )
+        let deleteOptions = PutioFileDeleteOptions(skipNonexistents: false, skipOwnerCheck: true)
+        let searchQuery = PutioFileSearchQuery(keyword: "matrix", perPage: 10, types: [.video, .audio])
+        let continueQuery = PutioFileSearchContinueQuery(perPage: 5)
+
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["parent_id"] as? Int, 7)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["mp4_status_parent"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["stream_url_parent"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["mp4_stream_url_parent"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["video_metadata_parent"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["per_page"] as? Int, 25)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["total"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["hidden"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["no_cursor"] as? Int, 1)
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["content_type"] as? String, "video/mp4")
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["file_type"] as? String, "VIDEO")
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["sort_by"] as? String, "NAME_ASC")
+        XCTAssertEqual(detailsQuery.parameters["mp4_size"] as? Int, 1)
+        XCTAssertEqual(detailsQuery.parameters["start_from"] as? Int, 1)
+        XCTAssertEqual(detailsQuery.parameters["stream_url"] as? Int, 1)
+        XCTAssertEqual(detailsQuery.parameters["mp4_stream_url"] as? Int, 1)
+        XCTAssertEqual(deleteOptions.parameters["skip_nonexistents"] as? Bool, false)
+        XCTAssertEqual(deleteOptions.parameters["skip_owner_check"] as? Bool, true)
+        XCTAssertEqual(searchQuery.parameters["query"] as? String, "matrix")
+        XCTAssertEqual(searchQuery.parameters["per_page"] as? Int, 10)
+        XCTAssertEqual(searchQuery.parameters["type"] as? String, "VIDEO,AUDIO")
+        XCTAssertEqual(continueQuery.parameters["per_page"] as? Int, 5)
     }
 }

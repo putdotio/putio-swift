@@ -2,28 +2,13 @@ import Foundation
 import Alamofire
 
 extension PutioSDK {
-    public func getFiles(parentID: Int, query: Parameters = [:]) async throws -> PutioFilesListResult {
-        let query = query.merge(with: [
-            "parent_id": parentID,
-            "mp4_status_parent": 1,
-            "stream_url_parent": 1,
-            "mp4_stream_url_parent": 1,
-            "video_metadata_parent": 1
-        ])
-
-        let envelope = try await request("/files/list", query: query, as: PutioFilesListEnvelope.self)
+    public func getFiles(parentID: Int, query: PutioFilesListQuery = PutioFilesListQuery()) async throws -> PutioFilesListResult {
+        let envelope = try await request("/files/list", query: query.parameters(parentID: parentID), as: PutioFilesListEnvelope.self)
         return PutioFilesListResult(parent: envelope.parent, children: envelope.files, cursor: envelope.cursor, total: envelope.total)
     }
 
-    public func getFile(fileID: Int, query: Parameters = [:]) async throws -> PutioFile {
-        let query = query.merge(with: [
-            "mp4_size": 1,
-            "start_from": 1,
-            "stream_url": 1,
-            "mp4_stream_url": 1
-        ])
-
-        let envelope = try await request("/files/\(fileID)", query: query, as: PutioFileEnvelope.self)
+    public func getFile(fileID: Int, query: PutioFileDetailsQuery = PutioFileDetailsQuery()) async throws -> PutioFile {
+        let envelope = try await request("/files/\(fileID)", query: query.parameters, as: PutioFileEnvelope.self)
         return envelope.file
     }
 
@@ -33,10 +18,9 @@ extension PutioSDK {
         return envelope.file
     }
 
-    public func deleteFiles(fileIDs: [Int], query: Parameters = [:]) async throws -> PutioOKResponse {
-        let query = ["skip_nonexistents": true, "skip_owner_check": false].merge(with: query)
+    public func deleteFiles(fileIDs: [Int], options: PutioFileDeleteOptions = PutioFileDeleteOptions()) async throws -> PutioOKResponse {
         let body = ["file_ids": (fileIDs.map { String($0) }).joined(separator: ",")]
-        return try await request("/files/delete", method: .post, query: query, body: body, as: PutioOKResponse.self)
+        return try await request("/files/delete", method: .post, query: options.parameters, body: body, as: PutioOKResponse.self)
     }
 
     public func copyFiles(fileIDs: [Int]) async throws -> PutioOKResponse {

@@ -141,10 +141,14 @@ final class PutioSDKTransportTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let response = try await sdk.saveAccountSettings(body: [
-            "history_enabled": false,
-            "hide_subtitles": true
-        ])
+        let response = try await sdk.saveAccountSettings(
+            .patch(
+                PutioAccountSettingsPatch(
+                    historyEnabled: false,
+                    hideSubtitles: true
+                )
+            )
+        )
 
         XCTAssertEqual(response.status, "OK")
     }

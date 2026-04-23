@@ -139,7 +139,7 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let response = try await sdk.searchFiles(keyword: "matrix", perPage: 25)
+        let response = try await sdk.searchFiles(query: PutioFileSearchQuery(keyword: "matrix", perPage: 25))
 
         XCTAssertEqual(response.cursor, "page-2")
         XCTAssertEqual(response.files.count, 1)

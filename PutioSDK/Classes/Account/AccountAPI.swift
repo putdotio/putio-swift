@@ -1,9 +1,7 @@
 import Foundation
-import Alamofire
-
 extension PutioSDK {
-    public func getAccountInfo(query: Parameters = [:]) async throws -> PutioAccount {
-        let envelope = try await request("/account/info", query: query, as: PutioAccountInfoEnvelope.self)
+    public func getAccountInfo(query: PutioAccountInfoQuery = PutioAccountInfoQuery()) async throws -> PutioAccount {
+        let envelope = try await request("/account/info", query: query.parameters, as: PutioAccountInfoEnvelope.self)
         return envelope.info
     }
 
@@ -12,12 +10,12 @@ extension PutioSDK {
         return envelope.settings
     }
 
-    public func saveAccountSettings(body: [String: Any]) async throws -> PutioOKResponse {
-        try await request("/account/settings", method: .post, body: body, as: PutioOKResponse.self)
+    public func saveAccountSettings(_ update: PutioAccountSettingsUpdate) async throws -> PutioOKResponse {
+        try await request("/account/settings", method: .post, body: update.parameters, as: PutioOKResponse.self)
     }
 
-    public func clearAccountData(options: [String: Bool]) async throws -> PutioOKResponse {
-        try await request("/account/clear", method: .post, body: options, as: PutioOKResponse.self)
+    public func clearAccountData(options: PutioAccountClearOptions) async throws -> PutioOKResponse {
+        try await request("/account/clear", method: .post, body: options.parameters, as: PutioOKResponse.self)
     }
 
     public func destroyAccount(currentPassword: String) async throws -> PutioOKResponse {

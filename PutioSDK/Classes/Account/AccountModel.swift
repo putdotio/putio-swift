@@ -121,3 +121,169 @@ public var PutioClearDataOptionKeys = [
     "trash",
     "friends"
 ]
+
+public struct PutioAccountInfoQuery {
+    public let downloadToken: Bool
+    public let features: Bool
+    public let intercom: Bool
+    public let pas: Bool
+    public let platform: String?
+    public let profitwell: Bool
+    public let pushToken: Bool
+
+    public init(
+        downloadToken: Bool = false,
+        features: Bool = false,
+        intercom: Bool = false,
+        pas: Bool = false,
+        platform: String? = nil,
+        profitwell: Bool = false,
+        pushToken: Bool = false
+    ) {
+        self.downloadToken = downloadToken
+        self.features = features
+        self.intercom = intercom
+        self.pas = pas
+        self.platform = platform
+        self.profitwell = profitwell
+        self.pushToken = pushToken
+    }
+
+    var parameters: [String: Any] {
+        var query: [String: Any] = [:]
+        if downloadToken { query["download_token"] = 1 }
+        if features { query["features"] = 1 }
+        if intercom { query["intercom"] = 1 }
+        if pas { query["pas"] = 1 }
+        if let platform { query["platform"] = platform }
+        if profitwell { query["profitwell"] = 1 }
+        if pushToken { query["push_token"] = 1 }
+        return query
+    }
+}
+
+public struct PutioAccountSettingsPatch {
+    public let historyEnabled: Bool?
+    public let trashEnabled: Bool?
+    public let hideSubtitles: Bool?
+    public let dontAutoSelectSubtitles: Bool?
+    public let tunnelRouteName: String?
+    public let showOptimisticUsage: Bool?
+
+    public init(
+        historyEnabled: Bool? = nil,
+        trashEnabled: Bool? = nil,
+        hideSubtitles: Bool? = nil,
+        dontAutoSelectSubtitles: Bool? = nil,
+        tunnelRouteName: String? = nil,
+        showOptimisticUsage: Bool? = nil
+    ) {
+        self.historyEnabled = historyEnabled
+        self.trashEnabled = trashEnabled
+        self.hideSubtitles = hideSubtitles
+        self.dontAutoSelectSubtitles = dontAutoSelectSubtitles
+        self.tunnelRouteName = tunnelRouteName
+        self.showOptimisticUsage = showOptimisticUsage
+    }
+
+    var parameters: [String: Any] {
+        var body: [String: Any] = [:]
+        if let historyEnabled { body["history_enabled"] = historyEnabled }
+        if let trashEnabled { body["trash_enabled"] = trashEnabled }
+        if let hideSubtitles { body["hide_subtitles"] = hideSubtitles }
+        if let dontAutoSelectSubtitles { body["dont_autoselect_subtitles"] = dontAutoSelectSubtitles }
+        if let tunnelRouteName { body["tunnel_route_name"] = tunnelRouteName }
+        if let showOptimisticUsage { body["show_optimistic_usage"] = showOptimisticUsage }
+        return body
+    }
+}
+
+public struct PutioTwoFactorSettings {
+    public let code: String
+    public let enable: Bool
+
+    public init(code: String, enable: Bool) {
+        self.code = code
+        self.enable = enable
+    }
+
+    var parameters: [String: Any] {
+        [
+            "code": code,
+            "enable": enable,
+        ]
+    }
+}
+
+public enum PutioAccountSettingsUpdate {
+    case patch(PutioAccountSettingsPatch)
+    case username(String)
+    case mail(currentPassword: String, mail: String)
+    case password(currentPassword: String, password: String)
+    case twoFactor(PutioTwoFactorSettings)
+
+    var parameters: [String: Any] {
+        switch self {
+        case let .patch(patch):
+            return patch.parameters
+        case let .username(username):
+            return ["username": username]
+        case let .mail(currentPassword, mail):
+            return [
+                "current_password": currentPassword,
+                "mail": mail,
+            ]
+        case let .password(currentPassword, password):
+            return [
+                "current_password": currentPassword,
+                "password": password,
+            ]
+        case let .twoFactor(settings):
+            return ["two_factor_enabled": settings.parameters]
+        }
+    }
+}
+
+public struct PutioAccountClearOptions {
+    public let files: Bool
+    public let finishedTransfers: Bool
+    public let activeTransfers: Bool
+    public let rssFeeds: Bool
+    public let rssLogs: Bool
+    public let history: Bool
+    public let trash: Bool
+    public let friends: Bool
+
+    public init(
+        files: Bool = false,
+        finishedTransfers: Bool = false,
+        activeTransfers: Bool = false,
+        rssFeeds: Bool = false,
+        rssLogs: Bool = false,
+        history: Bool = false,
+        trash: Bool = false,
+        friends: Bool = false
+    ) {
+        self.files = files
+        self.finishedTransfers = finishedTransfers
+        self.activeTransfers = activeTransfers
+        self.rssFeeds = rssFeeds
+        self.rssLogs = rssLogs
+        self.history = history
+        self.trash = trash
+        self.friends = friends
+    }
+
+    var parameters: [String: Any] {
+        [
+            "files": files,
+            "finished_transfers": finishedTransfers,
+            "active_transfers": activeTransfers,
+            "rss_feeds": rssFeeds,
+            "rss_logs": rssLogs,
+            "history": history,
+            "trash": trash,
+            "friends": friends,
+        ]
+    }
+}

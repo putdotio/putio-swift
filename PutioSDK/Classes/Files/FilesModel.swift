@@ -189,6 +189,97 @@ public enum PutioNextFileType: String, Decodable {
     case video = "VIDEO", audio = "AUDIO"
 }
 
+public struct PutioFilesListQuery {
+    public let perPage: Int?
+    public let total: Bool
+    public let hidden: Bool
+    public let noCursor: Bool
+    public let contentType: String?
+    public let fileType: PutioFileType?
+    public let sortBy: String?
+
+    public init(
+        perPage: Int? = nil,
+        total: Bool = false,
+        hidden: Bool = false,
+        noCursor: Bool = false,
+        contentType: String? = nil,
+        fileType: PutioFileType? = nil,
+        sortBy: String? = nil
+    ) {
+        self.perPage = perPage
+        self.total = total
+        self.hidden = hidden
+        self.noCursor = noCursor
+        self.contentType = contentType
+        self.fileType = fileType
+        self.sortBy = sortBy
+    }
+
+    func parameters(parentID: Int) -> [String: Any] {
+        var query: [String: Any] = [
+            "parent_id": parentID,
+            "mp4_status_parent": 1,
+            "stream_url_parent": 1,
+            "mp4_stream_url_parent": 1,
+            "video_metadata_parent": 1,
+        ]
+        if let perPage { query["per_page"] = perPage }
+        if total { query["total"] = 1 }
+        if hidden { query["hidden"] = 1 }
+        if noCursor { query["no_cursor"] = 1 }
+        if let contentType { query["content_type"] = contentType }
+        if let fileType { query["file_type"] = fileType.rawValue }
+        if let sortBy { query["sort_by"] = sortBy }
+        return query
+    }
+}
+
+public struct PutioFileDetailsQuery {
+    public let mp4Size: Bool
+    public let startFrom: Bool
+    public let streamURL: Bool
+    public let mp4StreamURL: Bool
+
+    public init(
+        mp4Size: Bool = true,
+        startFrom: Bool = true,
+        streamURL: Bool = true,
+        mp4StreamURL: Bool = true
+    ) {
+        self.mp4Size = mp4Size
+        self.startFrom = startFrom
+        self.streamURL = streamURL
+        self.mp4StreamURL = mp4StreamURL
+    }
+
+    var parameters: [String: Any] {
+        var query: [String: Any] = [:]
+        if mp4Size { query["mp4_size"] = 1 }
+        if startFrom { query["start_from"] = 1 }
+        if streamURL { query["stream_url"] = 1 }
+        if mp4StreamURL { query["mp4_stream_url"] = 1 }
+        return query
+    }
+}
+
+public struct PutioFileDeleteOptions {
+    public let skipNonexistents: Bool
+    public let skipOwnerCheck: Bool
+
+    public init(skipNonexistents: Bool = true, skipOwnerCheck: Bool = false) {
+        self.skipNonexistents = skipNonexistents
+        self.skipOwnerCheck = skipOwnerCheck
+    }
+
+    var parameters: [String: Any] {
+        [
+            "skip_nonexistents": skipNonexistents,
+            "skip_owner_check": skipOwnerCheck,
+        ]
+    }
+}
+
 open class PutioNextFile: Decodable {
     open var id: Int
     open var name: String
