@@ -31,7 +31,7 @@ extension PutioSDK {
         return envelope.code
     }
 
-    public func checkAuthCodeMatch(code: String) async throws -> String {
+    public func checkAuthCodeMatch(code: String) async throws -> String? {
         let envelope = try await request(
             "/oauth2/oob/code/\(code)",
             headers: ["Authorization": ""],
@@ -77,7 +77,7 @@ private struct PutioAuthCodeEnvelope: Decodable {
 }
 
 private struct PutioOAuthTokenEnvelope: Decodable {
-    let oauth_token: String
+    let oauth_token: String?
 }
 
 private struct PutioRecoveryCodesEnvelope: Decodable {

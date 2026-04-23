@@ -158,6 +158,23 @@ final class PutioSDKAuthTests: XCTestCase {
         )
     }
 
+    func testCheckAuthCodeMatchReturnsNilWhileCodeIsPending() async throws {
+        MockURLProtocol.requestHandler = { request in
+            XCTAssertEqual(request.url?.path, "/v2/oauth2/oob/code/PENDING")
+            XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
+            return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"oauth_token":null}"#.utf8))
+        }
+
+        let sdk = PutioSDK(
+            config: PutioSDKConfig(clientID: "ios-app", clientName: "put.io TV", token: "session-token"),
+            urlSession: makeTestSession()
+        )
+
+        let token = try await sdk.checkAuthCodeMatch(code: "PENDING")
+
+        XCTAssertNil(token)
+    }
+
     func testAuthModelsDecodeGracefulDefaults() throws {
         let decoder = JSONDecoder()
 
