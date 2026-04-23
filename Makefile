@@ -1,11 +1,12 @@
-.PHONY: bootstrap verify verify-spm live-test example-install print-simulator-destination clean
+.PHONY: bootstrap verify verify-spm coverage-check live-test example-install print-simulator-destination clean
 
 bootstrap:
 	bundle config set --local path vendor/bundle
 	bundle install
 
 verify:
-	swift test --filter PutioSDKTests
+	swift test --enable-code-coverage --filter PutioSDKTests
+	./scripts/check-spm-coverage.sh 90
 	swift build
 	bundle exec pod install --project-directory=Example
 	@destination="$$(./scripts/xcode-iphone-simulator-destination.sh --workspace Example/PutioSDK.xcworkspace --scheme PutioSDK 2>/dev/null || true)"; \
@@ -19,6 +20,9 @@ verify:
 
 verify-spm:
 	swift build
+
+coverage-check:
+	./scripts/check-spm-coverage.sh 90
 
 live-test:
 	swift test --filter PutioSDKLiveTests

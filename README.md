@@ -83,7 +83,7 @@ The repo exposes one local verification command:
 make verify
 ```
 
-Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
+Use `make bootstrap` first on a fresh clone. `make verify` runs SwiftPM tests with coverage enabled, enforces a `90%` source line coverage floor for `PutioSDK/Classes`, installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
 An opt-in live verification lane is also available:
 
