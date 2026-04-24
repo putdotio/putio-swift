@@ -26,7 +26,7 @@ Default example env file:
 
 - `.env.example`
 
-Supported direct runtime variables:
+Supported public runtime variables:
 
 - `PUTIO_TOKEN_FIRST_PARTY`
 - `PUTIO_ACCESS_TOKEN`
@@ -34,13 +34,7 @@ Supported direct runtime variables:
 - `PUTIO_CLIENT_ID`
 - `PUTIO_BASE_URL`
 
-Optional 1Password-backed runtime variables:
-
-- `OP_SERVICE_ACCOUNT_TOKEN`
-- `PUTIO_1PASSWORD_RUNTIME_ITEM_ID`
-- `PUTIO_1PASSWORD_RUNTIME_VAULT`
-
-The live harness prefers direct runtime variables first. If they are missing, it can hydrate the shared runtime token and client id from a 1Password item when all three optional 1Password variables are set.
+The live harness prefers direct runtime variables first. Maintainers may also configure a repo-local operator secret provider for shared live credentials; keep provider-specific names and secret locations out of public docs.
 
 ## Live Scope
 

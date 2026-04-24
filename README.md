@@ -75,23 +75,33 @@ Task {
 
 The SDK exposes an async-first `async throws` surface with native `URLSession` transport and no third-party networking dependency. It no longer ships completion-handler compatibility wrappers or raw JSON response APIs.
 
-## Verification
+## Error Handling
 
-The repo exposes one local verification command:
+Thrown SDK errors are `PutioSDKError` values that conform to `LocalizedError` and expose small classification helpers for app code:
+
+```swift
+do {
+    _ = try await sdk.getFile(fileID: 42)
+} catch let error as PutioSDKError {
+    if error.isAuthenticationFailure {
+        // refresh credentials or send the user through sign-in
+    } else if error.isRetryable {
+        // schedule a retry with backoff
+    } else if error.matches(statusCode: 404) {
+        // refresh stale local state
+    }
+}
+```
+
+## Development
+
+For local development, the repo exposes one verification command:
 
 ```bash
 make verify
 ```
 
-Use `make bootstrap` first on a fresh clone. `make verify` runs SwiftPM tests with coverage enabled, enforces a `90%` source line coverage floor for `PutioSDK/Classes`, installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
-
-An opt-in live verification lane is also available:
-
-```bash
-make live-test
-```
-
-Releases are continuous on `main`: every merge is treated as releasable. Conventional commits drive version selection through semantic-release, GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
+Use [Contributing](./CONTRIBUTING.md) for setup, deterministic verification, live API checks, and release expectations.
 
 ## Authentication Example
 

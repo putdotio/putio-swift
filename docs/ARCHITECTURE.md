@@ -24,7 +24,7 @@ graph LR
 | `PutioSDK` | shared SDK entrypoint and transport composition |
 | Async methods | preferred modern API surface using `async throws` |
 | Boundary models | typed request inputs plus `Encodable` request values and `Decodable` response types for the modernized domains |
-| Error model | typed transport, API, and decoding failures with `LocalizedError` guidance |
+| Error model | typed transport, API, and decoding failures with `LocalizedError` guidance plus retry and classification helpers |
 
 ## Design Rules
 

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for contributing to `putio-sdk-swift`.
+Thanks for contributing to the Swift SDK for put.io.
 
 ## Setup
 
@@ -32,7 +32,7 @@ Run the repo-local verification command before opening or updating a pull reques
 make verify
 ```
 
-This check builds the Swift package, installs the example workspace, and then builds the example-backed `PutioSDK` CocoaPods scheme from `Example/PutioSDK.xcworkspace`. It prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
+This check builds the Swift package, installs the example workspace, and then builds the example-backed `PutioSDK` CocoaPods scheme from the example workspace. It prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
 
 For real API verification, use the separate live lane:
 
@@ -40,7 +40,7 @@ For real API verification, use the separate live lane:
 make live-test
 ```
 
-The live suite prefers direct runtime env vars first and can optionally hydrate them from a configured 1Password runtime item. See [Testing](./docs/TESTING.md) for the supported variables and safety rules.
+The live suite prefers direct runtime env vars first and can optionally hydrate credentials from repo-local operator configuration. See [Testing](./docs/TESTING.md) for the supported public variables and safety rules.
 
 To see the concrete iPhone simulator destination Xcode is advertising to the repo on your machine, run:
 
@@ -57,7 +57,7 @@ make print-simulator-destination
 - The CocoaPods package is `PutioSDK`
 - The public SDK module and type names are `PutioSDK`
 - Prefer the native async APIs and treat completion-handler entrypoints as compatibility wrappers when extending existing domains
-- Keep `Package.swift`, `PutioSDK.podspec`, and `VERSION` aligned when dependency or platform support changes
+- Keep `Package.swift`, `podspec_helper.rb`, `PutioSDK.podspec`, and `VERSION` aligned when dependency or platform support changes
 - Any iPhone simulator on iOS `26.0` or newer is acceptable for interactive example runs; the repo does not require an exact simulator patch version
 - Use `bundle exec pod lib lint PutioSDK.podspec --allow-warnings` as a manual publish-time check when you need full podspec validation and have a working iOS destination available
 - Use the example app for lightweight runtime sanity checks when changing auth or request flow behavior
@@ -71,4 +71,5 @@ make print-simulator-destination
 - Keep changes focused and explicit
 - Add or update verification when behavior changes
 - Update docs when setup, release, or package expectations change
+- Use the pull request template to include the validation and contract evidence reviewers need
 - Prefer follow-up pull requests over mixing unrelated cleanup into the same branch

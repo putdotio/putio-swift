@@ -7,7 +7,7 @@ This document tracks how ready `putio-sdk-swift` is for autonomous agent work an
 - deterministic package-level unit tests now exist under `Tests/PutioSDKTests`
 - an opt-in live verification layer exists under `Tests/PutioSDKLiveTests`
 - the shared transport now has a native async `URLSession` path with `Decodable` boundary parsing for the modernized domains
-- typed failures now conform to `LocalizedError` and carry recovery guidance
+- typed failures now conform to `LocalizedError` and carry recovery guidance, retryability, and classification helpers
 - `make verify` is the canonical deterministic guardrail and enforces a `90%` source line coverage floor for `PutioSDK/Classes`
 - `make live-test` is the opt-in real API verification lane
 

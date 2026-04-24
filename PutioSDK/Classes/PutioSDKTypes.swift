@@ -308,6 +308,88 @@ public struct PutioSDKError: Error, LocalizedError, CustomStringConvertible, Cus
     public let underlyingError: Error
     public let responseBody: String?
 
+    /// HTTP status code for API failures, when the request reached put.io.
+    public var statusCode: Int? {
+        switch type {
+        case let .httpError(statusCode, _):
+            return statusCode
+        case .networkError, .decodingError, .unknownError:
+            return nil
+        }
+    }
+
+    /// Backend `error_type` value for API failures, when the response included one.
+    public var apiErrorType: String? {
+        switch type {
+        case let .httpError(_, errorType):
+            return errorType
+        case .networkError, .decodingError, .unknownError:
+            return nil
+        }
+    }
+
+    /// True for authorization and authentication failures that usually require a fresh sign-in or token.
+    public var isAuthenticationFailure: Bool {
+        statusCode == 401 || statusCode == 403
+    }
+
+    /// True when the backend reported that the requested resource was not found.
+    public var isNotFound: Bool {
+        statusCode == 404
+    }
+
+    /// True when put.io is rate-limiting the request.
+    public var isRateLimited: Bool {
+        statusCode == 429
+    }
+
+    /// True when the SDK could not reach put.io due to a transport-level failure.
+    public var isNetworkFailure: Bool {
+        switch type {
+        case .networkError:
+            return true
+        case .httpError, .decodingError, .unknownError:
+            return false
+        }
+    }
+
+    /// True when put.io responded, but the payload did not match the SDK model contract.
+    public var isDecodingFailure: Bool {
+        switch type {
+        case .decodingError:
+            return true
+        case .httpError, .networkError, .unknownError:
+            return false
+        }
+    }
+
+    /// True for transient failures where callers can reasonably schedule a retry with backoff.
+    public var isRetryable: Bool {
+        switch type {
+        case .networkError:
+            return true
+        case let .httpError(statusCode, _):
+            return statusCode == 408 ||
+                statusCode == 429 ||
+                (500...599).contains(statusCode)
+        case .decodingError, .unknownError:
+            return false
+        }
+    }
+
+    /// Matches an API failure by status code, backend error type, or both.
+    public func matches(statusCode: Int? = nil, errorType: String? = nil) -> Bool {
+        if let statusCode, self.statusCode != statusCode {
+            return false
+        }
+
+        if let errorType, self.apiErrorType != errorType {
+            return false
+        }
+
+        return statusCode != nil || errorType != nil
+    }
+
     public var errorDescription: String? {
         message
     }

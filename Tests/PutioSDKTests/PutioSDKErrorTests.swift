@@ -67,6 +67,75 @@ final class PutioSDKErrorTests: XCTestCase {
         XCTAssertTrue(unknownError.recoverySuggestion?.contains("underlying error") == true)
     }
 
+    func testTypedErrorsExposeConsumerClassificationHelpers() {
+        let requestConfig = PutioSDKRequestConfig(
+            apiConfig: PutioSDKConfig(clientID: "ios-app", token: "token-123"),
+            url: "/files/42",
+            method: .get
+        )
+        let requestInfo = PutioSDKErrorRequestInformation(config: requestConfig)
+
+        let unauthorized = PutioSDKError(
+            request: requestInfo,
+            statusCode: 401,
+            errorType: "invalid_scope",
+            message: "unauthorized",
+            underlyingError: URLError(.userAuthenticationRequired)
+        )
+        let notFound = PutioSDKError(
+            request: requestInfo,
+            statusCode: 404,
+            errorType: "NOT_FOUND",
+            message: "missing",
+            underlyingError: URLError(.badServerResponse)
+        )
+        let rateLimited = PutioSDKError(
+            request: requestInfo,
+            statusCode: 429,
+            errorType: nil,
+            message: "slow down",
+            underlyingError: URLError(.badServerResponse)
+        )
+        let serverError = PutioSDKError(
+            request: requestInfo,
+            statusCode: 503,
+            errorType: nil,
+            message: "unavailable",
+            underlyingError: URLError(.badServerResponse)
+        )
+        let networkError = PutioSDKError(request: requestInfo, error: URLError(.notConnectedToInternet))
+        let decodingError = PutioSDKError(
+            request: requestInfo,
+            decodingError: DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "broken")),
+            responseBody: "{}"
+        )
+
+        XCTAssertEqual(unauthorized.statusCode, 401)
+        XCTAssertEqual(unauthorized.apiErrorType, "invalid_scope")
+        XCTAssertTrue(unauthorized.isAuthenticationFailure)
+        XCTAssertFalse(unauthorized.isRetryable)
+        XCTAssertTrue(unauthorized.matches(statusCode: 401))
+        XCTAssertTrue(unauthorized.matches(errorType: "invalid_scope"))
+        XCTAssertTrue(unauthorized.matches(statusCode: 401, errorType: "invalid_scope"))
+        XCTAssertFalse(unauthorized.matches(statusCode: 403, errorType: "invalid_scope"))
+
+        XCTAssertTrue(notFound.isNotFound)
+        XCTAssertFalse(notFound.isRetryable)
+
+        XCTAssertTrue(rateLimited.isRateLimited)
+        XCTAssertTrue(rateLimited.isRetryable)
+        XCTAssertTrue(serverError.isRetryable)
+
+        XCTAssertNil(networkError.statusCode)
+        XCTAssertNil(networkError.apiErrorType)
+        XCTAssertTrue(networkError.isNetworkFailure)
+        XCTAssertTrue(networkError.isRetryable)
+
+        XCTAssertTrue(decodingError.isDecodingFailure)
+        XCTAssertFalse(decodingError.isRetryable)
+        XCTAssertFalse(decodingError.matches())
+    }
+
     func testErrorDescriptionsRedactSensitiveRequestData() {
         let requestConfig = PutioSDKRequestConfig(
             apiConfig: PutioSDKConfig(baseURL: "https://api.put.io/v2", clientID: "ios-app", token: "config-token"),
