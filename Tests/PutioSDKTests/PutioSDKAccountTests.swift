@@ -135,7 +135,8 @@ final class PutioSDKAccountTests: XCTestCase {
             hideSubtitles: true,
             dontAutoSelectSubtitles: false,
             tunnelRouteName: "eu-west",
-            showOptimisticUsage: true
+            showOptimisticUsage: true,
+            sortBy: "NAME_ASC"
         )
         let twoFactor = PutioTwoFactorSettings(code: "123456", enable: true)
         let clearOptions = PutioAccountClearOptions(
@@ -162,6 +163,7 @@ final class PutioSDKAccountTests: XCTestCase {
         XCTAssertEqual(settingsPatch.parameters["dont_autoselect_subtitles"], .bool(false))
         XCTAssertEqual(settingsPatch.parameters["tunnel_route_name"], .string("eu-west"))
         XCTAssertEqual(settingsPatch.parameters["show_optimistic_usage"], .bool(true))
+        XCTAssertEqual(settingsPatch.parameters["sort_by"], .string("NAME_ASC"))
         XCTAssertEqual(twoFactor.parameters["code"], .string("123456"))
         XCTAssertEqual(twoFactor.parameters["enable"], .bool(true))
         XCTAssertEqual(PutioAccountSettingsUpdate.patch(settingsPatch).parameters["history_enabled"], .bool(false))

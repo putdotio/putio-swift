@@ -169,6 +169,7 @@ public struct PutioAccountSettingsPatch {
     public let dontAutoSelectSubtitles: Bool?
     public let tunnelRouteName: String?
     public let showOptimisticUsage: Bool?
+    public let sortBy: String?
 
     public init(
         historyEnabled: Bool? = nil,
@@ -176,7 +177,8 @@ public struct PutioAccountSettingsPatch {
         hideSubtitles: Bool? = nil,
         dontAutoSelectSubtitles: Bool? = nil,
         tunnelRouteName: String? = nil,
-        showOptimisticUsage: Bool? = nil
+        showOptimisticUsage: Bool? = nil,
+        sortBy: String? = nil
     ) {
         self.historyEnabled = historyEnabled
         self.trashEnabled = trashEnabled
@@ -184,6 +186,7 @@ public struct PutioAccountSettingsPatch {
         self.dontAutoSelectSubtitles = dontAutoSelectSubtitles
         self.tunnelRouteName = tunnelRouteName
         self.showOptimisticUsage = showOptimisticUsage
+        self.sortBy = sortBy
     }
 
     var parameters: PutioRequestParameters {
@@ -194,6 +197,7 @@ public struct PutioAccountSettingsPatch {
         if let dontAutoSelectSubtitles { body["dont_autoselect_subtitles"] = .bool(dontAutoSelectSubtitles) }
         if let tunnelRouteName { body["tunnel_route_name"] = .string(tunnelRouteName) }
         if let showOptimisticUsage { body["show_optimistic_usage"] = .bool(showOptimisticUsage) }
+        if let sortBy { body["sort_by"] = .string(sortBy) }
         return body
     }
 }
