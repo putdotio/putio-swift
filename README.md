@@ -75,6 +75,18 @@ Task {
 
 The SDK exposes an async-first `async throws` surface with native `URLSession` transport and no third-party networking dependency. It no longer ships completion-handler compatibility wrappers or raw JSON response APIs.
 
+Apps that need a custom transport for tests, fixtures, or specialized session configuration can pass their own `URLSession`:
+
+```swift
+let configuration = URLSessionConfiguration.ephemeral
+configuration.protocolClasses = [MockURLProtocol.self]
+
+let sdk = PutioSDK(
+    config: PutioSDKConfig(clientID: "<your-client-id>"),
+    urlSession: URLSession(configuration: configuration)
+)
+```
+
 ## Error Handling
 
 Thrown SDK errors are `PutioSDKError` values that conform to `LocalizedError` and expose small classification helpers for app code:

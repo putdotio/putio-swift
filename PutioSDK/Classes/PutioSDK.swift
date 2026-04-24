@@ -16,7 +16,7 @@ public final class PutioSDK {
         self.init(config: config, urlSession: .shared)
     }
 
-    init(config: PutioSDKConfig, urlSession: URLSession) {
+    public init(config: PutioSDKConfig, urlSession: URLSession) {
         self.urlSession = urlSession
         self.config = config
     }
