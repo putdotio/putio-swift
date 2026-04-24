@@ -41,7 +41,7 @@ jobs:
           bundler-cache: true
 
       - name: Restore SwiftPM build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .build
           key: ${{ runner.os }}-swiftpm-${{ github.workflow }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
@@ -49,7 +49,7 @@ jobs:
             ${{ runner.os }}-swiftpm-${{ github.workflow }}-
 
       - name: Restore CocoaPods cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             Example/Pods
@@ -94,7 +94,7 @@ jobs:
           bundler-cache: true
 
       - name: Restore SwiftPM build cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .build
           key: ${{ runner.os }}-swiftpm-${{ github.workflow }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
@@ -102,7 +102,7 @@ jobs:
             ${{ runner.os }}-swiftpm-${{ github.workflow }}-
 
       - name: Restore CocoaPods cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             Example/Pods

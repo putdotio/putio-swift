@@ -1,37 +1,25 @@
 import Foundation
-import SwiftyJSON
 
 extension PutioSDK {
-    public func getGrants(completion: @escaping (Result<[PutioOAuthGrant], PutioSDKError>) -> Void) {
-        self.get("/oauth/grants") { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json["apps"].arrayValue.map {PutioOAuthGrant(json: $0)}))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func getGrants() async throws -> [PutioOAuthGrant] {
+        let envelope = try await request("/oauth/grants", as: PutioGrantsEnvelope.self)
+        return envelope.apps
     }
 
-    public func revokeGrant(id: Int, completion: @escaping PutioSDKBoolCompletion) {
-        self.post("/oauth/grants/\(id)/delete") { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func revokeGrant(id: Int) async throws -> PutioOKResponse {
+        try await request("/oauth/grants/\(id)/delete", method: .post, as: PutioOKResponse.self)
     }
 
-    public func linkDevice(code: String, completion: @escaping (Result<PutioOAuthGrant, PutioSDKError>) -> Void) {
-        self.post("/oauth2/oob/code", body: ["code": code]) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(PutioOAuthGrant(json: json["app"])))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func linkDevice(code: String) async throws -> PutioOAuthGrant {
+        let envelope = try await request("/oauth2/oob/code", method: .post, body: ["code": .string(code)], as: PutioGrantEnvelope.self)
+        return envelope.app
     }
+}
+
+private struct PutioGrantsEnvelope: Decodable {
+    let apps: [PutioOAuthGrant]
+}
+
+private struct PutioGrantEnvelope: Decodable {
+    let app: PutioOAuthGrant
 }

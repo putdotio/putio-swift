@@ -1,69 +1,29 @@
 import Foundation
-import SwiftyJSON
 
 extension PutioSDK {
-    public func startMp4Conversion(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/\(fileID)/mp4"
-
-        self.post(url) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func startMp4Conversion(fileID: Int) async throws -> PutioOKResponse {
+        try await request("/files/\(fileID)/mp4", method: .post, as: PutioOKResponse.self)
     }
 
-    public func getMp4ConversionStatus(fileID: Int, completion: @escaping (Result<PutioMp4Conversion, PutioSDKError>) -> Void) {
-        let url = "/files/\(fileID)/mp4"
-
-        self.get(url) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(PutioMp4Conversion(json: json)))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func getMp4ConversionStatus(fileID: Int) async throws -> PutioMp4Conversion {
+        let envelope = try await request("/files/\(fileID)/mp4", as: PutioMp4ConversionEnvelope.self)
+        return envelope.mp4
     }
 
-    public func getStartFrom(fileID: Int, completion: @escaping (Result<Int, PutioSDKError>) -> Void) {
-        let url = "/files/\(fileID)/start-from"
-
-        self.get(url) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json["start_from"].intValue))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func getStartFrom(fileID: Int) async throws -> Int {
+        let response = try await request("/files/\(fileID)/start-from", as: PutioStartFromResponse.self)
+        return response.startFrom
     }
 
-    public func setStartFrom(fileID: Int, time: Int, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/\(fileID)/start-from/set"
-
-        self.post(url, body: ["time": time]) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func setStartFrom(fileID: Int, time: Int) async throws -> PutioOKResponse {
+        try await request("/files/\(fileID)/start-from/set", method: .post, body: ["time": .integer(time)], as: PutioOKResponse.self)
     }
 
-    public func resetStartFrom(fileID: Int, completion: @escaping PutioSDKBoolCompletion) {
-        let url = "/files/\(fileID)/start-from/delete"
-
-        self.get(url) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func resetStartFrom(fileID: Int) async throws -> PutioOKResponse {
+        try await request("/files/\(fileID)/start-from/delete", as: PutioOKResponse.self)
     }
+}
+
+private struct PutioMp4ConversionEnvelope: Decodable {
+    let mp4: PutioMp4Conversion
 }

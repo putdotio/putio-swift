@@ -1,14 +1,7 @@
 import Foundation
 
 extension PutioSDK {
-    public func getSubtitles(fileID: Int, completion: @escaping (Result<[PutioSubtitle], PutioSDKError>) -> Void) {
-        self.get("/files/\(fileID)/subtitles", query: ["oauth_token": self.config.token]) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json["subtitles"].arrayValue.map {PutioSubtitle(json: $0)}))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func getSubtitles(fileID: Int) async throws -> PutioSubtitlesResponse {
+        try await request("/files/\(fileID)/subtitles", query: ["oauth_token": .string(self.config.token)], as: PutioSubtitlesResponse.self)
     }
 }

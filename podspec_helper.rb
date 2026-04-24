@@ -22,7 +22,4 @@ def configure_putio_sdk_spec(spec, name:, module_name: nil)
 
   spec.ios.deployment_target = '26.0'
   spec.source_files = 'PutioSDK/Classes/**/*'
-
-  spec.dependency 'Alamofire', '~> 5.11'
-  spec.dependency 'SwiftyJSON', '~> 5.0'
 end

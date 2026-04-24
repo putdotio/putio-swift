@@ -1,26 +1,15 @@
 PODS:
-  - Alamofire (5.11.2)
-  - PutioSDK (2.0.0):
-    - Alamofire (~> 5.11)
-    - SwiftyJSON (~> 5.0)
-  - SwiftyJSON (5.0.2)
+  - PutioSDK (2.0.0)
 
 DEPENDENCIES:
   - PutioSDK (from `../`)
-
-SPEC REPOS:
-  trunk:
-    - Alamofire
-    - SwiftyJSON
 
 EXTERNAL SOURCES:
   PutioSDK:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: 400275dd1c6d87d95a041861d2a59da4b520a203
-  PutioSDK: efc7fce0477bc46f0364d3827112dcb7cdd6bc43
-  SwiftyJSON: f5b1bf1cd8dd53cd25887ac0eabcfd92301c6a5a
+  PutioSDK: 9b93d771b1e29b718d5d411254d3206ae7a3faa2
 
 PODFILE CHECKSUM: e929897f16b1021dbb0f00ef39efb79f3674073a
 

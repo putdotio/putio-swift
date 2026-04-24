@@ -11,7 +11,7 @@ public class PutioIFTTTEvent {
 }
 
 public class PutioIFTTTEventIngredients {
-    public func toJSON() -> [String: Any] {
+    func parameters() -> PutioRequestParameters {
         return [:]
     }
 }
@@ -27,11 +27,11 @@ public class PutioIFTTTPlaybackEventIngredients: PutioIFTTTEventIngredients {
         self.fileType = fileType
     }
 
-    override public func toJSON() -> [String: Any] {
+    override func parameters() -> PutioRequestParameters {
         return [
-            "file_id": self.fileId,
-            "file_name": self.fileName,
-            "file_type": self.fileType
+            "file_id": .integer(self.fileId),
+            "file_name": .string(self.fileName),
+            "file_type": .string(self.fileType)
         ]
     }
 }

@@ -15,18 +15,22 @@ let package = Package(
             targets: ["PutioSDK"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.11.0"),
-        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.0"),
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "PutioSDK",
-            dependencies: [
-                "Alamofire",
-                "SwiftyJSON",
-            ],
+            dependencies: [],
             path: "PutioSDK/Classes"
+        ),
+        .testTarget(
+            name: "PutioSDKTests",
+            dependencies: ["PutioSDK"],
+            path: "Tests/PutioSDKTests"
+        ),
+        .testTarget(
+            name: "PutioSDKLiveTests",
+            dependencies: ["PutioSDK"],
+            path: "Tests/PutioSDKLiveTests"
         ),
     ],
     swiftLanguageModes: [

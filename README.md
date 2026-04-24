@@ -55,34 +55,53 @@ pod 'PutioSDK'
 ```swift
 import PutioSDK
 
-let api = PutioSDK(
+let sdk = PutioSDK(
     config: PutioSDKConfig(
         clientID: "<your-client-id>",
         token: "<your-access-token>"
     )
 )
 
-api.getAccountInfo { result in
-    switch result {
-    case .success(let account):
+Task {
+    do {
+        let account = try await sdk.getAccountInfo()
         print(account.username)
-    case .failure(let error):
+    } catch let error as PutioSDKError {
         print(error.message)
+        print(error.recoverySuggestion ?? "")
     }
 }
 ```
 
-## Verification
+The SDK exposes an async-first `async throws` surface with native `URLSession` transport and no third-party networking dependency. It no longer ships completion-handler compatibility wrappers or raw JSON response APIs.
 
-The repo exposes one local verification command:
+## Error Handling
+
+Thrown SDK errors are `PutioSDKError` values that conform to `LocalizedError` and expose small classification helpers for app code:
+
+```swift
+do {
+    _ = try await sdk.getFile(fileID: 42)
+} catch let error as PutioSDKError {
+    if error.isAuthenticationFailure {
+        // refresh credentials or send the user through sign-in
+    } else if error.isRetryable {
+        // schedule a retry with backoff
+    } else if error.matches(statusCode: 404) {
+        // refresh stale local state
+    }
+}
+```
+
+## Development
+
+For local development, the repo exposes one verification command:
 
 ```bash
 make verify
 ```
 
-Use `make bootstrap` first on a fresh clone. `make verify` installs the example workspace, prefers any Xcode-advertised iPhone simulator destination on iOS `26.0+`, and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet
-
-Releases are continuous on `main`: every merge is treated as releasable. Conventional commits drive version selection through semantic-release, GitHub releases run automatically after `make verify` passes, and CocoaPods publishing runs from the same workflow when `COCOAPODS_TRUNK_TOKEN` is configured
+Use [Contributing](./CONTRIBUTING.md) for setup, deterministic verification, live API checks, and release expectations.
 
 ## Authentication Example
 
@@ -94,6 +113,9 @@ The example app shows a minimal `ASWebAuthenticationSession` flow and a follow-u
 ## Docs
 
 - [Example app](./Example) for the example app and smoke-test workspace
+- [Architecture](./docs/ARCHITECTURE.md) for the current async transport and decoding direction
+- [Testing](./docs/TESTING.md) for deterministic and live verification
+- [Readiness](./docs/READINESS.md) for the current verification confidence
 - [Security](./SECURITY.md) for private vulnerability reporting
 
 ## Repo Internals

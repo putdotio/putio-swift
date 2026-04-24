@@ -1,33 +1,30 @@
-import SwiftyJSON
-
 open class PutioHistoryEventFactory {
-    static func get(json: JSON) -> PutioHistoryEvent {
-        switch json["type"] {
+    static func decode(rawType: String, from decoder: Decoder) throws -> PutioHistoryEvent {
+        switch rawType.lowercased() {
         case "upload":
-            return PutioUploadEvent(json: json)
+            return try PutioUploadEvent(from: decoder)
         case "file_shared":
-            return PutioFileSharedEvent(json: json)
+            return try PutioFileSharedEvent(from: decoder)
         case "transfer_completed":
-            return PutioTransferCompletedEvent(json: json)
+            return try PutioTransferCompletedEvent(from: decoder)
         case "transfer_error":
-            return PutioTransferErrorEvent(json: json)
+            return try PutioTransferErrorEvent(from: decoder)
         case "file_from_rss_deleted_for_space":
-            return PutioFileFromRSSDeletedErrorEvent(json: json)
+            return try PutioFileFromRSSDeletedErrorEvent(from: decoder)
         case "rss_filter_paused":
-            return PutioRSSFilterPausedEvent(json: json)
+            return try PutioRSSFilterPausedEvent(from: decoder)
         case "transfer_from_rss_error":
-            return PutioTransferFromRSSErrorEvent(json: json)
+            return try PutioTransferFromRSSErrorEvent(from: decoder)
         case "transfer_callback_error":
-            return PutioTransferCallbackErrorEvent(json: json)
+            return try PutioTransferCallbackErrorEvent(from: decoder)
         case "private_torrent_pin":
-            return PutioPrivateTorrentPinEvent(json: json)
+            return try PutioPrivateTorrentPinEvent(from: decoder)
         case "voucher":
-            return PutioVoucherEvent(json: json)
+            return try PutioVoucherEvent(from: decoder)
         case "zip_created":
-            return PutioZipCreatedEvent(json: json)
+            return try PutioZipCreatedEvent(from: decoder)
         default:
-            return PutioHistoryEvent(json: json)
+            return try PutioHistoryEvent(from: decoder)
         }
     }
 }
-

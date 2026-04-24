@@ -1,75 +1,47 @@
 import Foundation
-import SwiftyJSON
 
 extension PutioSDK {
-    public func listTrash(perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioSDKError>) -> Void) {
-        self.get("/trash/list", query: ["per_page": perPage]) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(PutioListTrashResponse(json: json)))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func listTrash(query: PutioTrashListQuery = PutioTrashListQuery()) async throws -> PutioListTrashResponse {
+        try await request("/trash/list", query: query.parameters, as: PutioListTrashResponse.self)
     }
 
-    public func continueListTrash(cursor: String, perPage: Int = 50, completion: @escaping (Result<PutioListTrashResponse, PutioSDKError>) -> Void) {
-        self.get("/trash/list/continue", query: ["cursor": cursor, "per_page": perPage]) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(PutioListTrashResponse(json: json)))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func listTrash(perPage: Int) async throws -> PutioListTrashResponse {
+        try await listTrash(query: PutioTrashListQuery(perPage: perPage))
     }
 
-    public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioSDKBoolCompletion) {
-        var body: [String: Any] = [:]
-
-        if let cursor = cursor, cursor != "" {
-            body = ["cursor": cursor]
-        } else {
-            body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
-        }
-
-        self.post("/trash/restore", body: body) { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func continueListTrash(cursor: String, query: PutioTrashListQuery = PutioTrashListQuery()) async throws -> PutioListTrashResponse {
+        try await request(
+            "/trash/list/continue",
+            method: .post,
+            query: query.parameters,
+            body: ["cursor": .string(cursor)],
+            as: PutioListTrashResponse.self
+        )
     }
 
-    public func deleteTrashFiles(fileIDs: [Int] = [], cursor: String?, completion: @escaping PutioSDKBoolCompletion) {
-        var body: [String: Any] = [:]
-
-        if let cursor = cursor, cursor != "" {
-            body = ["cursor": cursor]
-        } else {
-            body = ["file_ids": (fileIDs.map {String($0)}).joined(separator: ",")]
-        }
-
-        self.post("/trash/delete", body: body){ result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func continueListTrash(cursor: String, perPage: Int) async throws -> PutioListTrashResponse {
+        try await continueListTrash(cursor: cursor, query: PutioTrashListQuery(perPage: perPage))
     }
 
-    public func emptyTrash(completion: @escaping PutioSDKBoolCompletion) {
-        self.post("/trash/empty") { result in
-            switch result {
-            case .success(let json):
-                return completion(.success(json))
-            case .failure(let error):
-                return completion(.failure(error))
-            }
-        }
+    public func restoreTrashFiles(fileIDs: [Int] = [], cursor: String?) async throws -> PutioOKResponse {
+        let body = putioTrashMutationBody(fileIDs: fileIDs, cursor: cursor)
+        return try await request("/trash/restore", method: .post, body: body, as: PutioOKResponse.self)
     }
+
+    public func deleteTrashFiles(fileIDs: [Int] = [], cursor: String?) async throws -> PutioOKResponse {
+        let body = putioTrashMutationBody(fileIDs: fileIDs, cursor: cursor)
+        return try await request("/trash/delete", method: .post, body: body, as: PutioOKResponse.self)
+    }
+
+    public func emptyTrash() async throws -> PutioOKResponse {
+        try await request("/trash/empty", method: .post, as: PutioOKResponse.self)
+    }
+}
+
+private func putioTrashMutationBody(fileIDs: [Int], cursor: String?) -> PutioRequestParameters {
+    if let cursor, !cursor.isEmpty {
+        return ["cursor": .string(cursor)]
+    }
+
+    return ["file_ids": .string((fileIDs.map { String($0) }).joined(separator: ","))]
 }

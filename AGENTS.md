@@ -9,6 +9,9 @@
 
 - [Overview](./README.md)
 - [Contributing](./CONTRIBUTING.md)
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Testing](./docs/TESTING.md)
+- [Readiness](./docs/READINESS.md)
 - [Security](./SECURITY.md)
 
 ## Commands
