@@ -358,7 +358,8 @@ final class PutioSDKFilesTests: XCTestCase {
             noCursor: true,
             contentType: "video/mp4",
             fileType: .video,
-            sortBy: "NAME_ASC"
+            sortBy: "NAME_ASC",
+            mp4Status: true
         )
         let detailsQuery = PutioFileDetailsQuery(
             mp4Size: true,
@@ -382,6 +383,7 @@ final class PutioSDKFilesTests: XCTestCase {
         XCTAssertEqual(listQuery.parameters(parentID: 7)["content_type"], .string("video/mp4"))
         XCTAssertEqual(listQuery.parameters(parentID: 7)["file_type"], .string("VIDEO"))
         XCTAssertEqual(listQuery.parameters(parentID: 7)["sort_by"], .string("NAME_ASC"))
+        XCTAssertEqual(listQuery.parameters(parentID: 7)["mp4_status"], .integer(1))
         XCTAssertEqual(detailsQuery.parameters["mp4_size"], .integer(1))
         XCTAssertEqual(detailsQuery.parameters["start_from"], .integer(1))
         XCTAssertEqual(detailsQuery.parameters["stream_url"], .integer(1))
