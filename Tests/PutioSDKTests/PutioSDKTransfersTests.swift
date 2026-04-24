@@ -22,6 +22,7 @@ final class PutioSDKTransfersTests: XCTestCase {
                 let body = try XCTUnwrap(requestBodyData(for: request))
                 let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: String])
                 XCTAssertEqual(json["cursor"], "next-transfers")
+                XCTAssertNil(json["per_page"])
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(Self.transfersListPayload(cursor: nil, total: nil).utf8))
             case "/v2/transfers/42":
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(Self.transferEnvelopePayload(id: 42, status: "DOWNLOADING").utf8))

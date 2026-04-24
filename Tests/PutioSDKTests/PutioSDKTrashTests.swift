@@ -43,6 +43,7 @@ final class PutioSDKTrashTests: XCTestCase {
                 let body = try XCTUnwrap(requestBodyData(for: request))
                 let json = try XCTUnwrap(JSONSerialization.jsonObject(with: body) as? [String: String])
                 XCTAssertEqual(json["cursor"], "trash-page-2")
+                XCTAssertNil(json["per_page"])
                 return (makeHTTPResponse(for: request, statusCode: 200), Data(#"{"cursor":"done","trash_size":0,"files":[]}"#.utf8))
             case "/v2/trash/restore":
                 XCTAssertEqual(request.httpMethod, "POST")

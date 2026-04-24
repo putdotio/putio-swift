@@ -18,6 +18,7 @@ fi
 coverage_json="$(mktemp)"
 trap 'rm -f "$coverage_json"' EXIT
 
+# Xcode's llvm-cov export names the JSON export format "text".
 xcrun llvm-cov export \
     -format=text \
     -instr-profile "$profdata_path" \

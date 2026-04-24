@@ -7,8 +7,6 @@ public protocol PutioSDKDelegate: AnyObject {
 public final class PutioSDK {
     public weak var delegate: PutioSDKDelegate?
     let urlSession: URLSession
-    let jsonDecoder: JSONDecoder
-    let jsonEncoder: JSONEncoder
 
     static let apiURL = "https://api.put.io/v2"
 
@@ -21,8 +19,6 @@ public final class PutioSDK {
     init(config: PutioSDKConfig, urlSession: URLSession) {
         self.urlSession = urlSession
         self.config = config
-        self.jsonDecoder = JSONDecoder()
-        self.jsonEncoder = JSONEncoder()
     }
 
     public func setToken(token: String) {
@@ -52,7 +48,7 @@ public final class PutioSDK {
         let data = try await execute(requestConfig: requestConfig)
 
         do {
-            return try jsonDecoder.decode(type, from: data)
+            return try JSONDecoder().decode(type, from: data)
         } catch {
             let apiError = PutioSDKError(request: PutioSDKErrorRequestInformation(config: requestConfig), decodingError: error, responseBody: String(decoding: data, as: UTF8.self))
             delegate?.onPutioSDKError(error: apiError)
@@ -83,7 +79,7 @@ public final class PutioSDK {
 
         guard (200..<300).contains(httpResponse.statusCode) else {
             let body = String(decoding: data, as: UTF8.self)
-            let envelope = try? jsonDecoder.decode(PutioAPIErrorEnvelope.self, from: data)
+            let envelope = try? JSONDecoder().decode(PutioAPIErrorEnvelope.self, from: data)
             let message = envelope?.resolvedMessage ?? "put.io returned HTTP \(httpResponse.statusCode)"
             let apiError = PutioSDKError(
                 request: requestInformation,
@@ -117,7 +113,7 @@ public final class PutioSDK {
         }
 
         if let body = requestConfig.body, !body.isEmpty {
-            request.httpBody = try jsonEncoder.encode(body)
+            request.httpBody = try JSONEncoder().encode(body)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
 
