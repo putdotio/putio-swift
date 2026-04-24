@@ -85,7 +85,7 @@ final class PutioSDKLiveTests: XCTestCase {
         let candidate = try XCTUnwrap(video)
 
         let subtitles = try await sdk.getSubtitles(fileID: candidate.id)
-        if let subtitle = subtitles.first {
+        if let subtitle = subtitles.subtitles.first {
             XCTAssertFalse(subtitle.key.isEmpty)
             XCTAssertFalse(subtitle.languageCode.isEmpty)
             XCTAssertFalse(subtitle.url.isEmpty)

@@ -151,6 +151,7 @@ final class PutioSDKFilesTests: XCTestCase {
                 let payload = """
                 {
                   "cursor": "search-done",
+                  "total": 1,
                   "files": [
                     {
                       "id": 90,

@@ -4,6 +4,56 @@ public protocol PutioFileHistoryEvent {
     var fileID: Int { get set }
 }
 
+public struct PutioHistoryEventsQuery {
+    public let perPage: Int?
+    public let before: Int?
+
+    public init(perPage: Int? = nil, before: Int? = nil) {
+        self.perPage = perPage
+        self.before = before
+    }
+
+    var parameters: PutioRequestParameters {
+        var query: PutioRequestParameters = [:]
+        if let perPage {
+            query["per_page"] = .integer(perPage)
+        }
+        if let before {
+            query["before"] = .integer(before)
+        }
+        return query
+    }
+}
+
+open class PutioHistoryEventsResponse: Decodable {
+    open var events: [PutioHistoryEvent]
+    open var hasMore: Bool
+    open var status: String
+
+    enum CodingKeys: String, CodingKey {
+        case events
+        case hasMore = "has_more"
+        case status
+    }
+
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        var eventsContainer = try container.nestedUnkeyedContainer(forKey: .events)
+        var decodedEvents: [PutioHistoryEvent] = []
+
+        while !eventsContainer.isAtEnd {
+            let eventDecoder = try eventsContainer.superDecoder()
+            let eventContainer = try eventDecoder.container(keyedBy: PutioHistoryEvent.CodingKeys.self)
+            let rawType = try eventContainer.decodeIfPresent(String.self, forKey: .type) ?? ""
+            decodedEvents.append(try PutioHistoryEventFactory.decode(rawType: rawType, from: eventDecoder))
+        }
+
+        self.events = decodedEvents
+        self.hasMore = try container.decode(Bool.self, forKey: .hasMore)
+        self.status = try container.decode(String.self, forKey: .status)
+    }
+}
+
 open class PutioHistoryEvent: Decodable {
     public enum EventType {
         case upload, fileShared, transferCompleted, transferError, fileFromRSSDeletedError, rssFilterPaused, transferFromRSSError, transferCallbackError, privateTorrentPin, voucher, zipCreated, other

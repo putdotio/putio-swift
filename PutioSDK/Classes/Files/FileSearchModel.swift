@@ -2,7 +2,7 @@ import Foundation
 
 open class PutioFileSearchResponse: Decodable {
     open var cursor: String?
-    open var total: Int?
+    open var total: Int
     open var files: [PutioFile]
 
     enum CodingKeys: String, CodingKey {
@@ -14,7 +14,7 @@ open class PutioFileSearchResponse: Decodable {
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.cursor = try container.decodeIfPresent(String.self, forKey: .cursor)
-        self.total = try container.decodeIfPresent(Int.self, forKey: .total)
+        self.total = try container.decode(Int.self, forKey: .total)
         self.files = try container.decodeIfPresent([PutioFile].self, forKey: .files) ?? []
     }
 }

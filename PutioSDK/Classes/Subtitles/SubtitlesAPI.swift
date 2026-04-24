@@ -1,12 +1,7 @@
 import Foundation
 
 extension PutioSDK {
-    public func getSubtitles(fileID: Int) async throws -> [PutioSubtitle] {
-        let envelope = try await request("/files/\(fileID)/subtitles", query: ["oauth_token": .string(self.config.token)], as: PutioSubtitlesEnvelope.self)
-        return envelope.subtitles
+    public func getSubtitles(fileID: Int) async throws -> PutioSubtitlesResponse {
+        try await request("/files/\(fileID)/subtitles", query: ["oauth_token": .string(self.config.token)], as: PutioSubtitlesResponse.self)
     }
-}
-
-private struct PutioSubtitlesEnvelope: Decodable {
-    let subtitles: [PutioSubtitle]
 }

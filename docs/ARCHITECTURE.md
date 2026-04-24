@@ -58,7 +58,7 @@ graph LR
   - `revokeGrant`
   - `linkDevice`
 - `history`
-  - `getHistoryEvents`
+  - `getHistoryEvents` with typed `per_page` / `before` query input and `has_more` response state
   - `clearHistoryEvents`
   - `deleteHistoryEvent`
 - `files`
@@ -82,7 +82,7 @@ graph LR
 - `routes`
   - `getRoutes`
 - `subtitles`
-  - `getSubtitles`
+  - `getSubtitles` with the backend default key and subtitle `format` preserved
 - `transfers`
   - `listTransfers`
   - `continueTransfers`

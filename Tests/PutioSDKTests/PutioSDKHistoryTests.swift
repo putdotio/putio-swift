@@ -12,8 +12,14 @@ final class PutioSDKHistoryTests: XCTestCase {
         MockURLProtocol.requestHandler = { request in
             switch request.url?.path {
             case "/v2/events/list":
+                let components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "per_page" })?.value, "25")
+                XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "before" })?.value, "100")
+
                 let payload = """
                 {
+                  "status": "OK",
+                  "has_more": true,
                   "events": [
                     { "id": 1, "user_id": 42, "type": "upload", "created_at": "2026-04-20T10:00:00Z", "file_name": "Episode.mkv", "file_size": 10, "file_id": 9 },
                     { "id": 2, "user_id": 42, "type": "file_shared", "created_at": "2026-04-20T10:01:00Z", "sharing_user_name": "bob", "file_name": "Movie.mkv", "file_size": 11, "file_id": 10 },
@@ -48,10 +54,13 @@ final class PutioSDKHistoryTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let events = try await sdk.getHistoryEvents()
+        let response = try await sdk.getHistoryEvents(query: PutioHistoryEventsQuery(perPage: 25, before: 100))
+        let events = response.events
         let cleared = try await sdk.clearHistoryEvents()
         let deleted = try await sdk.deleteHistoryEvent(eventID: 12)
 
+        XCTAssertEqual(response.status, "OK")
+        XCTAssertEqual(response.hasMore, true)
         XCTAssertEqual(events.count, 12)
         XCTAssertTrue(events[0] is PutioUploadEvent)
         XCTAssertEqual((events[0] as? PutioUploadEvent)?.fileID, 9)

@@ -81,8 +81,10 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
 
             let payload = """
             {
+              "default": "all",
               "subtitles": [
                 {
+                  "format": "vtt",
                   "key": "all",
                   "language": "English",
                   "language_code": "en",
@@ -102,11 +104,13 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let subtitles = try await sdk.getSubtitles(fileID: 42)
+        let response = try await sdk.getSubtitles(fileID: 42)
 
-        XCTAssertEqual(subtitles.count, 1)
-        XCTAssertEqual(subtitles.first?.languageCode, "en")
-        XCTAssertEqual(subtitles.first?.url, "https://example.com/subtitles/en.vtt")
+        XCTAssertEqual(response.defaultKey, "all")
+        XCTAssertEqual(response.subtitles.count, 1)
+        XCTAssertEqual(response.subtitles.first?.format, "vtt")
+        XCTAssertEqual(response.subtitles.first?.languageCode, "en")
+        XCTAssertEqual(response.subtitles.first?.url, "https://example.com/subtitles/en.vtt")
     }
 
     func testSearchFilesDecodesTypedFilesAndCursor() async throws {
@@ -167,6 +171,17 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
         XCTAssertTrue(response.files.isEmpty)
     }
 
+    func testSearchFilesRequiresBackendTotal() throws {
+        let payload = """
+        {
+          "cursor": null,
+          "files": []
+        }
+        """
+
+        XCTAssertThrowsError(try JSONDecoder().decode(PutioFileSearchResponse.self, from: Data(payload.utf8)))
+    }
+
     func testGetMp4ConversionStatusDecodesTypedStatus() async throws {
         MockURLProtocol.requestHandler = { request in
             XCTAssertEqual(request.url?.path, "/v2/files/42/mp4")
@@ -221,9 +236,14 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
     func testGetHistoryEventsDecodesConcreteEventTypes() async throws {
         MockURLProtocol.requestHandler = { request in
             XCTAssertEqual(request.url?.path, "/v2/events/list")
+            let components = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)
+            XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "per_page" })?.value, "25")
+            XCTAssertEqual(components?.queryItems?.first(where: { $0.name == "before" })?.value, "100")
 
             let payload = """
             {
+              "status": "OK",
+              "has_more": false,
               "events": [
                 {
                   "id": 1,
@@ -253,8 +273,11 @@ final class PutioSDKDomainDecodeTests: XCTestCase {
             urlSession: makeTestSession()
         )
 
-        let events = try await sdk.getHistoryEvents()
+        let response = try await sdk.getHistoryEvents(query: PutioHistoryEventsQuery(perPage: 25, before: 100))
+        let events = response.events
 
+        XCTAssertEqual(response.status, "OK")
+        XCTAssertEqual(response.hasMore, false)
         XCTAssertEqual(events.count, 2)
         XCTAssertTrue(events.first is PutioTransferCompletedEvent)
         XCTAssertEqual(events.first?.type, .transferCompleted)
