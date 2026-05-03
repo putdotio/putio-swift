@@ -1,4 +1,4 @@
-.PHONY: bootstrap verify verify-spm coverage-check live-test example-install print-simulator-destination clean
+.PHONY: bootstrap verify verify-spm coverage-check live-test example-install print-simulator-destination secrets-setup secrets-clean clean
 
 bootstrap:
 	bundle config set --local path vendor/bundle
@@ -26,6 +26,13 @@ coverage-check:
 
 live-test:
 	swift test --filter PutioSDKLiveTests
+
+secrets-setup:
+	OP_ACCOUNT=putdotio.1password.com op whoami >/dev/null
+	OP_ACCOUNT=putdotio.1password.com op inject -f -i .env.example -o .env.local
+
+secrets-clean:
+	rm -f .env.local .env.local.* .env.local.swp
 
 example-install:
 	bundle exec pod install --project-directory=Example
