@@ -22,23 +22,23 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
       - name: Select latest stable Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: latest-stable
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@c4e5b1316158f92e3d49443a9d58b31d25ac0f8f # v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
       - name: Restore SwiftPM build cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: .build
           key: ${{ runner.os }}-swiftpm-${{ github.workflow }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
@@ -46,7 +46,7 @@ jobs:
             ${{ runner.os }}-swiftpm-${{ github.workflow }}-
 
       - name: Restore CocoaPods cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: |
             Example/Pods
@@ -85,24 +85,24 @@ jobs:
           permission-issues: write
           permission-pull-requests: write
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
           token: ${{ steps.release-bot.outputs.token }}
 
       - name: Select latest stable Xcode
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: latest-stable
 
       - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@c4e5b1316158f92e3d49443a9d58b31d25ac0f8f # v1
         with:
           ruby-version: .ruby-version
           bundler-cache: true
 
       - name: Restore SwiftPM build cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: .build
           key: ${{ runner.os }}-swiftpm-${{ github.workflow }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
@@ -110,11 +110,9 @@ jobs:
             ${{ runner.os }}-swiftpm-${{ github.workflow }}-
 
       - name: Restore CocoaPods cache
-        uses: actions/cache@v5
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          path: |
-            Example/Pods
-            ~/Library/Caches/CocoaPods
+          path: ~/Library/Caches/CocoaPods
           key: ${{ runner.os }}-cocoapods-${{ github.workflow }}-${{ hashFiles('Example/Podfile.lock', 'PutioSDK.podspec', 'podspec_helper.rb') }}
           restore-keys: |
             ${{ runner.os }}-cocoapods-${{ github.workflow }}-
@@ -123,15 +121,15 @@ jobs:
         run: make bootstrap
 
       - name: Release SDK
-        uses: cycjimmy/semantic-release-action@v6
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
           extra_plugins: |
-            @semantic-release/commit-analyzer
-            @semantic-release/release-notes-generator
-            @semantic-release/exec
-            @semantic-release/github
-            @semantic-release/git
-            conventional-changelog-conventionalcommits
+            @semantic-release/commit-analyzer@13.0.1
+            @semantic-release/release-notes-generator@14.1.1
+            @semantic-release/exec@7.1.0
+            @semantic-release/github@12.0.8
+            @semantic-release/git@10.0.1
+            conventional-changelog-conventionalcommits@9.3.1
         env:
           GITHUB_TOKEN: ${{ steps.release-bot.outputs.token }}
           COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}

@@ -122,6 +122,8 @@ The example app shows a minimal `ASWebAuthenticationSession` flow and a follow-u
 - [Example/PutioSDK/ViewController.swift](./Example/PutioSDK/ViewController.swift)
 - [Example app guide](./Example/README.md)
 
+Use `try PutioSDK.generateOAuthState()` with `getAuthURL(redirectURI:state:)`, then validate the returned callback state before accepting `access_token`.
+
 ## Docs
 
 - [Example app](./Example) for the example app and smoke-test workspace

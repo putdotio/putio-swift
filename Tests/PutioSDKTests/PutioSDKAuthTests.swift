@@ -26,6 +26,57 @@ final class PutioSDKAuthTests: XCTestCase {
         XCTAssertEqual(query["state"], "csrf-token")
     }
 
+    func testGenerateOAuthStateProducesURLSafeHighEntropyValue() throws {
+        let state = try PutioSDK.generateOAuthState()
+        let secondState = try PutioSDK.generateOAuthState()
+
+        XCTAssertGreaterThanOrEqual(state.count, 32)
+        XCTAssertNotEqual(state, secondState)
+        XCTAssertFalse(state.contains("+"))
+        XCTAssertFalse(state.contains("/"))
+        XCTAssertFalse(state.contains("="))
+        XCTAssertThrowsError(try PutioSDK.generateOAuthState(byteCount: 0)) { error in
+            XCTAssertEqual(error as? PutioOAuthStateError, .invalidByteCount)
+        }
+    }
+
+    func testOAuthCallbackParserValidatesCallbackAndStateBeforeReturningToken() throws {
+        let sdk = PutioSDK(
+            config: PutioSDKConfig(clientID: "ios-app", clientName: "put.io TV + Beta", token: "session-token"),
+            urlSession: makeTestSession()
+        )
+        let callbackURL = try XCTUnwrap(URL(string: "putioswift://auth#access_token=token-123&state=csrf-token"))
+
+        let token = try sdk.accessToken(
+            fromOAuthCallback: callbackURL,
+            expectedScheme: "putioswift",
+            expectedHost: "auth",
+            expectedState: "csrf-token"
+        )
+
+        XCTAssertEqual(token, "token-123")
+        XCTAssertThrowsError(
+            try sdk.accessToken(
+                fromOAuthCallback: callbackURL,
+                expectedScheme: "putioswift",
+                expectedHost: "auth",
+                expectedState: "wrong-state"
+            )
+        ) { error in
+            XCTAssertEqual(error as? PutioOAuthCallbackError, .invalidState)
+        }
+        XCTAssertThrowsError(
+            try sdk.accessToken(
+                fromOAuthCallback: callbackURL,
+                expectedScheme: "putioswift",
+                expectedHost: "other",
+                expectedState: "csrf-token"
+            )
+        ) { error in
+            XCTAssertEqual(error as? PutioOAuthCallbackError, .invalidCallbackURL)
+        }
+    }
+
     func testAuthAndTwoFactorEndpointsDecodeTypedResponses() async throws {
         var seenPaths: [String] = []
 
