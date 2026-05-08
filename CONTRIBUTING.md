@@ -65,7 +65,7 @@ make print-simulator-destination
 - The release workflow uses semantic-release on `main`
 - Conventional commits drive automated version selection through semantic-release
 - GitHub release writes use `putio-release-bot` through `PUTIO_RELEASE_BOT_APP_ID` and `PUTIO_RELEASE_BOT_PRIVATE_KEY` in the protected `release` Environment
-- CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
+- CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN` in the protected `release` Environment
 
 ## Pull Requests
 
