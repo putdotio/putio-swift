@@ -64,7 +64,8 @@ make print-simulator-destination
 - Do not commit tokens, private API credentials, or release-only secrets
 - The release workflow uses semantic-release on `main`
 - Conventional commits drive automated version selection through semantic-release
-- GitHub releases only need the built-in `GITHUB_TOKEN`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN`
+- GitHub release writes use `putio-release-bot` through `PUTIO_RELEASE_BOT_APP_ID` and `PUTIO_RELEASE_BOT_PRIVATE_KEY` in the protected `release` Environment
+- CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN` in the protected `release` Environment
 
 ## Pull Requests
 
