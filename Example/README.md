@@ -20,6 +20,6 @@ open Example/PutioSDK.xcworkspace
 - run the `PutioSDK_Example` target
 - enter your OAuth client ID
 - complete the `ASWebAuthenticationSession` sign-in flow
-- confirm the app can fetch account info and list files after the callback
+- confirm the app can fetch account info and list files after the state-validated callback
 
 Do not commit personal tokens, client secrets, or test credentials from local smoke checks

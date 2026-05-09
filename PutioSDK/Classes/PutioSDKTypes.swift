@@ -230,7 +230,7 @@ extension PutioSDKRequestConfig: CustomStringConvertible, CustomDebugStringConve
         }
 
         components.queryItems = queryItems.map { item in
-            sensitiveKey(item.name) ? URLQueryItem(name: item.name, value: "<redacted>") : item
+            sensitiveKey(item.name) ? URLQueryItem(name: "<redacted>", value: "<redacted>") : item
         }
         return components.string ?? url
     }
@@ -238,7 +238,7 @@ extension PutioSDKRequestConfig: CustomStringConvertible, CustomDebugStringConve
     private var redactedHeaders: PutioHTTPHeaders {
         var redacted: PutioHTTPHeaders = [:]
         for (key, value) in headers {
-            redacted[key] = sensitiveKey(key) ? "<redacted>" : value
+            redacted[sensitiveKey(key) ? "<redacted>" : key] = sensitiveKey(key) ? "<redacted>" : value
         }
         return redacted
     }
@@ -257,19 +257,53 @@ extension PutioSDKErrorRequestInformation: CustomStringConvertible, CustomDebugS
 private func redact(_ parameters: PutioRequestParameters) -> PutioRequestParameters {
     var redacted = PutioRequestParameters()
     for (key, value) in parameters {
-        redacted[key] = sensitiveKey(key) ? "<redacted>" : value
+        redacted[sensitiveKey(key) ? "<redacted>" : key] = sensitiveKey(key) ? "<redacted>" : redact(value)
     }
     return redacted
+}
+
+private func redact(_ value: PutioRequestValue) -> PutioRequestValue {
+    switch value {
+    case let .array(values):
+        return .array(values.map(redact))
+    case let .object(parameters):
+        return .object(redact(parameters))
+    case .string, .integer, .double, .bool:
+        return value
+    }
 }
 
 private func sensitiveKey(_ key: String) -> Bool {
     let normalized = key.lowercased()
     return normalized == "authorization" ||
+        normalized == "password" ||
+        normalized == "current_password" ||
+        normalized == "secret" ||
+        normalized == "recovery_codes" ||
         normalized == "token" ||
         normalized == "oauth_token" ||
         normalized == "access_token" ||
         normalized == "client_secret" ||
-        normalized.hasSuffix("_token")
+        normalized.hasSuffix("_token") ||
+        normalized.hasSuffix("_secret") ||
+        normalized.contains("_secret_")
+}
+
+private func redactSensitiveText(_ text: String) -> String {
+    let replacements = [
+        (#"(?i)([?&](?:[^=\s&#"']*token|[^=\s&#"']*secret|password|current_password|recovery_codes)=)[^\s&#"']+"#, "$1<redacted>"),
+        (#"(?i)((?:^|[\s,])(?:[A-Za-z0-9_]*token|[A-Za-z0-9_]*secret|password|current_password|recovery_codes)=)[^\s,]+"#, "$1<redacted>"),
+        (#"(?i)("[^"]*(?:token|secret|password|recovery_codes)[^"]*"\s*:\s*)("[^"]*")"#, "$1\"<redacted>\""),
+        (#"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b"#, "<redacted>"),
+    ]
+
+    return replacements.reduce(text) { result, replacement in
+        result.replacingOccurrences(
+            of: replacement.0,
+            with: replacement.1,
+            options: .regularExpression
+        )
+    }
 }
 
 public enum PutioSDKErrorType {
@@ -391,7 +425,7 @@ public struct PutioSDKError: Error, LocalizedError, CustomStringConvertible, Cus
     }
 
     public var errorDescription: String? {
-        message
+        redactedMessage
     }
 
     public var failureReason: String? {
@@ -412,7 +446,7 @@ public struct PutioSDKError: Error, LocalizedError, CustomStringConvertible, Cus
     }
 
     public var description: String {
-        "PutioSDKError(request: \(request), type: \(type), message: \"\(message)\", underlyingError: \(underlyingError), responseBody: \(responseBody ?? "nil"))"
+        "PutioSDKError(request: \(request), type: \(type), message: \"\(redactedMessage)\", underlyingError: \(underlyingError), responseBody: \(redactedResponseBodyDescription))"
     }
 
     public var debugDescription: String {
@@ -478,6 +512,18 @@ public struct PutioSDKError: Error, LocalizedError, CustomStringConvertible, Cus
         self.message = error.localizedDescription
         self.underlyingError = error
         self.responseBody = nil
+    }
+
+    private var redactedResponseBodyDescription: String {
+        guard let responseBody else {
+            return "nil"
+        }
+
+        return "<redacted body, \(responseBody.utf8.count) bytes>"
+    }
+
+    private var redactedMessage: String {
+        redactSensitiveText(message)
     }
 }
 

@@ -1,7 +1,62 @@
 import Foundation
+import Security
+
+public enum PutioOAuthCallbackError: Error, LocalizedError, Equatable {
+    case invalidCallbackURL
+    case invalidState
+    case missingAccessToken
+
+    public var errorDescription: String? {
+        switch self {
+        case .invalidCallbackURL:
+            return "The OAuth callback URL did not match the expected app callback."
+        case .invalidState:
+            return "The OAuth callback state did not match the pending sign-in state."
+        case .missingAccessToken:
+            return "The OAuth callback did not include an access token."
+        }
+    }
+}
+
+public enum PutioOAuthStateError: Error, LocalizedError, Equatable {
+    case invalidByteCount
+    case generationFailed(OSStatus)
+
+    public var errorDescription: String? {
+        switch self {
+        case .invalidByteCount:
+            return "OAuth state byte count must be greater than zero."
+        case .generationFailed:
+            return "The SDK could not generate a secure OAuth state."
+        }
+    }
+}
 
 extension PutioSDK {
-    public func getAuthURL(redirectURI: String, responseType: String = "token", state: String = "") -> URL {
+    public static func generateOAuthState(byteCount: Int = 32) throws -> String {
+        guard byteCount > 0 else {
+            throw PutioOAuthStateError.invalidByteCount
+        }
+
+        var bytes = [UInt8](repeating: 0, count: byteCount)
+        let status = bytes.withUnsafeMutableBytes { buffer -> OSStatus in
+            guard let baseAddress = buffer.baseAddress else {
+                return errSecParam
+            }
+
+            return SecRandomCopyBytes(kSecRandomDefault, byteCount, baseAddress)
+        }
+        guard status == errSecSuccess else {
+            throw PutioOAuthStateError.generationFailed(status)
+        }
+
+        return Data(bytes).base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
+    }
+
+    public func getAuthURL(redirectURI: String, responseType: String = "token", state: String) -> URL {
         var url = URLComponents(string: "\(self.config.baseURL)/oauth2/authenticate")
 
         url?.queryItems = [
@@ -17,6 +72,42 @@ extension PutioSDK {
         }
 
         return authURL
+    }
+
+    @available(*, deprecated, message: "Generate and pass a high-entropy state value, for example try PutioSDK.generateOAuthState().")
+    public func getAuthURL(redirectURI: String, responseType: String = "token") -> URL {
+        getAuthURL(redirectURI: redirectURI, responseType: responseType, state: "")
+    }
+
+    public func accessToken(
+        fromOAuthCallback callbackURL: URL,
+        expectedScheme: String,
+        expectedHost: String,
+        expectedState: String
+    ) throws -> String {
+        guard
+            callbackURL.scheme?.caseInsensitiveCompare(expectedScheme) == .orderedSame,
+            callbackURL.host?.caseInsensitiveCompare(expectedHost) == .orderedSame
+        else {
+            throw PutioOAuthCallbackError.invalidCallbackURL
+        }
+
+        var urlComponents = URLComponents()
+        urlComponents.query = callbackURL.fragment
+        let queryItems = urlComponents.queryItems ?? []
+
+        guard
+            !expectedState.isEmpty,
+            queryItems.first(where: { $0.name == "state" })?.value == expectedState
+        else {
+            throw PutioOAuthCallbackError.invalidState
+        }
+
+        guard let token = queryItems.first(where: { $0.name == "access_token" })?.value, !token.isEmpty else {
+            throw PutioOAuthCallbackError.missingAccessToken
+        }
+
+        return token
     }
 
     public func getAuthCode() async throws -> PutioAuthCode {

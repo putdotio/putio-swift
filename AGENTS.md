@@ -32,6 +32,7 @@
 - CI and release automation run from `main`
 - The release workflow uses semantic-release after `make verify` passes on `main`
 - GitHub release writes use `putio-release-bot`; CocoaPods publishing additionally needs `COCOAPODS_TRUNK_TOKEN` in the protected `release` Environment
+- Release jobs cache CocoaPods downloads only and regenerate generated `Example/Pods`
 - Verify example workspace installation when auth-flow or package-install surface changes
 - Repo verification should build the Swift package and the `PutioSDK` CocoaPods scheme from the example workspace
 - `make verify` prefers an Xcode-advertised iPhone simulator destination on iOS `26.0+` and falls back to the installed `iphonesimulator` SDK when Xcode is not exposing one yet

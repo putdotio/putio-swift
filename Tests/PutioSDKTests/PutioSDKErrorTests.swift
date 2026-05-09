@@ -142,8 +142,13 @@ final class PutioSDKErrorTests: XCTestCase {
             url: "/two_factor/verify/totp",
             method: .post,
             headers: ["Authorization": "Bearer header-token"],
-            query: ["oauth_token": "query-token"],
-            body: ["client_secret": "client-secret", "name": "safe-name"]
+            query: ["oauth_token": "query-token", "password": "password"],
+            body: [
+                "client_secret": "client-secret",
+                "current_password": "current_password",
+                "profile": .object(["totp_secret": "totp-secret"]),
+                "name": "safe-name",
+            ]
         )
         let requestInfo = PutioSDKErrorRequestInformation(config: requestConfig)
         let error = PutioSDKError(
@@ -160,9 +165,55 @@ final class PutioSDKErrorTests: XCTestCase {
         XCTAssertFalse(description.contains("header-token"))
         XCTAssertFalse(description.contains("query-token"))
         XCTAssertFalse(description.contains("client-secret"))
+        XCTAssertFalse(description.contains("password"))
+        XCTAssertFalse(description.contains("current_password"))
+        XCTAssertFalse(description.contains("totp-secret"))
         XCTAssertTrue(description.contains("safe-name"))
         XCTAssertTrue(description.contains("<redacted>"))
         XCTAssertFalse(error.failureReason?.contains("query-token") == true)
+    }
+
+    func testErrorDescriptionRedactsRawResponseBodyButKeepsExplicitProperty() {
+        let requestConfig = PutioSDKRequestConfig(
+            apiConfig: PutioSDKConfig(clientID: "ios-app", token: "token-123"),
+            url: "/account/info",
+            method: .get
+        )
+        let requestInfo = PutioSDKErrorRequestInformation(config: requestConfig)
+        let rawBody = """
+        {
+          "email": "person@example.com",
+          "access_token": "response-token",
+          "download_url": "https://example.com/file?oauth_token=url-token"
+        }
+        """
+        let error = PutioSDKError(
+            request: requestInfo,
+            statusCode: 403,
+            errorType: "forbidden",
+            message: #"safe failure for person@example.com with access_token=response-token and {"client_secret":"message-secret"}"#,
+            underlyingError: URLError(.userAuthenticationRequired),
+            responseBody: rawBody
+        )
+
+        let description = String(describing: error)
+        let debugDescription = String(reflecting: error)
+
+        XCTAssertFalse(description.contains("person@example.com"))
+        XCTAssertFalse(description.contains("response-token"))
+        XCTAssertFalse(description.contains("url-token"))
+        XCTAssertFalse(description.contains("message-secret"))
+        XCTAssertFalse(debugDescription.contains("person@example.com"))
+        XCTAssertFalse(debugDescription.contains("response-token"))
+        XCTAssertFalse(debugDescription.contains("message-secret"))
+        XCTAssertFalse(error.errorDescription?.contains("person@example.com") == true)
+        XCTAssertFalse(error.errorDescription?.contains("response-token") == true)
+        XCTAssertFalse(error.errorDescription?.contains("message-secret") == true)
+        XCTAssertTrue(description.contains("HTTP 403") || description.contains("statusCode: 403"))
+        XCTAssertTrue(description.contains("forbidden"))
+        XCTAssertTrue(description.contains("safe failure"))
+        XCTAssertTrue(description.contains("<redacted body,"))
+        XCTAssertEqual(error.responseBody, rawBody)
     }
 
     func testTransportNotifiesDelegateForNetworkAndDecodingFailures() async throws {

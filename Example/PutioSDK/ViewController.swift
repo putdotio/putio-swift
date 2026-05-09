@@ -5,6 +5,10 @@ import AuthenticationServices
 class ViewController: UIViewController {
     var api: PutioSDK?
     var session: ASWebAuthenticationSession?
+    var pendingOAuthState: String?
+
+    private let authCallbackScheme = "putioswift"
+    private let authCallbackHost = "auth"
 
     @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var startButton: UIButton!
@@ -31,13 +35,22 @@ class ViewController: UIViewController {
     func startAuthFlow() {
         guard let api = api else { return }
 
-        let scheme = "putioswift"
-        let url = api.getAuthURL(redirectURI: "\(scheme)://auth")
+        let state: String
+        do {
+            state = try PutioSDK.generateOAuthState()
+        } catch {
+            return handleAuthCallbackFailure(error: error)
+        }
 
-        session = ASWebAuthenticationSession(url: url, callbackURLScheme: scheme) { callbackURL, error in
+        pendingOAuthState = state
+        let url = api.getAuthURL(redirectURI: "\(authCallbackScheme)://\(authCallbackHost)", state: state)
+
+        session = ASWebAuthenticationSession(url: url, callbackURLScheme: authCallbackScheme) { [weak self] callbackURL, error in
+            guard let self else { return }
+            self.session = nil
+
             guard error == nil, let callbackURL = callbackURL else {
-                return self.handleAuthCallbackFailure(error: error!)
-
+                return self.handleAuthCallbackFailure(error: error ?? self.makeAuthError("Missing OAuth callback URL"))
             }
 
             // Callback URL: putioswift://auth#access_token={TOKEN}
@@ -49,6 +62,9 @@ class ViewController: UIViewController {
     }
 
     func handleAuthCallbackFailure(error: Error) {
+        pendingOAuthState = nil
+        session = nil
+
         let alertController = UIAlertController(title: "Auth Failure", message: error.localizedDescription, preferredStyle: .alert)
         let closeButton = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(closeButton)
@@ -56,17 +72,35 @@ class ViewController: UIViewController {
     }
 
     func handleAuthCallbackSuccess(callbackURL: URL) {
-        var urlComponents = URLComponents()
-        urlComponents.query = callbackURL.fragment
+        defer {
+            pendingOAuthState = nil
+            session = nil
+        }
 
-        guard let tokenFragment = urlComponents.queryItems?.first(where: { $0.name == "access_token" }), let token = tokenFragment.value else {
-            let error = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Missing access_token in the callback URL"])
+        guard let api else { return }
+        guard let pendingOAuthState else {
+            return handleAuthCallbackFailure(error: makeAuthError("Missing pending OAuth state"))
+        }
+
+        let token: String
+        do {
+            token = try api.accessToken(
+                fromOAuthCallback: callbackURL,
+                expectedScheme: authCallbackScheme,
+                expectedHost: authCallbackHost,
+                expectedState: pendingOAuthState
+            )
+        } catch {
             return handleAuthCallbackFailure(error: error)
         }
 
         Task {
             await fetchAccountInfo(token: token)
         }
+    }
+
+    func makeAuthError(_ message: String) -> NSError {
+        NSError(domain: "PutioSDKExampleAuth", code: 0, userInfo: [NSLocalizedDescriptionKey: message])
     }
 
     @MainActor
