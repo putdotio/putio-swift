@@ -17,7 +17,7 @@ jobs:
   verify:
     if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')
     name: Verify Swift SDK
-    runs-on: macos-26
+    runs-on: macos-latest
     timeout-minutes: 30
 
     steps:
@@ -66,7 +66,7 @@ jobs:
     name: Release Swift SDK
     needs:
       - verify
-    runs-on: macos-26
+    runs-on: macos-latest
     timeout-minutes: 30
     environment:
       name: release
