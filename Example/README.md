@@ -22,4 +22,4 @@ open Example/PutioSDK.xcworkspace
 - complete the `ASWebAuthenticationSession` sign-in flow
 - confirm the app can fetch account info and list files after the state-validated callback
 
-Do not commit personal tokens, client secrets, or test credentials from local smoke checks
+Keep personal tokens, client secrets, and test credentials from local smoke checks out of commits

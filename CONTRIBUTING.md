@@ -61,7 +61,7 @@ make print-simulator-destination
 - Any iPhone simulator on iOS `26.0` or newer is acceptable for interactive example runs; the repo does not require an exact simulator patch version
 - Use `bundle exec pod lib lint PutioSDK.podspec --allow-warnings` as a manual publish-time check when you need full podspec validation and have a working iOS destination available
 - Use the example app for lightweight runtime sanity checks when changing auth or request flow behavior
-- Do not commit tokens, private API credentials, or release-only secrets
+- Keep tokens, private API credentials, and release-only secrets out of commits
 - The release workflow uses semantic-release on `main`
 - Conventional commits drive automated version selection through semantic-release
 - GitHub release writes use `putio-release-bot` through `PUTIO_RELEASE_BOT_APP_ID` and `PUTIO_RELEASE_BOT_PRIVATE_KEY` in the protected `release` Environment
