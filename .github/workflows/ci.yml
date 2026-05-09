@@ -68,7 +68,9 @@ jobs:
       - verify
     runs-on: macos-26
     timeout-minutes: 30
-    environment: release
+    environment:
+      name: release
+      deployment: false
     permissions:
       contents: write
       issues: write
