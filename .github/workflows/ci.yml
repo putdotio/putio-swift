@@ -72,9 +72,7 @@ jobs:
       name: release
       deployment: false
     permissions:
-      contents: write
-      issues: write
-      pull-requests: write
+      contents: read
 
     steps:
       - name: Create release bot token
